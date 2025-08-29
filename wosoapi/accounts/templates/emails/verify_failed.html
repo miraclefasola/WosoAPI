@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verification Failed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #f44336;
+        }
+        p {
+            margin-top: 20px;
+            color: #333;
+        }
+        a {
+            margin-top: 30px;
+            display: inline-block;
+            padding: 10px 20px;
+            background: #f44336;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a:hover {
+            background: #e53935;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>❌ Verification Failed</h1>
+        <p>{{ message }}</p>
+        <a href="/resend-verification/">Resend Verification Email</a>
+    </div>
+</body>
+</html>

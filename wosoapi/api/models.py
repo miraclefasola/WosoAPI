@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Country(models.Model):
-    name = models.CharField(max_length=70)
+    name = models.CharField(max_length=70, unique=True)
 
     def __str__(self):
         return self.name
@@ -104,8 +104,8 @@ class PlayerSeasonStats(models.Model):
     take_ons = models.IntegerField(null=True, blank=True)
     carries_to_final_3rd = models.IntegerField(null=True, blank=True)
     carries_to_pen_area = models.IntegerField(null=True, blank=True)
-    yellow_cards = models.SmallIntegerField(null=True, blank=True)
-    red_cards = models.SmallIntegerField(null=True, blank=True)
+    yellow_card = models.SmallIntegerField(null=True, blank=True)
+    red_card = models.SmallIntegerField(null=True, blank=True)
 
     class Meta:
         constraints=[models.UniqueConstraint(fields=['player', 'season'], name='unique_player_season')]

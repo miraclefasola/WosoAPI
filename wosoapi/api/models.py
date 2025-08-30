@@ -39,7 +39,9 @@ class Club(models.Model):
 
 
 class ClubSeasonStat(models.Model):
-    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="season_stats")
+    club = models.ForeignKey(
+        Club, on_delete=models.CASCADE, related_name="season_stats"
+    )
     season = models.ForeignKey(
         Season, on_delete=models.CASCADE, related_name="club_season", db_index=True
     )
@@ -61,8 +63,11 @@ class ClubSeasonStat(models.Model):
     passes_to_pen_area = models.IntegerField(null=True, blank=True)
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["club", "season"], name="unique_club_season"),
-    ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["club", "season"], name="unique_club_season"
+            ),
+        ]
 
     def __str__(self):
         return f"{self.club.name}, {self.season.season}"
@@ -70,7 +75,7 @@ class ClubSeasonStat(models.Model):
 
 class Player(models.Model):
     full_name = models.CharField(max_length=500)
-    fbref_id = models.CharField(max_length=100,unique=True)
+    fbref_id = models.CharField(max_length=100, unique=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="club_player")
 
     def __str__(self):
@@ -108,7 +113,11 @@ class PlayerSeasonStats(models.Model):
     red_card = models.SmallIntegerField(null=True, blank=True)
 
     class Meta:
-        constraints=[models.UniqueConstraint(fields=['player', 'season'], name='unique_player_season')]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["player", "season"], name="unique_player_season"
+            )
+        ]
 
     def __str__(self):
         return f"{self.player.full_name} {self.position}"

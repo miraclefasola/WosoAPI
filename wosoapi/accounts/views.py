@@ -15,7 +15,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import get_object_or_404
 from accounts.email import send_verification_email
 from accounts.admin_task import delete_unverified_users
-from django.utils.encoding import force_bytes,force_str
+from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 User = get_user_model()
@@ -40,7 +40,7 @@ class VerifyEmailView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, uid, token):
-        
+
         # str_uid= request.query_param("uid")
         uid = force_str(urlsafe_base64_decode(uid))
         user = get_object_or_404(User, pk=uid)
@@ -51,8 +51,11 @@ class VerifyEmailView(APIView):
             user.save()
             return render(request, "emails/verify_success.html", {"user": user})
         else:
-            return render(request, "emails/verify_failed.html", {"message": "Invalid or expired token."})
-
+            return render(
+                request,
+                "emails/verify_failed.html",
+                {"message": "Invalid or expired token."},
+            )
 
 
 class DeleteinActiveUsers(APIView):
@@ -75,9 +78,8 @@ class ResendVerificationView(APIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data["email"]
-
-
+        email = serializer.validated_data["email"]
+        user = User.objects.get(email=email)
 
         send_verification_email(user)
 

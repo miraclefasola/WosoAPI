@@ -18,5 +18,5 @@ urlpatterns = [
         VerifyEmailView.as_view(),
         name="verify_email",
     ),
-    path('resend/verify', ResendVerificationView.as_view(), name='resend_verification')
+    path("resend/verify", ResendVerificationView.as_view(), name="resend_verification"),
 ]

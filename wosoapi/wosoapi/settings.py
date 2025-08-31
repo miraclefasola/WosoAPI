@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-19qr15)al6o=0$=6h-b%8l9d1^&mv-el4lh8(_(2dr3w-hru)u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+
 
 
 # Application definition
@@ -195,3 +195,14 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".onrender.com"]
 CSRF_TRUSTED_ORIGINS = ["https://*.onrender.com"]
+
+if not DEBUG:
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_SECONDS = 86400
+    SECURE_REDIRECT_EXEMPT = []
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True

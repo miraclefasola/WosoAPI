@@ -87,17 +87,19 @@ load_dotenv()
 user = os.environ.get("DB_USER")
 password = os.environ.get("DB_PASSWORD")
 host = os.environ.get("DB_HOST")
+db_name=os.environ.get("DB_NAME")
+db_port= os.environ.get("DB_PORT")
 # smtp config for password reset
 
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "woso_api",
+        "NAME": db_name,
         "USER": user,
         "PASSWORD": password,
         "HOST": host,
-        "PORT": "3306",
+        "PORT": db_port,
     
         "OPTIONS": {
             "charset": "utf8mb4",
@@ -177,7 +179,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 load_dotenv()
 email = os.environ.get("smtp_email")
-password = os.environ.get("smtp_password")
+smtp_password = os.environ.get("smtp_password")
 
 # SMTP configuratioon for password rest functionality
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -185,14 +187,14 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = email
-EMAIL_HOST_PASSWORD = password
+EMAIL_HOST_PASSWORD = smtp_password
 DEFAULT_FROM_EMAIL = email
 
 
 PASSWORD_RESET_TIMEOUT = 86400  # 1 day in seconds
 
 
-STATIC_URL = "/static/"
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 

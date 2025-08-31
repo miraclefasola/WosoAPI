@@ -100,11 +100,6 @@ DATABASES = {
         "PASSWORD": password,
         "HOST": host,
         "PORT": db_port,
-    
-        "OPTIONS": {
-            "charset": "utf8mb4",
-            "init_command": "SET sql_mode='STRICT_ALL_TABLES'",
-        },
     }
 }
 

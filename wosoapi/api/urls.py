@@ -4,16 +4,16 @@ from api.views import *
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register(r"countries", CountryView.as_view(), basename="all_countries")
-router.register(r"leagues", LeagueView.as_view(), basename="all_leagues")
-router.register(r"season", SeasonView.as_view(), basename="seasons")
-router.register(r"club/", Clubview.as_view(), basename="all_clubs")
-router.register(r"club/stats", ClubSeasonStatView.as_view(), basename="club_stats")
-router.register(r"players", PlayerView.as_view(), basename="all_players")
+router.register(r"countries", CountryView, basename="all_countries")
+router.register(r"leagues", LeagueView, basename="all_leagues")
+router.register(r"season", SeasonView, basename="seasons")
+router.register(r"club", Clubview, basename="all_clubs")
+router.register(r"clubstats", ClubSeasonStatView, basename="club_stats")
+router.register(r"players", PlayerView, basename="all_players")
 router.register(
-    r"players/stats", PlayerSeasonStatsView(), basename="season_player_stats"
+    r"playerstats", PlayerSeasonStatsView, basename="season_player_stats"
 )
-router.register(r"goalkeepers", GoalkeeperView.as_view(), basename="goalkeepers")
+router.register(r"goalkeepers", GoalkeeperView, basename="goalkeepers")
 
 
 urlpatterns = [

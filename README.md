@@ -7,13 +7,13 @@
 
 ---
 
-> **"Growing up watching women's football, I noticed something missing - the data wasn't there. While men's football analytics flourished with detailed stats and insights, women's football data remained scattered and incomplete. As someone passionate about both technology and women's sports, I built this API to bridge that gap. Every goal scored, every progressive pass made, every save - they all deserve to be measured, analyzed, and celebrated. This isn't just about numbers; it's about giving women's football the analytical foundation it deserves to grow, attract investment, and inspire the next generation of female athletes."**
+> **"With women's football, the data just isn't there. While men's football analytics flourished with detailed stats and insights, women's football data remained scattered and incomplete. As someone passionate about both technology and women's sports, I built this API to bridge that gap. Every goal scored, every progressive pass made, every save - they all deserve to be measured, analyzed, and celebrated. This isn't just about numbers; it's about giving women's football the analytical foundation it deserves to grow, attract investment, and inspire the next generation of female athletes."**
 
 ---
 
 ## 🌟 Overview
 
-The **WOSO API** (Women's Sports Obsessed) provides comprehensive football data specifically focused on women's leagues, with rich statistical analysis capabilities. Built for analysts, developers, journalists, and anyone passionate about women's football analytics.
+**WOSO API** provides comprehensive football data specifically focused on women's leagues, with rich statistical analysis capabilities. Built for analysts, developers, journalists, and anyone passionate about women's football analytics.
 
 **🔥 Data Source:** All football statistics are sourced from [FBref.com](https://fbref.com) - the premier destination for football statistics and analytics. We are grateful to FBref for providing comprehensive women's football data that makes this API possible.
 
@@ -38,13 +38,13 @@ The **WOSO API** (Women's Sports Obsessed) provides comprehensive football data 
 
 ### Base URL
 ```
-http://localhost:8000/wosoapi/
+https://wosoapi.com/
 ```
 
 ### 1. Register & Authenticate
 ```bash
 # 1. Register new account
-curl -X POST http://localhost:8000/wosoapi/register/ \
+curl -X POST http://wosoapi/register/ \
   -H "Content-Type: application/json" \
   -d '{
     "email": "analyst@example.com",
@@ -55,7 +55,7 @@ curl -X POST http://localhost:8000/wosoapi/register/ \
 # 2. Check email and click verification link
 
 # 3. Get JWT tokens
-curl -X POST http://localhost:8000/wosoapi/token/ \
+curl -X POST http://wosoapi/token/ \
   -H "Content-Type: application/json" \
   -d '{
     "email": "analyst@example.com", 
@@ -67,15 +67,15 @@ curl -X POST http://localhost:8000/wosoapi/token/ \
 ```bash
 # Get all WSL clubs
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  http://localhost:8000/wosoapi/leagues/wsl/clubs/
+  https://wosoapi/leagues/<int:league_id>/clubs/
 
 # Get all players in Arsenal Women
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  http://localhost:8000/wosoapi/clubs/arsenal-women/players/
+   https://wosoapi/clubs/<int:club_id>/players/
 
 # Get top scorers
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  "http://localhost:8000/wosoapi/players/stats/?ordering=-goals"
+  "https://wosoapi/leagues/<int:league_id>/players/?ordering=-goals"
 ```
 
 ---
@@ -200,7 +200,7 @@ Get access and refresh tokens for authenticated API requests.
 }
 ```
 
-> 🔑 **Token Lifespan:** Access tokens are short-lived, refresh tokens last longer. Check your Django settings for exact durations.
+> 🔑 **Token Lifespan:** Access tokens are short-lived(2hours/120minutes), refresh tokens last longer(7 days).
 
 </details>
 
@@ -225,30 +225,7 @@ Get new access token using valid refresh token.
 
 </details>
 
-### Admin Operations
 
-<details>
-<summary><strong>GET</strong> /wosoapi/admin/delete/ - Delete Unverified Users (Admin Only)</summary>
-
-Administrative endpoint to clean up unverified user accounts.
-
-**Headers Required:**
-```
-Authorization: Bearer ADMIN_ACCESS_TOKEN
-```
-
-**Success Response (200):**
-```json
-{
-  "message": "Successfully deleted 5 unverified users."
-}
-```
-
-> ⚠️ **Admin Only:** Requires superuser permissions.
-
-</details>
-
----
 
 ## ⚽ Football Data API
 

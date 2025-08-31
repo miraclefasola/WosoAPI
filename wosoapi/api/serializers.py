@@ -125,5 +125,5 @@ class GoalkeeperSerializer(serializers.ModelSerializer):
             "saves",
             "save_percentage",
             "clean_sheets",
-            "psxg",
+            "psxg"
         ]

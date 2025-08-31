@@ -1,0 +1,7 @@
+Django>=5.0,<6.0
+djangorestframework>=3.15.0
+djangorestframework-simplejwt>=5.3.0
+django-filter>=24.3
+mysqlclient>=2.2.4   # or PyMySQL if you prefer
+gunicorn>=21.2.0
+python-dotenv>=1.0.1

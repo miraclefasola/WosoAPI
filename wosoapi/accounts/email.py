@@ -13,10 +13,8 @@ def send_verification_email(user):
     from_email = "shetalksfooty@gmail.com"
     to = user.email
 
-    verify_url = f"http://localhost:8000/wosoapi/verify/{uid}/{token}/"
-    # import time
-    # host = "https://abcd1234.ngrok.io"  # your ngrok URL from terminal
-    # verify_url = f"{host}/wosoapi/verify/{uid}/{token}/?ts={int(time.time())}"
+    verify_url = f"https://wosoapi.onrender.com/verify/{uid}/{token}/"
+
 
     # Render HTML template
     html_content = render_to_string(

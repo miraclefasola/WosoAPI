@@ -20,3 +20,4 @@ class IsSuperUserOrReadOnly(BasePermission):
             return request.user.is_superuser
 
         return False
+    

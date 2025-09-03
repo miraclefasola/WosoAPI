@@ -44,7 +44,7 @@ https://wosoapi.com/
 ### 1. Register & Authenticate
 ```bash
 # 1. Register new account
-curl -X POST http://wosoapi/register/ \
+curl -X POST https://wosoapi.onrender.com/register/ \
   -H "Content-Type: application/json" \
   -d '{
     "email": "analyst@example.com",
@@ -55,7 +55,7 @@ curl -X POST http://wosoapi/register/ \
 # 2. Check email and click verification link
 
 # 3. Get JWT tokens
-curl -X POST http://wosoapi/token/ \
+curl -X POST https://wosoapi.onrender.com//token/ \
   -H "Content-Type: application/json" \
   -d '{
     "email": "analyst@example.com", 
@@ -67,15 +67,15 @@ curl -X POST http://wosoapi/token/ \
 ```bash
 # Get all WSL clubs
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  https://wosoapi/leagues/<int:league_id>/clubs/
+  https://wosoapi.onrender.com/leagues/<int:league_id>/clubs/
 
 # Get all players in Arsenal Women
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-   https://wosoapi/clubs/<int:club_id>/players/
+   https://wosoapi.onrender.com/clubs/<int:club_id>/players/
 
 # Get top scorers
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  "https://wosoapi/leagues/<int:league_id>/players/?ordering=-goals"
+  "https://wosoapi.onrender.com/leagues/<int:league_id>/players/?ordering=-goals"
 ```
 
 ---
@@ -87,7 +87,7 @@ curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
 ### Registration & Verification Flow
 
 <details>
-<summary><strong>POST</strong> /wosoapi/register/ - Register New User</summary>
+<summary><strong>POST</strong> /register/ - Register New User</summary>
 
 Create a new user account. Account starts inactive until email verification.
 
@@ -120,7 +120,7 @@ Create a new user account. Account starts inactive until email verification.
 </details>
 
 <details>
-<summary><strong>GET</strong> /wosoapi/verify/{uid}/{token}/ - Verify Email</summary>
+<summary><strong>GET</strong> /verify/{uid}/{token}/ - Verify Email</summary>
 
 Activate user account using verification link from email.
 
@@ -144,7 +144,7 @@ Activate user account using verification link from email.
 </details>
 
 <details>
-<summary><strong>POST</strong> /wosoapi/resend/verify/ - Resend Verification Email</summary>
+<summary><strong>POST</strong> /resend/verify/ - Resend Verification Email</summary>
 
 Request new verification email for unverified accounts.
 
@@ -173,7 +173,7 @@ Request new verification email for unverified accounts.
 ### JWT Token Management
 
 <details>
-<summary><strong>POST</strong> /wosoapi/token/ - Obtain JWT Tokens</summary>
+<summary><strong>POST</strong> /token/ - Obtain JWT Tokens</summary>
 
 Get access and refresh tokens for authenticated API requests.
 
@@ -205,7 +205,7 @@ Get access and refresh tokens for authenticated API requests.
 </details>
 
 <details>
-<summary><strong>POST</strong> /wosoapi/token/refresh/ - Refresh Access Token</summary>
+<summary><strong>POST</strong> /token/refresh/ - Refresh Access Token</summary>
 
 Get new access token using valid refresh token.
 
@@ -236,7 +236,7 @@ Get new access token using valid refresh token.
 ### 🌍 Countries & Leagues
 
 <details>
-<summary><strong>GET</strong> /wosoapi/countries/ - List All Countries</summary>
+<summary><strong>GET</strong> /countries/ - List All Countries</summary>
 
 Get all countries with women's football leagues in the database.
 
@@ -244,7 +244,7 @@ Get all countries with women's football leagues in the database.
 ```json
 [
   {
-    "id": "ENG",
+    "id": "1",
     "name": "England", 
     "code": "ENG",
     "leagues_count": 1
@@ -255,7 +255,7 @@ Get all countries with women's football leagues in the database.
 </details>
 
 <details>
-<summary><strong>GET</strong> /wosoapi/leagues/ - List All Leagues</summary>
+<summary><strong>GET</strong> /leagues/ - List All Leagues</summary>
 
 Get all women's football leagues with basic information.
 
@@ -263,12 +263,10 @@ Get all women's football leagues with basic information.
 ```json
 [
   {
-    "league_id": "wsl",
+    "id": "1",
     "name": "Women's Super League",
     "country": "England",
-    "current_season": "2024/25",
-    "total_clubs": 12,
-    "founded": 2011
+    "total_clubs": 12
   }
 ]
 ```
@@ -278,20 +276,20 @@ Get all women's football leagues with basic information.
 </details>
 
 <details>
-<summary><strong>GET</strong> /wosoapi/leagues/{league_id}/seasons/ - League Seasons</summary>
+<summary><strong>GET</strong> /leagues/{league_id}/seasons/ - League Seasons</summary>
 
 Get all available seasons for a specific league.
 
-**Example:** `/wosoapi/leagues/wsl/seasons/`
+**Example:** `/leagues/1/seasons/`
 
 </details>
 
 <details>
-<summary><strong>GET</strong> /wosoapi/leagues/{league_id}/clubs/ - Clubs in League</summary>
+<summary><strong>GET</strong> /leagues/{league_id}/clubs/ - Clubs in League</summary>
 
 Get all clubs in a specific league with current season performance.
 
-**Example:** `/wosoapi/leagues/wsl/clubs/`
+**Example:** `/wosoapi/leagues/1/clubs/`
 
 *All team statistics sourced from [FBref.com](https://fbref.com)*
 
@@ -303,18 +301,18 @@ Get all clubs in a specific league with current season performance.
 Get all players across all clubs in a league with comprehensive statistics.
 
 **Query Parameters:**
-- `position` - Filter by position (GK, DF, MF, FW)
-- `nationality` - Filter by country
-- `min_goals` - Minimum goals scored
-- `min_minutes` - Minimum minutes played
-- `ordering` - Sort by statistic (e.g., `-goals`, `xg`, `-assists`)
+- `id` - Filter by player id
+- `full_name`- Filter by full name
+- `club` - Filter by club
+- `fbref_id` - filter by fbref_id
+- `ordering` - Sort by `id`, `full_name`, `club`
 
 *Player statistics sourced from [FBref.com](https://fbref.com)*
 
 </details>
 
 <details>
-<summary><strong>GET</strong> /wosoapi/leagues/{league_id}/goalkeepers/ - All League Goalkeepers</summary>
+<summary><strong>GET</strong> /leagues/{league_id}/goalkeepers/ - All League Goalkeepers</summary>
 
 Get all goalkeepers across all clubs in a league with specialized goalkeeper statistics.
 
@@ -340,30 +338,30 @@ Get all clubs across all leagues and seasons.
 
 **Query Parameters:**
 - `league` - Filter by league
-- `country` - Filter by country
+
 - `search` - Search by club name
 
 </details>
 
 <details>
-<summary><strong>GET</strong> /wosoapi/clubs/{club_id}/ - Club Profile & Stats</summary>
+<summary><strong>GET</strong> /clubs/{club_id}/ - Club Profile & Stats</summary>
 
 Get comprehensive club information and detailed season statistics.
 
-**Example:** `/wosoapi/clubs/arsenal-women/`
+**Example:** `/clubs/1/`
 
 **Response includes:**
 - Club basic information
-- Current season performance
+
 - Historical data (if available)
-- Squad summary statistics
+
 
 *All club statistics sourced from [FBref.com](https://fbref.com)*
 
 </details>
 
 <details>
-<summary><strong>GET</strong> /wosoapi/club/stats/ - All Club Statistics</summary>
+<summary><strong>GET</strong> /clubstats/ - All Club Statistics</summary>
 
 Get statistical data for all clubs across all seasons.
 
@@ -379,23 +377,18 @@ Get statistical data for all clubs across all seasons.
 </details>
 
 <details>
-<summary><strong>GET</strong> /wosoapi/clubs/{club_id}/players/ - Club Players</summary>
+<summary><strong>GET</strong> /clubs/{club_id}/players/ - Club Players</summary>
 
 Get all players in a specific club with their comprehensive season statistics.
 
 **Example:** `/wosoapi/clubs/arsenal-women/players/`
-
-**Query Parameters:**
-- `position` - Filter by position
-- `min_minutes` - Minimum minutes played
-- `ordering` - Sort by statistic
 
 *Player statistics sourced from [FBref.com](https://fbref.com)*
 
 </details>
 
 <details>
-<summary><strong>GET</strong> /wosoapi/clubs/{club_id}/goalkeepers/ - Club Goalkeepers</summary>
+<summary><strong>GET</strong> /clubs/{club_id}/goalkeepers/ - Club Goalkeepers</summary>
 
 Get all goalkeepers in a specific club with specialized goalkeeper statistics.
 
@@ -406,28 +399,21 @@ Get all goalkeepers in a specific club with specialized goalkeeper statistics.
 ### 👩‍⚽ Players
 
 <details>
-<summary><strong>GET</strong> /wosoapi/players/ - All Players</summary>
+<summary><strong>GET</strong> /players/ - All Players</summary>
 
 Get list of all players across all clubs and leagues.
 
-**Query Parameters:**
-- `club` - Filter by club ID
-- `league` - Filter by league
-- `position` - Filter by position (GK, DF, MF, FW)
-- `nationality` - Filter by country
-- `search` - Search by player name
-- `age_min` / `age_max` - Age range filter
+
 
 **Response:**
 ```json
 [
   {
-    "player_id": "vivianne-miedema",
-    "name": "Vivianne Miedema",
-    "club": "Arsenal Women", 
-    "position": "FW",
-    "age": 27,
-    "nationality": "Netherlands"
+    "player_id": "250",
+    "full_name": "Mariona Caldentey",
+    "club": "Arsenal", 
+    "fbref_id":"4671156"
+
   }
 ]
 ```
@@ -435,43 +421,39 @@ Get list of all players across all clubs and leagues.
 </details>
 
 <details>
-<summary><strong>GET</strong> /wosoapi/players/stats/ - All Player Statistics</summary>
+<summary><strong>GET</strong> /playerstats/ - All Player Statistics</summary>
 
 Get comprehensive statistical data for all players with advanced analytics.
 
 **Query Parameters:**
 - `season` - Filter by season
-- `club` - Filter by club
 - `position` - Filter by position
-- `min_minutes` - Minimum minutes played
+- `minutes_played` - Minutes played
 - `ordering` - Sort by stat (e.g., `goals`, `-xg`, `assists`, `-progressive_passes`)
 
 **Response includes extensive FBref statistics:**
 - **Basic:** matches_played, starts, minutes, goals, assists
-- **Expected:** xg, xa, npxg, npxg_xa
-- **Shooting:** shots, shots_on_target, shot_conversion
-- **Passing:** pass_completion, progressive_passes, key_passes
-- **Progression:** progressive_carries, carries_distance
-- **Defending:** tackles, interceptions, blocks, clearances
-- **Discipline:** yellow_cards, red_cards, fouls
-- **Per 90 Stats:** goals_per90, assists_per90, xg_per90
+- **Expected:** xg, xa, npxg, 
+- **Shooting:** shots, shots_target, shots_creation_action
+- **Passing:** passes_to_final_3rd,passes_to_pen_area
+- **Progression:** prog_carries, carries_to_final_3rd, carries_to_pen_area
+- **Defending:** tackles, interceptions, tackles_won
+- **Discipline:** yellow_cards, red_cards, fouls_won,fouls_commited
 
 *All player statistics sourced from [FBref.com](https://fbref.com)*
 
 </details>
 
 <details>
-<summary><strong>GET</strong> /wosoapi/players/{player_id}/ - Player Profile</summary>
+<summary><strong>GET</strong> /players/{player_id}/ - Player Profile</summary>
 
 Get detailed player information and complete statistical history.
 
-**Example:** `/wosoapi/players/sam-kerr/`
+**Example:** `/wosoapi/players/`
 
 **Response includes:**
-- Personal information and career details
-- Current season performance
-- Historical statistics
-- Advanced analytics and per-90 metrics
+- Personal information 
+
 
 *Player data sourced from [FBref.com](https://fbref.com)*
 
@@ -480,30 +462,27 @@ Get detailed player information and complete statistical history.
 ### 🥅 Goalkeepers
 
 <details>
-<summary><strong>GET</strong> /wosoapi/goalkeepers/ - All Goalkeepers</summary>
+<summary><strong>GET</strong> /goalkeepers/ - All Goalkeepers</summary>
 
 Get list of all goalkeepers across leagues with specialized filtering.
 
 **Query Parameters:**
 - `club` - Filter by club
 - `league` - Filter by league  
-- `nationality` - Filter by country
-- `min_minutes` - Minimum minutes played
-- `ordering` - Sort by goalkeeper stats (e.g., `-save_percentage`, `goals_against`)
+- `minutes` - Minutes played
+- `ordering` - Sort by goalkeeper stats (e.g., `-save_percentage`, `goals_conceded`)
 
 </details>
 
 <details>
-<summary><strong>GET</strong> /wosoapi/goalkeepers/{goalkeeper_id}/ - Goalkeeper Profile</summary>
+<summary><strong>GET</strong> /goalkeepers/{goalkeeper_id}/ - Goalkeeper Profile</summary>
 
 Get detailed goalkeeper profile with specialized statistics and career history.
 
 **Response includes:**
 - **Shot Stopping:** saves, save_percentage, goals_against
-- **Advanced Metrics:** post_shot_xg, goals_prevented, shot_stopping_performance
-- **Distribution:** launch_completion, pass_completion, distribution_distance
-- **Penalty Stats:** penalties_faced, penalties_saved, penalty_save_rate
-- **Sweeping Actions:** actions_outside_penalty_area
+- **Advanced Metrics:** post_shot_xg, 
+
 
 *All goalkeeper statistics sourced from [FBref.com](https://fbref.com)*
 
@@ -516,43 +495,43 @@ Get detailed goalkeeper profile with specialized statistics and career history.
 ### 🌍 **Countries**
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/wosoapi/countries/` | GET | Get all countries with women's football data |
+| `/countries/` | GET | Get all countries with women's football data |
 
 ### 🏆 **Leagues**  
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/wosoapi/leagues/` | GET | Get all leagues |
-| `/wosoapi/leagues/{league_id}/seasons/` | GET | Get all seasons for a specific league |
-| `/wosoapi/leagues/{league_id}/clubs/` | GET | Get all clubs in a specific league |
-| `/wosoapi/leagues/{league_id}/players/` | GET | Get all players in clubs of a specific league |
-| `/wosoapi/leagues/{league_id}/goalkeepers/` | GET | Get all goalkeepers in clubs of a specific league |
+| `/leagues/` | GET | Get all leagues |
+| `/leagues/{league_id}/seasons/` | GET | Get all seasons for a specific league |
+| `/leagues/{league_id}/clubs/` | GET | Get all clubs in a specific league |
+| `/leagues/{league_id}/players/` | GET | Get all players in clubs of a specific league |
+| `/leagues/{league_id}/goalkeepers/` | GET | Get all goalkeepers in clubs of a specific league |
 
 ### 📅 **Seasons**
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/wosoapi/season/` | GET | Get all seasons across all leagues |
+| `/seasons/` | GET | Get all seasons across all leagues |
 
 ### 🏟️ **Clubs**
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/wosoapi/club/` | GET | Get all clubs |
-| `/wosoapi/clubs/{club_id}/` | GET | Get details + stats of a specific club |
-| `/wosoapi/club/stats/` | GET | Get all club stats (across seasons) |
-| `/wosoapi/clubs/{club_id}/players/` | GET | Get all players (with stats) in a specific club |
-| `/wosoapi/clubs/{club_id}/goalkeepers/` | GET | Get all goalkeepers (with stats) in a specific club |
+| `/club/` | GET | Get all clubs |
+| `/clubs/{club_id}/` | GET | Get details + stats of a specific club |
+| `/clubstats/` | GET | Get all club stats (across seasons) |
+| `/clubs/{club_id}/players/` | GET | Get all players (with stats) in a specific club |
+| `/clubs/{club_id}/goalkeepers/` | GET | Get all goalkeepers (with stats) in a specific club |
 
 ### 👩‍⚽ **Players**
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/wosoapi/players/` | GET | Get all players |
-| `/wosoapi/players/stats/` | GET | Get all player stats (across seasons) |
-| `/wosoapi/players/{player_id}/` | GET | Get details + stats of a specific player |
+| `/players/` | GET | Get all players |
+| `/players/stats/` | GET | Get all player stats (across seasons) |
+| `/players/{player_id}/` | GET | Get details + stats of a specific player |
 
 ### 🧤 **Goalkeepers**
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/wosoapi/goalkeepers/` | GET | Get all goalkeepers |
-| `/wosoapi/goalkeepers/{goalkeeper_id}/` | GET | Get details + stats of a specific goalkeeper |
+| `/goalkeepers/` | GET | Get all goalkeepers |
+| `/goalkeepers/{goalkeeper_id}/` | GET | Get details + stats of a specific goalkeeper |
 
 ---
 
@@ -560,35 +539,71 @@ Get detailed goalkeeper profile with specialized statistics and career history.
 
 ### 🎯 Top Performers
 ```bash
-# Top 10 goal scorers in WSL
-GET /wosoapi/players/stats/?league=wsl&ordering=-goals&min_minutes=500
+# Top 10 goal scorers in WSL (2023/24, league filter)
+GET /playerstats/?season=2023/24&player__club__league__code=WSL&ordering=-goals&minutes_played__gte=500&limit=10
 
-# Best passers by completion rate
-GET /wosoapi/players/stats/?position=MF&ordering=-pass_completion&min_minutes=300
+# Top 5 goal scorers in Arsenal Women (2023/24, league + club filter)
+GET /playerstats/?season=2023/24&player__club__league__code=WSL&player__club__name=Arsenal&ordering=-goals&limit=10
 
-# Most progressive players
-GET /wosoapi/players/stats/?ordering=-progressive_passes&min_minutes=400
+# Best passers by completion (all leagues, 2023/24)
+GET /playerstats/?season=2023/24&position=MF&ordering=-passes_comp&minutes_played__gte=300
+
+# Most progressive players in UWCL (2023/24, league filter)
+GET /playerstats/?season=2023/24&player__club__league__code=UWCL&ordering=-prog_carries&minutes_played__gte=400
+
+# Top 10 assist providers in Chelsea Women (2023/24, club filter)
+GET /playerstats/?season=2023/24&player__club__name=Chelsea&ordering=-assists&limit=10
+
+# Most minutes played in Arsenal Women (2023/24, league + club filter)
+GET /playerstats/?season=2023/24&player__club__league__code=WSL&player__club__name=Arsenal&ordering=-minutes_played&limit=10
+
+
+
 ```
 
 ### ⚡ Advanced Analytics
 ```bash
-# Highest xG performers
-GET /wosoapi/players/stats/?ordering=-xg&position=FW
+# Highest xG performers, forwards in WSL (2023/24, league filter)
+GET /playerstats/?season=2023/24&player__club__league__code=WSL&position=FW&ordering=-xg
 
-# Most efficient finishers (goals vs xG)
-GET /wosoapi/players/stats/?ordering=-goals&min_minutes=600
+# Underperforming strikers in UWCL (high xG but ≤2 goals, 2023/24, league filter)
+GET /playerstats/?season=2023/24&player__club__league__code=WSL&position=FW&ordering=-xg&goals__lte=2
 
-# Best defensive midfielders
-GET /wosoapi/players/stats/?position=MF&ordering=-tackles&min_minutes=500
+# Best defensive midfielders in Arsenal Women (2023/24, league + club filter)
+GET /playerstats/?season=2023/24&player__club__league__code=WSL&player__club__name=Arsenal&position=MF&ordering=-tackles&minutes_played__gte=500
+
+# Most ball-winning midfielders (global, tackles + interceptions, 2023/24)
+GET /playerstats/?season=2023/24&position=MF&ordering=-tackles&ordering=-interceptions
+
+# Best young forwards in WSL (under 23, 2023/24, league filter)
+GET /playerstats/?season=2023/24&player__club__league__code=WSL&player__age__lte=23&position=FW&minutes_played__gte=300&ordering=-goals
+
+# Ball-playing defenders in Barcelona Femení (2023/24, league + club filter)
+GET /playerstats/?season=2023/24&player__club__league__code=UWCL&player__club__name=Barcelona&position=DF&ordering=-prog_carries&minutes_played__gte=700
 ```
 
 ### 🥅 Goalkeeper Analytics
 ```bash
-# Best shot stoppers
-GET /wosoapi/goalkeepers/?ordering=-save_percentage&min_minutes=450
+# Best shot stoppers in WSL (2023/24, league filter)
+GET /goalkeepers/?season=2023/24&player__club__league__code=WSL&ordering=-save_percentage&minutes_played__gte=450
 
-# Goalkeepers preventing most goals vs xG
-GET /wosoapi/goalkeepers/?ordering=-goals_prevented
+# Goalkeepers with most clean sheets in Chelsea Women (2023/24, club filter)
+GET /goalkeepers/?season=2023/24&player__club__name=Chelsea&ordering=-clean_sheets
+
+# Goalkeepers preventing most goals vs xG in UWCL (2023/24, league filter)
+GET /goalkeepers/?season=2023/24&player__club__league__code=UWCL&ordering=-psxg
+# Best shot stoppers (2023/24)
+GET /goalkeepers/?season=2023/24&ordering=-save_percentage&minutes_played__gte=450
+
+# Most saves (2023/24)
+GET /goalkeepers/?season=2023/24&ordering=-saves&limit=5
+
+# Most clean sheets (2023/24)
+GET /goalkeepers/?season=2023/24&ordering=-clean_sheets
+
+# Preventing most goals vs xG (2023/24)
+GET /goalkeepers/?season=2023/24&ordering=-psxg
+
 ```
 
 ---
@@ -604,19 +619,17 @@ GET /wosoapi/goalkeepers/?ordering=-goals_prevented
 **Outfield Player Stats:**
 - **Basic Performance:** matches, starts, minutes, goals, assists
 - **Expected Stats:** xG, xA, npxG (non-penalty expected goals)
-- **Shooting:** shots, shots on target, conversion rates
-- **Passing:** completion rates, progressive passes, key passes
-- **Ball Progression:** progressive carries, dribbles, carry distance
-- **Defending:** tackles, interceptions, blocks, clearances, aerial duels
-- **Discipline:** yellow cards, red cards, fouls committed/drawn
-- **Per 90 Metrics:** All major stats normalized per 90 minutes
+- **Shooting:** shots, shots on target
+- **Passing:**  progressive passes,   passes_to_pen_area, 
+- **Ball Progression:** dribbles, carries_to_final_3rd, carries_to_pen_area, passes_to_final_3rd, prog_carries
+- **Defending:** tackles, interceptions
+- **Discipline:** yellow cards, red cards, fouls committed/won
+
 
 **Goalkeeper-Specific Stats:**
-- **Shot Stopping:** saves, save percentage, goals against
-- **Advanced Metrics:** post-shot xG, goals prevented
-- **Distribution:** launch completion, pass accuracy, distribution distance  
-- **Penalty Situations:** penalties faced, saved, save rate
-- **Sweeping:** actions outside penalty area, defensive actions
+- **Shot Stopping:** saves, save percentage, goals conceded
+- **Advanced Metrics:** post-shot xG
+
 
 *All statistics collected and calculated by [FBref.com](https://fbref.com)*
 
@@ -653,14 +666,6 @@ GET /wosoapi/goalkeepers/?ordering=-goals_prevented
 - **429** - Rate limit exceeded
 - **500** - Internal server error
 
-### Error Response Format
-```json
-{
-  "error": "Resource not found",
-  "code": "PLAYER_NOT_FOUND", 
-  "details": "Player with ID 'invalid-id' does not exist"
-}
-```
 
 ---
 
@@ -708,7 +713,7 @@ python manage.py runserver
 import requests
 
 # 1. Register
-response = requests.post('http://localhost:8000/wosoapi/register/', json={
+response = requests.post('https://wosoapi.onrender.com/register/', json={
     'email': 'dev@example.com',
     'password': 'DevPass123!',
     'password_confirm': 'DevPass123!'
@@ -717,7 +722,7 @@ response = requests.post('http://localhost:8000/wosoapi/register/', json={
 # 2. Verify email (check inbox)
 
 # 3. Get tokens
-response = requests.post('http://localhost:8000/wosoapi/token/', json={
+response = requests.post('https://wosoapi.onrender.com//token/', json={
     'email': 'dev@example.com',
     'password': 'DevPass123!'
 })
@@ -727,26 +732,26 @@ access_token = tokens['access']
 
 # 4. Make authenticated requests
 headers = {'Authorization': f'Bearer {access_token}'}
-players = requests.get('http://localhost:8000/wosoapi/players/', headers=headers)
+players = requests.get('https://wosoapi.onrender.com/players/', headers=headers)
 ```
 
 ### 3. Common Patterns
 ```python
 # Get top scorers
 top_scorers = requests.get(
-    'http://localhost:8000/wosoapi/players/stats/?ordering=-goals&min_minutes=500',
+    'https://wosoapi.onrender.com/players/stats/?ordering=-goals&min_minutes=500',
     headers=headers
 ).json()
 
 # Get Arsenal squad
 arsenal_players = requests.get(
-    'http://localhost:8000/wosoapi/clubs/arsenal-women/players/',
+    'https://wosoapi.onrender.com//clubs/arsenal-women/players/',
     headers=headers  
 ).json()
 
 # Get WSL goalkeepers by save percentage
 best_keepers = requests.get(
-    'http://localhost:8000/wosoapi/leagues/wsl/goalkeepers/?ordering=-save_percentage',
+    'https://wosoapi.onrender.com/leagues/wsl/goalkeepers/?ordering=-save_percentage',
     headers=headers
 ).json()
 ```
@@ -756,9 +761,9 @@ best_keepers = requests.get(
 ## 💡 Support & Contributing
 
 **Questions or Issues?**
-- 📧 Email: api@woso.dev
-- 🐦 Twitter: [@your_twitter_handle]
-- 📚 Full Documentation: https://docs.woso.dev
+- 📧 Email: fasolamiracle001@gmail.com
+- 🐦 Twitter: [@Justmimi___]
+<!-- - 📚 Full Documentation: -->
 
 **Data Attribution:**
 Please acknowledge [**FBref.com**](https://fbref.com) when using this API's data in your applications, research, or publications.

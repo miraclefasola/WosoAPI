@@ -5,7 +5,7 @@ from api.models import *
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
-        fields = ["id", "name"]
+        fields = ["id", "name", "code"]
 
 
 class LeagueSerializer(serializers.ModelSerializer):
@@ -18,7 +18,7 @@ class LeagueSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = League
-        fields = ["id", "name", "country", "country_id"]
+        fields = ["id", "name", "country", "country_id", "code", "total_clubs"]
 
 
 class SeasonSerializer(serializers.ModelSerializer):
@@ -143,6 +143,8 @@ class PlayerSeasonStatsSerializer(serializers.ModelSerializer):
             "interceptions",
             "touches",
             "take_ons",
+            "fouls_won"
+            "fouls_commited",
             "carries_to_final_3rd",
             "carries_to_pen_area",
             "yellow_card",

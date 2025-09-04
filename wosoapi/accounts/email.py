@@ -3,6 +3,7 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
+from datetime import datetime
 
 
 def send_verification_email(user):
@@ -18,7 +19,7 @@ def send_verification_email(user):
 
     # Render HTML template
     html_content = render_to_string(
-        "emails/verify_email.html", {"user": user, "verification_link": verify_url}
+        "emails/verify_email.html", {"user": user, "verification_link": verify_url, "current_year": datetime.now().year}
     )
 
     # Plain text fallback

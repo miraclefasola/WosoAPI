@@ -15,6 +15,7 @@ class League(models.Model):
     )
     name = models.CharField(max_length=100)
     total_clubs= models.IntegerField(null=  True, blank=True)
+    code= models.CharField(max_length=10,unique=True, null=True, blank=True)
 
     def __str__(self):
         return f"{self.name}, {self.country}"

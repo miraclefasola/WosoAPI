@@ -70,7 +70,7 @@ class SeasonView(ModelViewSet):
 
     ordering_fields = ["id", "season", "league__name"]
     search_fields = ["id", "season", "league__name"]
-    ordering = ["season"]
+    ordering = ["season", "league__name"]
     filterset_fields = {
         "id": ["exact"],
         "season": ["exact", "icontains"],
@@ -91,7 +91,7 @@ class Clubview(ModelViewSet):
 
     ordering_fields = ["id", "name", "fbref_id", "league__name"]
     search_fields = ["id", "name", "fbref_id", "league__name"]
-    ordering = ["name"]
+    ordering = ["name", "fbref_id"]
     filterset_fields = {
         "id": ["exact"],
         "name": ["exact", "icontains"],
@@ -272,7 +272,7 @@ class PlayerSeasonStatsView(ModelViewSet):
         "yellow_card",
         "red_card",
     ]
-    ordering = ["position"]
+    ordering = ["-goals", "-assists", "-minutes_played", "player__full_name"]
     filterset_fields = {
         "id": ["exact"],
         "fouls_commited": ["exact", "gte", "lte", "range"],
@@ -348,7 +348,7 @@ class GoalkeeperView(ModelViewSet):
         "clean_sheets",
         "psxg",
     ]
-    ordering = ["matches_played"]
+    ordering = ["matches_played", "minutes_played", "goals_conceded", "player__full_name"]
     filterset_fields = {
         "player__full_name": ["exact", "icontains"],
         "player__club__name": ["exact", "icontains"],
@@ -378,7 +378,7 @@ class LeagueSeasonView(ListAPIView):
 
     ordering_fields = ["id", "season", "league__name"]
     search_fields = ["id", "season", "league__name"]
-    ordering = ["season"]
+    ordering = ["season", "league__name"]
     filterset_fields = {
         "id": ["exact"],
         "season": ["exact", "icontains"],
@@ -404,7 +404,7 @@ class LeagueClubView(ListAPIView):
 
     ordering_fields = ["id", "name", "fbref_id", "league__name"]
     search_fields = ["id", "name", "fbref_id", "league__name"]
-    ordering = ["name"]
+    ordering = ["name","fbref_id"]
     filterset_fields = {
         "id": ["exact"],
         "name": ["exact", "icontains"],
@@ -431,7 +431,7 @@ class LeaguePlayerView(ListAPIView):
 
     ordering_fields = ["id", "full_name", "fbref_id", "club__name"]
     search_fields = ["id", "full_name", "fbref_id", "club__name"]
-    ordering = ["full_name"]
+    ordering = ["full_name","fbref_id"]
     filterset_fields = {
         "id": ["exact"],
         "full_name": ["exact", "icontains"],
@@ -484,7 +484,7 @@ class LeagueGoalkeeperView(ListAPIView):
         "clean_sheets",
         "psxg",
     ]
-    ordering = ["matches_played"]
+    ordering = ["matches_played","minutes_played","goals_conceded", "psxg", "player__full_name"]
     filterset_fields = {
         "player__full_name": ["exact", "icontains"],
         "player__club__name": ["exact", "icontains"],
@@ -660,7 +660,7 @@ class ClubPlayerView(ListAPIView):
         "yellow_card",
         "red_card",
     ]
-    ordering = ["position"]
+    ordering = ["-goals", "-assists", "-minutes_played", "player__full_name"]
     filterset_fields = {
         "id": ["exact"],
         "fouls_commited": ["exact", "gte", "lte", "range"],
@@ -738,7 +738,7 @@ class ClubGoalkeeperView(ListAPIView):
         "clean_sheets",
         "psxg",
     ]
-    ordering = ["matches_played"]
+    ordering = ["matches_played","minutes_played","goals_conceded", "psxg", "player__full_name"]
     filterset_fields = {
         "player__full_name": ["exact", "icontains"],
         "player__club__name": ["exact", "icontains"],

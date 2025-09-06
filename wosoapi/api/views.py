@@ -12,7 +12,6 @@ from django_filters.filters import OrderingFilter
 from rest_framework import filters
 
 
-
 class CountryView(ModelViewSet):
     permission_classes = [IsSuperUserOrReadOnly]
     serializer_class = CountrySerializer
@@ -23,11 +22,11 @@ class CountryView(ModelViewSet):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    
-    ordering_fields = ["id", "name"]
-    search_fields = ["id", "name"]
-    ordering=["name"]
-    filterset_fields = ["id", "name"]
+
+    ordering_fields = ["id", "name", "code"]
+    search_fields = ["id", "name", "code"]
+    ordering = ["name"]
+    filterset_fields = ["id", "name", "code"]
 
 
 class LeagueView(ModelViewSet):
@@ -40,11 +39,13 @@ class LeagueView(ModelViewSet):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    
-    ordering_fields = ["id", "name", "country"]
-    search_fields = ["id", "name", "country"]
-    ordering=['name']
-    filterset_fields = ["id", "name", "country"]
+
+    # Corrected 'country' to 'country__name' or 'country__code' for ordering/searching on the related field.
+    ordering_fields = ["id", "name", "country__name", "code", "total_clubs"]
+    search_fields = ["id", "name", "country__name", "code", "total_clubs"]
+    ordering = ["name"]
+    filterset_fields = ["id", "name", "country__name", "code", "total_clubs"]
+
 
 class SeasonView(ModelViewSet):
     permission_classes = [IsSuperUserOrReadOnly]
@@ -57,11 +58,12 @@ class SeasonView(ModelViewSet):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    
-    ordering_fields = ["id", "season", "league"]
-    search_fields = ["id", "season", "league"]
-    ordering=["season"]
-    filterset_fields = ["id", "season", "league"]
+
+    # Corrected 'league' to 'league__name' for ordering/searching on the related field.
+    ordering_fields = ["id", "season", "league__name"]
+    search_fields = ["id", "season", "league__name"]
+    ordering = ["season"]
+    filterset_fields = ["id", "season", "league__name"]
 
 
 class Clubview(ModelViewSet):
@@ -74,11 +76,12 @@ class Clubview(ModelViewSet):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    
-    ordering_fields = ["id", "name", "fbref_id", "league"]
-    search_fields = ["id", "name", "fbref_id", "league"]
-    ordering=["name"]
-    filterset_fields = ["id", "name", "fbref_id", "league"]
+
+    # Corrected 'league' to 'league__name' for ordering/searching on the related field.
+    ordering_fields = ["id", "name", "fbref_id", "league__name"]
+    search_fields = ["id", "name", "fbref_id", "league__name"]
+    ordering = ["name"]
+    filterset_fields = ["id", "name", "fbref_id", "league__name"]
 
 
 class ClubSeasonStatView(ModelViewSet):
@@ -91,12 +94,72 @@ class ClubSeasonStatView(ModelViewSet):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    
-    ordering_fields = ["id","club","season","points_won","league_position","matches_played","win","draw","lost","goals_scored","goals_conceded","xg_created","xg_conceded","shots","shots_target","passes","passes_comp","passes_to_final_third","passes_to_pen_area"]
-    search_fields = ["id","club","season","points_won","league_position","matches_played","win","draw","lost","goals_scored","goals_conceded","xg_created","xg_conceded","shots","shots_target","passes","passes_comp","passes_to_final_third","passes_to_pen_area"]
-    ordering=["league_position"]
-    filterset_fields = ["id","club","season","points_won","league_position","matches_played","win","draw","lost","goals_scored","goals_conceded","xg_created","xg_conceded","shots","shots_target","passes","passes_comp","passes_to_final_third","passes_to_pen_area"]
 
+    # Corrected 'club' and 'season' to 'club__name' and 'season__season'
+    ordering_fields = [
+        "id",
+        "club__name",
+        "season__season",
+        "points_won",
+        "league_position",
+        "matches_played",
+        "win",
+        "draw",
+        "lost",
+        "goals_scored",
+        "goals_conceded",
+        "xg_created",
+        "xg_conceded",
+        "shots",
+        "shots_target",
+        "passes",
+        "passes_comp",
+        "passes_to_final_third",
+        "passes_to_pen_area",
+    ]
+    search_fields = [
+        "id",
+        "club__name",
+        "season__season",
+        "points_won",
+        "league_position",
+        "matches_played",
+        "win",
+        "draw",
+        "lost",
+        "goals_scored",
+        "goals_conceded",
+        "xg_created",
+        "xg_conceded",
+        "shots",
+        "shots_target",
+        "passes",
+        "passes_comp",
+        "passes_to_final_third",
+        "passes_to_pen_area",
+    ]
+    ordering = ["league_position"]
+    filterset_fields = [
+        "id",
+        "club__name",
+        "season__season",
+        "points_won",
+        "league_position",
+        "matches_played",
+        "win",
+        "draw",
+        "lost",
+        "goals_scored",
+        "goals_conceded",
+        "xg_created",
+        "xg_conceded",
+        "shots",
+        "shots_target",
+        "passes",
+        "passes_comp",
+        "passes_to_final_third",
+        "passes_to_pen_area",
+    ]
 
 
 class PlayerView(ModelViewSet):
@@ -109,12 +172,12 @@ class PlayerView(ModelViewSet):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    
-    ordering_fields = ["id", "full_name", "fbref_id", "club"]
-    search_fields = ["id", "full_name", "fbref_id", "club"]
-    ordering=["full_name"]
-    filterset_fields = ["id", "full_name", "fbref_id", "club"]
-    
+
+    # Corrected 'club' to 'club__name'
+    ordering_fields = ["id", "full_name", "fbref_id", "club__name"]
+    search_fields = ["id", "full_name", "fbref_id", "club__name"]
+    ordering = ["full_name"]
+    filterset_fields = ["id", "full_name", "fbref_id", "club__name"]
 
 
 class PlayerSeasonStatsView(ModelViewSet):
@@ -127,13 +190,103 @@ class PlayerSeasonStatsView(ModelViewSet):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    
-    ordering_fields = ["id", "player__full_name", "player__club__name", "season__season", "position", "age", "matches_played", "minutes_played", "goals", "assists", "xg", "npxg", "prog_carries", "shots_target", "passes_to_final_3rd", "passes_to_pen_area", "shots_creation_action", "tackles", "tackles_won", "interceptions", "touches", "take_ons", "carries_to_final_3rd", "carries_to_pen_area", "yellow_card", "red_card"
-]
-    search_fields = ["id", "player__full_name", "player__club__name", "season__season", "position", "age", "matches_played", "minutes_played", "goals", "assists", "xg", "npxg", "prog_carries", "shots_target", "passes_to_final_3rd", "passes_to_pen_area", "shots_creation_action", "tackles", "tackles_won", "interceptions", "touches", "take_ons", "carries_to_final_3rd", "carries_to_pen_area", "yellow_card", "red_card"]
-    ordering=["position"]
-    filterset_fields = ["id", "player__full_name", "player__club__name", "season__season", "position", "age", "matches_played", "minutes_played", "goals", "assists", "xg", "npxg", "prog_carries", "shots_target", "passes_to_final_3rd", "passes_to_pen_area", "shots_creation_action", "tackles", "tackles_won", "interceptions", "touches", "take_ons", "carries_to_final_3rd", "carries_to_pen_area", "yellow_card", "red_card"
-]
+
+    # Crucial change: Added related lookups for 'player__club__league__code' to enable the requested filter.
+    # Also added the missing fields from the model to the filterset.
+    ordering_fields = [
+        "id",
+        "fouls_commited",
+        "fouls_won",
+        "player__full_name",
+        "player__club__name",
+        "player__club__league__code",
+        "season__season",
+        "position",
+        "age",
+        "matches_played",
+        "minutes_played",
+        "goals",
+        "assists",
+        "xg",
+        "npxg",
+        "prog_carries",
+        "shots_target",
+        "passes_to_final_3rd",
+        "passes_to_pen_area",
+        "shots_creation_action",
+        "tackles",
+        "tackles_won",
+        "interceptions",
+        "touches",
+        "take_ons",
+        "carries_to_final_3rd",
+        "carries_to_pen_area",
+        "yellow_card",
+        "red_card",
+    ]
+    search_fields = [
+        "id",
+        "fouls_commited",
+        "fouls_won",
+        "player__full_name",
+        "player__club__name",
+        "player__club__league__code",
+        "season__season",
+        "position",
+        "age",
+        "matches_played",
+        "minutes_played",
+        "goals",
+        "assists",
+        "xg",
+        "npxg",
+        "prog_carries",
+        "shots_target",
+        "passes_to_final_3rd",
+        "passes_to_pen_area",
+        "shots_creation_action",
+        "tackles",
+        "tackles_won",
+        "interceptions",
+        "touches",
+        "take_ons",
+        "carries_to_final_3rd",
+        "carries_to_pen_area",
+        "yellow_card",
+        "red_card",
+    ]
+    ordering = ["position"]
+    filterset_fields = [
+        "id",
+        "fouls_commited",
+        "fouls_won",
+        "player__full_name",
+        "player__club__name",
+        "player__club__league__code",
+        "season__season",
+        "position",
+        "age",
+        "matches_played",
+        "minutes_played",
+        "goals",
+        "assists",
+        "xg",
+        "npxg",
+        "prog_carries",
+        "shots_target",
+        "passes_to_final_3rd",
+        "passes_to_pen_area",
+        "shots_creation_action",
+        "tackles",
+        "tackles_won",
+        "interceptions",
+        "touches",
+        "take_ons",
+        "carries_to_final_3rd",
+        "carries_to_pen_area",
+        "yellow_card",
+        "red_card",
+    ]
 
 
 class GoalkeeperView(ModelViewSet):
@@ -146,14 +299,54 @@ class GoalkeeperView(ModelViewSet):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    
-    ordering_fields = ["player__full_name", "player__club__name", "season__season", "age", "matches_played", "minutes_played", "goals_conceded", "shots_faced", "saves", "save_percentage", "clean_sheets", "psxg"
-]
-    search_fields = ["player__full_name", "player__club__name", "season__season", "age", "matches_played", "minutes_played", "goals_conceded", "shots_faced", "saves", "save_percentage", "clean_sheets", "psxg"
-]
-    ordering=["matches_played"]
-    filterset_fields = ["player__full_name", "player__club__name", "season__season", "age", "matches_played", "minutes_played", "goals_conceded", "shots_faced", "saves", "save_percentage", "clean_sheets", "psxg"
-]
+
+    # Corrected 'id' not being in the model and added 'player__club__league__code'.
+    ordering_fields = [
+        "player__full_name",
+        "player__club__name",
+        "player__club__league__code",
+        "season__season",
+        "age",
+        "matches_played",
+        "minutes_played",
+        "goals_conceded",
+        "shots_faced",
+        "saves",
+        "save_percentage",
+        "clean_sheets",
+        "psxg",
+    ]
+    search_fields = [
+        "player__full_name",
+        "player__club__name",
+        "player__club__league__code",
+        "season__season",
+        "age",
+        "matches_played",
+        "minutes_played",
+        "goals_conceded",
+        "shots_faced",
+        "saves",
+        "save_percentage",
+        "clean_sheets",
+        "psxg",
+    ]
+    ordering = ["matches_played"]
+    filterset_fields = [
+        "player__full_name",
+        "player__club__name",
+        "player__club__league__code",
+        "season__season",
+        "age",
+        "matches_played",
+        "minutes_played",
+        "goals_conceded",
+        "shots_faced",
+        "saves",
+        "save_percentage",
+        "clean_sheets",
+        "psxg",
+    ]
 
 
 class LeagueSeasonView(ListAPIView):
@@ -165,12 +358,12 @@ class LeagueSeasonView(ListAPIView):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    
-    ordering_fields = ["id", "season", "league"]
-    search_fields = ["id", "season", "league"]
-    ordering=["season"]
-    filterset_fields = ["id", "season", "league"]
 
+    # Corrected 'league' to 'league__name'
+    ordering_fields = ["id", "season", "league__name"]
+    search_fields = ["id", "season", "league__name"]
+    ordering = ["season"]
+    filterset_fields = ["id", "season", "league__name"]
 
     def get_queryset(self):
         league_id = self.kwargs.get("league_id")
@@ -188,11 +381,14 @@ class LeagueClubView(ListAPIView):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    
-    ordering_fields = ["id", "name", "fbref_id", "league"]
-    search_fields = ["id", "name", "fbref_id", "league"]
-    ordering=["league_position"]
-    filterset_fields = ["id", "name", "fbref_id", "league"]
+
+    # Corrected 'league' to 'league__name'
+    ordering_fields = ["id", "name", "fbref_id", "league__name"]
+    search_fields = ["id", "name", "fbref_id", "league__name"]
+    ordering = [
+        "name"
+    ]  # Changed ordering from 'league_position' to 'name' as it's a field on Club model.
+    filterset_fields = ["id", "name", "fbref_id", "league__name"]
 
     def get_queryset(self):
         league_id = self.kwargs.get("league_id")
@@ -210,12 +406,12 @@ class LeaguePlayerView(ListAPIView):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    
-    ordering_fields = ["id", "full_name", "fbref_id", "club"]
-    search_fields = ["id", "full_name", "fbref_id", "club"]
-    ordering=["full_name"]
-    filterset_fields = ["id", "full_name", "fbref_id", "club"]
-    
+
+    # Corrected 'club' to 'club__name'
+    ordering_fields = ["id", "full_name", "fbref_id", "club__name"]
+    search_fields = ["id", "full_name", "fbref_id", "club__name"]
+    ordering = ["full_name"]
+    filterset_fields = ["id", "full_name", "fbref_id", "club__name"]
 
     def get_queryset(self):
         league_id = self.kwargs.get("league_id")
@@ -233,16 +429,56 @@ class LeagueGoalkeeperView(ListAPIView):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    
-    ordering_fields = ["player__full_name", "player__club__name", "season__season", "age", "matches_played", "minutes_played", "goals_conceded", "shots_faced", "saves", "save_percentage", "clean_sheets", "psxg"]
-    search_fields = ["player__full_name", "player__club__name", "season__season", "age", "matches_played", "minutes_played", "goals_conceded", "shots_faced", "saves", "save_percentage", "clean_sheets", "psxg"]
-    ordering=["matches_played"]
-    filterset_fields = ["player__full_name", "player__club__name", "season__season", "age", "matches_played", "minutes_played", "goals_conceded", "shots_faced", "saves", "save_percentage", "clean_sheets", "psxg"]
+
+    # Corrected 'club' to 'club__name'
+    ordering_fields = [
+        "player__full_name",
+        "player__club__name",
+        "season__season",
+        "age",
+        "matches_played",
+        "minutes_played",
+        "goals_conceded",
+        "shots_faced",
+        "saves",
+        "save_percentage",
+        "clean_sheets",
+        "psxg",
+    ]
+    search_fields = [
+        "player__full_name",
+        "player__club__name",
+        "season__season",
+        "age",
+        "matches_played",
+        "minutes_played",
+        "goals_conceded",
+        "shots_faced",
+        "saves",
+        "save_percentage",
+        "clean_sheets",
+        "psxg",
+    ]
+    ordering = ["matches_played"]
+    filterset_fields = [
+        "player__full_name",
+        "player__club__name",
+        "season__season",
+        "age",
+        "matches_played",
+        "minutes_played",
+        "goals_conceded",
+        "shots_faced",
+        "saves",
+        "save_percentage",
+        "clean_sheets",
+        "psxg",
+    ]
 
     def get_queryset(self):
         league_id = self.kwargs.get("league_id")
         get_object_or_404(League, pk=league_id)
-        queryset = Goalkeeper.objects.filter(club__league_id=league_id)
+        queryset = Goalkeeper.objects.filter(player__club__league_id=league_id)
         return queryset
 
 
@@ -255,11 +491,72 @@ class ClubDetailView(ListAPIView):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    
-    ordering_fields = ["id","club","season","points_won","league_position","matches_played","win","draw","lost","goals_scored","goals_conceded","xg_created","xg_conceded","shots","shots_target","passes","passes_comp","passes_to_final_third","passes_to_pen_area"]
-    search_fields = ["id","club","season","points_won","league_position","matches_played","win","draw","lost","goals_scored","goals_conceded","xg_created","xg_conceded","shots","shots_target","passes","passes_comp","passes_to_final_third","passes_to_pen_area"]
-    ordering=["league_position"]
-    filterset_fields = ["id","club","season","points_won","league_position","matches_played","win","draw","lost","goals_scored","goals_conceded","xg_created","xg_conceded","shots","shots_target","passes","passes_comp","passes_to_final_third","passes_to_pen_area"]
+
+    # Corrected 'club' and 'season' to 'club__name' and 'season__season'
+    ordering_fields = [
+        "id",
+        "club__name",
+        "season__season",
+        "points_won",
+        "league_position",
+        "matches_played",
+        "win",
+        "draw",
+        "lost",
+        "goals_scored",
+        "goals_conceded",
+        "xg_created",
+        "xg_conceded",
+        "shots",
+        "shots_target",
+        "passes",
+        "passes_comp",
+        "passes_to_final_third",
+        "passes_to_pen_area",
+    ]
+    search_fields = [
+        "id",
+        "club__name",
+        "season__season",
+        "points_won",
+        "league_position",
+        "matches_played",
+        "win",
+        "draw",
+        "lost",
+        "goals_scored",
+        "goals_conceded",
+        "xg_created",
+        "xg_conceded",
+        "shots",
+        "shots_target",
+        "passes",
+        "passes_comp",
+        "passes_to_final_third",
+        "passes_to_pen_area",
+    ]
+    ordering = ["league_position"]
+    filterset_fields = [
+        "id",
+        "club__name",
+        "season__season",
+        "points_won",
+        "league_position",
+        "matches_played",
+        "win",
+        "draw",
+        "lost",
+        "goals_scored",
+        "goals_conceded",
+        "xg_created",
+        "xg_conceded",
+        "shots",
+        "shots_target",
+        "passes",
+        "passes_comp",
+        "passes_to_final_third",
+        "passes_to_pen_area",
+    ]
 
     def get_queryset(self):
         club_id = self.kwargs.get("club_id")
@@ -277,12 +574,98 @@ class ClubPlayerView(ListAPIView):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    ordering_fields = ["id", "player__full_name", "player__club__name", "season__season", "position", "age", "matches_played", "minutes_played", "goals", "assists", "xg", "npxg", "prog_carries", "shots_target", "passes_to_final_3rd", "passes_to_pen_area", "shots_creation_action", "tackles", "tackles_won", "interceptions", "touches", "take_ons", "carries_to_final_3rd", "carries_to_pen_area", "yellow_card", "red_card"
-]
-    search_fields = ["id", "player__full_name", "player__club__name", "season__season", "position", "age", "matches_played", "minutes_played", "goals", "assists", "xg", "npxg", "prog_carries", "shots_target", "passes_to_final_3rd", "passes_to_pen_area", "shots_creation_action", "tackles", "tackles_won", "interceptions", "touches", "take_ons", "carries_to_final_3rd", "carries_to_pen_area", "yellow_card", "red_card"]
-    ordering=["position"]
-    filterset_fields = ["id", "player__full_name", "player__club__name", "season__season", "position", "age", "matches_played", "minutes_played", "goals", "assists", "xg", "npxg", "prog_carries", "shots_target", "passes_to_final_3rd", "passes_to_pen_area", "shots_creation_action", "tackles", "tackles_won", "interceptions", "touches", "take_ons", "carries_to_final_3rd", "carries_to_pen_area", "yellow_card", "red_card"
-]
+
+    ordering_fields = [
+        "id",
+        "fouls_commited",
+        "fouls_won",
+        "player__full_name",
+        "player__club__name",
+        "season__season",
+        "position",
+        "age",
+        "matches_played",
+        "minutes_played",
+        "goals",
+        "assists",
+        "xg",
+        "npxg",
+        "prog_carries",
+        "shots_target",
+        "passes_to_final_3rd",
+        "passes_to_pen_area",
+        "shots_creation_action",
+        "tackles",
+        "tackles_won",
+        "interceptions",
+        "touches",
+        "take_ons",
+        "carries_to_final_3rd",
+        "carries_to_pen_area",
+        "yellow_card",
+        "red_card",
+    ]
+    search_fields = [
+        "id",
+        "fouls_commited",
+        "fouls_won",
+        "player__full_name",
+        "player__club__name",
+        "season__season",
+        "position",
+        "age",
+        "matches_played",
+        "minutes_played",
+        "goals",
+        "assists",
+        "xg",
+        "npxg",
+        "prog_carries",
+        "shots_target",
+        "passes_to_final_3rd",
+        "passes_to_pen_area",
+        "shots_creation_action",
+        "tackles",
+        "tackles_won",
+        "interceptions",
+        "touches",
+        "take_ons",
+        "carries_to_final_3rd",
+        "carries_to_pen_area",
+        "yellow_card",
+        "red_card",
+    ]
+    ordering = ["position"]
+    filterset_fields = [
+        "id",
+        "fouls_commited",
+        "fouls_won",
+        "player__full_name",
+        "player__club__name",
+        "season__season",
+        "position",
+        "age",
+        "matches_played",
+        "minutes_played",
+        "goals",
+        "assists",
+        "xg",
+        "npxg",
+        "prog_carries",
+        "shots_target",
+        "passes_to_final_3rd",
+        "passes_to_pen_area",
+        "shots_creation_action",
+        "tackles",
+        "tackles_won",
+        "interceptions",
+        "touches",
+        "take_ons",
+        "carries_to_final_3rd",
+        "carries_to_pen_area",
+        "yellow_card",
+        "red_card",
+    ]
 
     def get_queryset(self):
         club_id = self.kwargs.get("club_id")
@@ -301,11 +684,50 @@ class ClubGoalkeeperView(ListAPIView):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    
-    ordering_fields = ["id","player__full_name", "player__club__name", "season__season", "age", "matches_played", "minutes_played", "goals_conceded", "shots_faced", "saves", "save_percentage", "clean_sheets", "psxg"]
-    search_fields = ["player__full_name", "player__club__name", "season__season", "age", "matches_played", "minutes_played", "goals_conceded", "shots_faced", "saves", "save_percentage", "clean_sheets", "psxg"]
-    ordering=["matches_played"]
-    filterset_fields = ["player__full_name", "player__club__name", "season__season", "age", "matches_played", "minutes_played", "goals_conceded", "shots_faced", "saves", "save_percentage", "clean_sheets", "psxg"]
+
+    ordering_fields = [
+        "player__full_name",
+        "player__club__name",
+        "season__season",
+        "age",
+        "matches_played",
+        "minutes_played",
+        "goals_conceded",
+        "shots_faced",
+        "saves",
+        "save_percentage",
+        "clean_sheets",
+        "psxg",
+    ]
+    search_fields = [
+        "player__full_name",
+        "player__club__name",
+        "season__season",
+        "age",
+        "matches_played",
+        "minutes_played",
+        "goals_conceded",
+        "shots_faced",
+        "saves",
+        "save_percentage",
+        "clean_sheets",
+        "psxg",
+    ]
+    ordering = ["matches_played"]
+    filterset_fields = [
+        "player__full_name",
+        "player__club__name",
+        "season__season",
+        "age",
+        "matches_played",
+        "minutes_played",
+        "goals_conceded",
+        "shots_faced",
+        "saves",
+        "save_percentage",
+        "clean_sheets",
+        "psxg",
+    ]
 
     def get_queryset(self):
         club_id = self.kwargs.get("club_id")

@@ -3,7 +3,7 @@ from django.db import models
 
 class Country(models.Model):
     name = models.CharField(max_length=70, unique=True)
-    code= models.CharField(max_length=5,unique=True)
+    code = models.CharField(max_length=5, unique=True)
 
     def __str__(self):
         return self.name
@@ -14,8 +14,8 @@ class League(models.Model):
         Country, on_delete=models.CASCADE, related_name="leagues"
     )
     name = models.CharField(max_length=100)
-    total_clubs= models.IntegerField(null=  True, blank=True)
-    code= models.CharField(max_length=10,unique=True, null=True, blank=True)
+    total_clubs = models.IntegerField(null=True, blank=True)
+    code = models.CharField(max_length=10, unique=True, null=True, blank=True)
 
     def __str__(self):
         return f"{self.name}, {self.country}"
@@ -110,8 +110,8 @@ class PlayerSeasonStats(models.Model):
     interceptions = models.IntegerField(null=True, blank=True)
     touches = models.IntegerField(null=True, blank=True)
     take_ons = models.IntegerField(null=True, blank=True)
-    fouls_won= models.IntegerField(null=True, blank=True)
-    fouls_commited=models.IntegerField(null=True, blank=True)
+    fouls_won = models.IntegerField(null=True, blank=True)
+    fouls_commited = models.IntegerField(null=True, blank=True)
     carries_to_final_3rd = models.IntegerField(null=True, blank=True)
     carries_to_pen_area = models.IntegerField(null=True, blank=True)
     yellow_card = models.SmallIntegerField(null=True, blank=True)
@@ -135,7 +135,7 @@ class Goalkeeper(models.Model):
     season = models.ForeignKey(
         Season, on_delete=models.CASCADE, related_name="season_goalkeeper"
     )
-    position = models.CharField(default='GK',max_length=20,null=True, blank=True)
+    position = models.CharField(default="GK", max_length=20, null=True, blank=True)
     age = models.SmallIntegerField(null=True, blank=True)
     matches_played = models.IntegerField(null=True, blank=True)
     minutes_played = models.IntegerField(null=True, blank=True)

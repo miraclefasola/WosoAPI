@@ -10,9 +10,7 @@ router.register(r"seasons", SeasonView, basename="seasons")
 router.register(r"clubs", Clubview, basename="all_clubs")
 router.register(r"clubstats", ClubSeasonStatView, basename="club_stats")
 router.register(r"players", PlayerView, basename="all_players")
-router.register(
-    r"playerstats", PlayerSeasonStatsView, basename="season_player_stats"
-)
+router.register(r"playerstats", PlayerSeasonStatsView, basename="season_player_stats")
 router.register(r"goalkeepers", GoalkeeperView, basename="goalkeepers")
 
 

@@ -16,10 +16,14 @@ def send_verification_email(user):
 
     verify_url = f"https://wosoapi.onrender.com/verify/{uid}/{token}/"
 
-
     # Render HTML template
     html_content = render_to_string(
-        "emails/verify_email.html", {"user": user, "verification_link": verify_url, "current_year": datetime.now().year}
+        "emails/verify_email.html",
+        {
+            "user": user,
+            "verification_link": verify_url,
+            "current_year": datetime.now().year,
+        },
     )
 
     # Plain text fallback

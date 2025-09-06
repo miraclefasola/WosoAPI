@@ -26,8 +26,6 @@ SECRET_KEY = "django-insecure-19qr15)al6o=0$=6h-b%8l9d1^&mv-el4lh8(_(2dr3w-hru)u
 DEBUG = False
 
 
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -87,8 +85,8 @@ load_dotenv()
 user = os.environ.get("DB_USER")
 password = os.environ.get("DB_PASSWORD")
 host = os.environ.get("DB_HOST")
-db_name=os.environ.get("DB_NAME")
-db_port= os.environ.get("DB_PORT")
+db_name = os.environ.get("DB_NAME")
+db_port = os.environ.get("DB_PORT")
 # smtp config for password reset
 
 
@@ -157,7 +155,6 @@ REST_FRAMEWORK = {
         "rest_framework.filters.SearchFilter",
         "rest_framework.filters.OrderingFilter",
     ),
-
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 10,
 }
@@ -189,7 +186,6 @@ DEFAULT_FROM_EMAIL = email
 PASSWORD_RESET_TIMEOUT = 86400  # 1 day in seconds
 
 
-
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
@@ -203,6 +199,6 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = 86400
     SECURE_REDIRECT_EXEMPT = []
     SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True

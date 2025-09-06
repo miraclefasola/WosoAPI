@@ -3,4 +3,6 @@ WSL_2024_25_ALL_PLAYER_STATS_20250821_102053.csv
 WSL_2024_25_TEAM_STATS_20250821_102053.csv
 WSL_2024_25_COMBINED_PLAYER_STATS.csv
 fbref_scrap.py
+club_create.py
+combined_players.py
 

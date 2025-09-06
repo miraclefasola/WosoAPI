@@ -36,7 +36,7 @@ class CountryView(ModelViewSet):
 class LeagueView(ModelViewSet):
     permission_classes = [IsSuperUserOrReadOnly]
     serializer_class = LeagueSerializer
-    queryset = League.objects.all()
+    queryset = League.objects.select_related("country").all()
     authentication_classes = [JWTAuthentication]
     filter_backends = [
         filters.OrderingFilter,
@@ -59,7 +59,7 @@ class LeagueView(ModelViewSet):
 class SeasonView(ModelViewSet):
     permission_classes = [IsSuperUserOrReadOnly]
     authentication_classes = [JWTAuthentication]
-    queryset = Season.objects.all()
+    queryset = Season.objects.select_related("league").all()
     serializer_class = SeasonSerializer
 
     filter_backends = [
@@ -82,7 +82,7 @@ class Clubview(ModelViewSet):
     permission_classes = [IsSuperUserOrReadOnly]
     authentication_classes = [JWTAuthentication]
     serializer_class = ClubSerializer
-    queryset = Club.objects.all()
+    queryset = Club.objects.select_related("league").all()
     filter_backends = [
         filters.OrderingFilter,
         filters.SearchFilter,
@@ -103,7 +103,7 @@ class Clubview(ModelViewSet):
 class ClubSeasonStatView(ModelViewSet):
     permission_classes = [IsSuperUserOrReadOnly]
     authentication_classes = [JWTAuthentication]
-    queryset = ClubSeasonStat.objects.all()
+    queryset = ClubSeasonStat.objects.select_related("club", "season").all()
     serializer_class = ClubSeasonStatSerializer
     filter_backends = [
         filters.OrderingFilter,
@@ -180,7 +180,7 @@ class ClubSeasonStatView(ModelViewSet):
 class PlayerView(ModelViewSet):
     permission_classes = [IsSuperUserOrReadOnly]
     authentication_classes = [JWTAuthentication]
-    queryset = Player.objects.all()
+    queryset = Player.objects.select_related("club").all()
     serializer_class = PlayerSerializer
     filter_backends = [
         filters.OrderingFilter,
@@ -202,7 +202,7 @@ class PlayerView(ModelViewSet):
 class PlayerSeasonStatsView(ModelViewSet):
     permission_classes = [IsSuperUserOrReadOnly]
     authentication_classes = [JWTAuthentication]
-    queryset = PlayerSeasonStats.objects.all()
+    queryset = PlayerSeasonStats.objects.select_related("player", "player__club", "player__club__league", "season").all()
     serializer_class = PlayerSeasonStatsSerializer
     filter_backends = [
         filters.OrderingFilter,
@@ -309,7 +309,7 @@ class PlayerSeasonStatsView(ModelViewSet):
 class GoalkeeperView(ModelViewSet):
     permission_classes = [IsSuperUserOrReadOnly]
     authentication_classes = [JWTAuthentication]
-    queryset = Goalkeeper.objects.all()
+    queryset = Goalkeeper.objects.select_related("player","player__club","player__club__league", "season").all()
     serializer_class = GoalkeeperSerializer
     filter_backends = [
         filters.OrderingFilter,
@@ -388,7 +388,7 @@ class LeagueSeasonView(ListAPIView):
     def get_queryset(self):
         league_id = self.kwargs.get("league_id")
         get_object_or_404(League, pk=league_id)
-        queryset = Season.objects.filter(league_id=league_id)
+        queryset = Season.objects.select_related("league").filter(league_id=league_id)
         return queryset
 
 
@@ -415,7 +415,7 @@ class LeagueClubView(ListAPIView):
     def get_queryset(self):
         league_id = self.kwargs.get("league_id")
         get_object_or_404(League, pk=league_id)
-        queryset = Club.objects.filter(league_id=league_id)
+        queryset = Club.objects.select_related("league").filter(league_id=league_id)
         return queryset
 
 
@@ -442,7 +442,7 @@ class LeaguePlayerView(ListAPIView):
     def get_queryset(self):
         league_id = self.kwargs.get("league_id")
         get_object_or_404(League, pk=league_id)
-        queryset = Player.objects.filter(club__league_id=league_id)
+        queryset = Player.objects.select_related("club").filter(club__league_id=league_id)
         return queryset
 
 
@@ -504,7 +504,7 @@ class LeagueGoalkeeperView(ListAPIView):
     def get_queryset(self):
         league_id = self.kwargs.get("league_id")
         get_object_or_404(League, pk=league_id)
-        queryset = Goalkeeper.objects.filter(player__club__league_id=league_id)
+        queryset = Goalkeeper.objects.select_related("player","player__club", "player__club__league", "season").filter(player__club__league_id=league_id)
         return queryset
 
 
@@ -586,7 +586,7 @@ class ClubDetailView(ListAPIView):
     def get_queryset(self):
         club_id = self.kwargs.get("club_id")
         get_object_or_404(Club, pk=club_id)
-        queryset = ClubSeasonStat.objects.filter(club_id=club_id)
+        queryset = ClubSeasonStat.objects.select_related("club", "season").filter(club_id=club_id)
         return queryset
 
 
@@ -695,7 +695,7 @@ class ClubPlayerView(ListAPIView):
     def get_queryset(self):
         club_id = self.kwargs.get("club_id")
         get_object_or_404(Club, pk=club_id)
-        queryset = PlayerSeasonStats.objects.filter(player__club_id=club_id)
+        queryset = PlayerSeasonStats.objects.select_related("player", "player__club", "season").filter(player__club_id=club_id)
         return queryset
 
 
@@ -757,5 +757,5 @@ class ClubGoalkeeperView(ListAPIView):
     def get_queryset(self):
         club_id = self.kwargs.get("club_id")
         get_object_or_404(Club, pk=club_id)
-        queryset = Goalkeeper.objects.filter(player__club_id=club_id)
+        queryset = Goalkeeper.objects.select_related("player", "player__club", "season").filter(player__club_id=club_id)
         return queryset

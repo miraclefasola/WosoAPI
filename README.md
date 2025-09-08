@@ -7,7 +7,7 @@
 
 ---
 
-> **"With women's football, the data just isn't there. While men's football analytics flourished with detailed stats and insights, women's football data remained scattered and incomplete. As someone passionate about both technology and women's sports, I built this API to bridge that gap. Every goal scored, every progressive pass made, every save - they all deserve to be measured, analyzed, and celebrated. This isn't just about numbers; it's about giving women's football the analytical foundation it deserves to grow, attract investment, and inspire the next generation of female athletes."**
+> **"With women's football, the data just isn't there. While men's football analytics flourished with detailed stats and insights, women's football data remained scattered and incomplete. As someone passionate about both technology and women's sports, I built this API to bridge that gap.This isn't just about numbers; it's about giving women's football the analytical foundation it deserves to grow, attract investment, and inspire the next generation of female athletes."**
 
 ---
 
@@ -18,12 +18,12 @@
 **🔥 Data Source:** All football statistics are sourced from [FBref.com](https://fbref.com) - the premier destination for football statistics and analytics. We are grateful to FBref for providing comprehensive women's football data that makes this API possible.
 
 ### ✨ Key Features
-- 🔒 **Secure JWT Authentication** with email verification
+- 🔑 **Secure JWT Authentication** with email verification
 - 📊 **Comprehensive Stats** including xG, xA, progressive passes, defensive actions
 - 🏆 **Multi-League Support** starting with WSL (Women's Super League)
 - ⚡ **High Performance** REST API built with Django + DRF
 - 📈 **Advanced Analytics** designed for serious football analysis
-- 🌍 **Developer Friendly** with detailed documentation and examples
+- 🌐 **Developer Friendly** with detailed documentation and examples
 
 ### 🎯 Use Cases
 - **Sports Analytics**: Build dashboards and predictive models
@@ -38,7 +38,7 @@
 
 ### Base URL
 ```
-https://wosoapi.com/
+https://wosoapi.onrender.com/
 ```
 
 ### 1. Register & Authenticate
@@ -55,7 +55,7 @@ curl -X POST https://wosoapi.onrender.com/register/ \
 # 2. Check email and click verification link
 
 # 3. Get JWT tokens
-curl -X POST https://wosoapi.onrender.com//token/ \
+curl -X POST https://wosoapi.onrender.com/token/ \
   -H "Content-Type: application/json" \
   -d '{
     "email": "analyst@example.com", 
@@ -65,17 +65,21 @@ curl -X POST https://wosoapi.onrender.com//token/ \
 
 ### 2. Make API Calls
 ```bash
-# Get all WSL clubs
+# Get all leagues
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  https://wosoapi.onrender.com/leagues/<int:league_id>/clubs/
+  https://wosoapi.onrender.com/leagues/
 
-# Get all players in Arsenal Women
+# Get all clubs in a specific league
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-   https://wosoapi.onrender.com/clubs/<int:club_id>/players/
+  https://wosoapi.onrender.com/leagues/1/clubs/
 
-# Get top scorers
+# Get all players in a specific club
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  "https://wosoapi.onrender.com/leagues/<int:league_id>/players/?ordering=-goals"
+   https://wosoapi.onrender.com/clubs/1/players/
+
+# Get top scorers with minimum 500 minutes played
+curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  "https://wosoapi.onrender.com/playerstats/?ordering=-goals&minutes_played__gte=500"
 ```
 
 ---
@@ -225,8 +229,6 @@ Get new access token using valid refresh token.
 
 </details>
 
-
-
 ## ⚽ Football Data API
 
 > **🏅 Data Attribution:** All football statistics provided by [FBref.com](https://fbref.com) - *Sports Reference* and its partners. FBref is the leading source for advanced football analytics and historical statistics. Please respect their terms of service when using this data.
@@ -246,8 +248,7 @@ Get all countries with women's football leagues in the database.
   {
     "id": "1",
     "name": "England", 
-    "code": "ENG",
-    "leagues_count": 1
+    "code": "ENG"
   }
 ]
 ```
@@ -266,6 +267,7 @@ Get all women's football leagues with basic information.
     "id": "1",
     "name": "Women's Super League",
     "country": "England",
+    "code": "WSL",
     "total_clubs": 12
   }
 ]
@@ -289,23 +291,24 @@ Get all available seasons for a specific league.
 
 Get all clubs in a specific league with current season performance.
 
-**Example:** `/wosoapi/leagues/1/clubs/`
+**Example:** `/leagues/1/clubs/`
 
 *All team statistics sourced from [FBref.com](https://fbref.com)*
 
 </details>
 
 <details>
-<summary><strong>GET</strong> /wosoapi/leagues/{league_id}/players/ - All League Players</summary>
+<summary><strong>GET</strong> /leagues/{league_id}/players/ - All League Players</summary>
 
 Get all players across all clubs in a league with comprehensive statistics.
 
 **Query Parameters:**
-- `id` - Filter by player id
-- `full_name`- Filter by full name
-- `club` - Filter by club
-- `fbref_id` - filter by fbref_id
-- `ordering` - Sort by `id`, `full_name`, `club`
+- `player__full_name` - Filter by player name
+- `club__name` - Filter by club
+- `season__season` - Filter by season
+- `position` - Filter by position
+- `minutes_played__gte` - Minimum minutes played
+- `ordering` - Sort by any field (e.g., `-goals`, `-assists`)
 
 *Player statistics sourced from [FBref.com](https://fbref.com)*
 
@@ -323,7 +326,7 @@ Get all goalkeepers across all clubs in a league with specialized goalkeeper sta
 ### 📅 Seasons
 
 <details>
-<summary><strong>GET</strong> /wosoapi/season/ - List All Seasons</summary>
+<summary><strong>GET</strong> /seasons/ - List All Seasons</summary>
 
 Get all seasons across all leagues in the database.
 
@@ -332,13 +335,13 @@ Get all seasons across all leagues in the database.
 ### 🏟️ Clubs & Teams
 
 <details>
-<summary><strong>GET</strong> /wosoapi/club/ - List All Clubs</summary>
+<summary><strong>GET</strong> /clubs/ - List All Clubs</summary>
 
 Get all clubs across all leagues and seasons.
 
 **Query Parameters:**
-- `league` - Filter by league
-
+- `name` - Filter by club name
+- `fbref_id` - Filter by FBref ID
 - `search` - Search by club name
 
 </details>
@@ -352,9 +355,8 @@ Get comprehensive club information and detailed season statistics.
 
 **Response includes:**
 - Club basic information
-
+- Season-by-season statistics
 - Historical data (if available)
-
 
 *All club statistics sourced from [FBref.com](https://fbref.com)*
 
@@ -366,9 +368,10 @@ Get comprehensive club information and detailed season statistics.
 Get statistical data for all clubs across all seasons.
 
 **Query Parameters:**
-- `season` - Filter by season (e.g., `2024/25`)
-- `league` - Filter by league (e.g., `wsl`)
-- `ordering` - Sort by field (e.g., `points`, `-goals_for`, `xg_for`)
+- `season__season` - Filter by season (e.g., `2023/24`)
+- `league__name` - Filter by league name
+- `club__name` - Filter by club name
+- `ordering` - Sort by field (e.g., `points_won`, `-goals_scored`, `xg_created`)
 
 **Response includes:** Goals for/against, xG, possession stats, passing stats, defensive stats, and more.
 
@@ -381,7 +384,7 @@ Get statistical data for all clubs across all seasons.
 
 Get all players in a specific club with their comprehensive season statistics.
 
-**Example:** `/wosoapi/clubs/arsenal-women/players/`
+**Example:** `/clubs/1/players/`
 
 *Player statistics sourced from [FBref.com](https://fbref.com)*
 
@@ -403,17 +406,15 @@ Get all goalkeepers in a specific club with specialized goalkeeper statistics.
 
 Get list of all players across all clubs and leagues.
 
-
-
 **Response:**
 ```json
 [
   {
-    "player_id": "250",
+    "id": "1",
     "full_name": "Mariona Caldentey",
-    "club": "Arsenal", 
-    "fbref_id":"4671156"
-
+    "fbref_id": "4671156",
+    "nationality": "Spain",
+    "age": 28
   }
 ]
 ```
@@ -426,36 +427,24 @@ Get list of all players across all clubs and leagues.
 Get comprehensive statistical data for all players with advanced analytics.
 
 **Query Parameters:**
-- `season` - Filter by season
+- `season__season` - Filter by season
 - `position` - Filter by position
-- `minutes_played` - Minutes played
-- `ordering` - Sort by stat (e.g., `goals`, `-xg`, `assists`, `-progressive_passes`)
+- `player__full_name__icontains` - Filter by player name
+- `club__name` - Filter by club name
+- `league__code` - Filter by league code
+- `minutes_played__gte` - Minimum minutes played
+- `ordering` - Sort by stat (e.g., `goals`, `-xg`, `assists`, `-prog_carries`)
 
 **Response includes extensive FBref statistics:**
-- **Basic:** matches_played, starts, minutes, goals, assists
-- **Expected:** xg, xa, npxg, 
-- **Shooting:** shots, shots_target, shots_creation_action
-- **Passing:** passes_to_final_3rd,passes_to_pen_area
-- **Progression:** prog_carries, carries_to_final_3rd, carries_to_pen_area
-- **Defending:** tackles, interceptions, tackles_won
-- **Discipline:** yellow_cards, red_cards, fouls_won,fouls_commited
+- **Basic:** matches_played, matches_completed, minutes_played, goals, assists
+- **Expected:** xg, npxg, xg_performance, npxg_performance
+- **Shooting:** shots_target, shots_creation_action
+- **Passing:** passes_to_final_3rd, passes_to_pen_area, pass_switches, through_ball
+- **Progression:** prog_carries, prog_carries_final_3rd, prog_passes, carries_to_final_3rd, carries_to_pen_area
+- **Defending:** tackles, tackles_won, interceptions, blocks, ball_recoveries, aerial_duels_won
+- **Discipline:** yellow_card, red_card, fouls_won, fouls_committed
 
 *All player statistics sourced from [FBref.com](https://fbref.com)*
-
-</details>
-
-<details>
-<summary><strong>GET</strong> /players/{player_id}/ - Player Profile</summary>
-
-Get detailed player information and complete statistical history.
-
-**Example:** `/wosoapi/players/`
-
-**Response includes:**
-- Personal information 
-
-
-*Player data sourced from [FBref.com](https://fbref.com)*
 
 </details>
 
@@ -467,71 +456,13 @@ Get detailed player information and complete statistical history.
 Get list of all goalkeepers across leagues with specialized filtering.
 
 **Query Parameters:**
-- `club` - Filter by club
-- `league` - Filter by league  
-- `minutes` - Minutes played
+- `player__full_name` - Filter by goalkeeper name
+- `club__name` - Filter by club
+- `league__code` - Filter by league  
+- `minutes_played__gte` - Minimum minutes played
 - `ordering` - Sort by goalkeeper stats (e.g., `-save_percentage`, `goals_conceded`)
 
 </details>
-
-<details>
-<summary><strong>GET</strong> /goalkeepers/{goalkeeper_id}/ - Goalkeeper Profile</summary>
-
-Get detailed goalkeeper profile with specialized statistics and career history.
-
-**Response includes:**
-- **Shot Stopping:** saves, save_percentage, goals_against
-- **Advanced Metrics:** post_shot_xg, 
-
-
-*All goalkeeper statistics sourced from [FBref.com](https://fbref.com)*
-
-</details>
-
----
-
-## 📊 Complete API Reference
-
-### 🌍 **Countries**
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/countries/` | GET | Get all countries with women's football data |
-
-### 🏆 **Leagues**  
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/leagues/` | GET | Get all leagues |
-| `/leagues/{league_id}/seasons/` | GET | Get all seasons for a specific league |
-| `/leagues/{league_id}/clubs/` | GET | Get all clubs in a specific league |
-| `/leagues/{league_id}/players/` | GET | Get all players in clubs of a specific league |
-| `/leagues/{league_id}/goalkeepers/` | GET | Get all goalkeepers in clubs of a specific league |
-
-### 📅 **Seasons**
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/seasons/` | GET | Get all seasons across all leagues |
-
-### 🏟️ **Clubs**
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/club/` | GET | Get all clubs |
-| `/clubs/{club_id}/` | GET | Get details + stats of a specific club |
-| `/clubstats/` | GET | Get all club stats (across seasons) |
-| `/clubs/{club_id}/players/` | GET | Get all players (with stats) in a specific club |
-| `/clubs/{club_id}/goalkeepers/` | GET | Get all goalkeepers (with stats) in a specific club |
-
-### 👩‍⚽ **Players**
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/players/` | GET | Get all players |
-| `/players/stats/` | GET | Get all player stats (across seasons) |
-| `/players/{player_id}/` | GET | Get details + stats of a specific player |
-
-### 🧤 **Goalkeepers**
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/goalkeepers/` | GET | Get all goalkeepers |
-| `/goalkeepers/{goalkeeper_id}/` | GET | Get details + stats of a specific goalkeeper |
 
 ---
 
@@ -539,71 +470,65 @@ Get detailed goalkeeper profile with specialized statistics and career history.
 
 ### 🎯 Top Performers
 ```bash
-# Top 10 goal scorers in WSL (2023/24, league filter)
-GET /playerstats/?season=2023/24&player__club__league__code=WSL&ordering=-goals&minutes_played__gte=500&limit=10
+# Top 10 goal scorers in WSL (2023/24, minimum 500 minutes)
+GET /playerstats/?season__season=2023/24&league__code=WSL&ordering=-goals&minutes_played__gte=500&limit=10
 
-# Top 5 goal scorers in Arsenal Women (2023/24, league + club filter)
-GET /playerstats/?season=2023/24&player__club__league__code=WSL&player__club__name=Arsenal&ordering=-goals&limit=10
+# Top 5 goal scorers in Arsenal Women (2023/24)
+GET /playerstats/?season__season=2023/24&league__code=WSL&club__name=Arsenal&ordering=-goals&limit=5
 
-# Best passers by completion (all leagues, 2023/24)
-GET /playerstats/?season=2023/24&position=MF&ordering=-passes_comp&minutes_played__gte=300
+# Best passers by progressive passes (all leagues, 2023/24)
+GET /playerstats/?season__season=2023/24&position=MF&ordering=-prog_passes&minutes_played__gte=300
 
-# Most progressive players in UWCL (2023/24, league filter)
-GET /playerstats/?season=2023/24&player__club__league__code=UWCL&ordering=-prog_carries&minutes_played__gte=400
+# Most progressive players in WSL (2023/24)
+GET /playerstats/?season__season=2023/24&league__code=WSL&ordering=-prog_carries&minutes_played__gte=400
 
-# Top 10 assist providers in Chelsea Women (2023/24, club filter)
-GET /playerstats/?season=2023/24&player__club__name=Chelsea&ordering=-assists&limit=10
+# Top 10 assist providers in Chelsea Women (2023/24)
+GET /playerstats/?season__season=2023/24&club__name=Chelsea&ordering=-assists&limit=10
 
-# Most minutes played in Arsenal Women (2023/24, league + club filter)
-GET /playerstats/?season=2023/24&player__club__league__code=WSL&player__club__name=Arsenal&ordering=-minutes_played&limit=10
-
-
-
+# Most minutes played in Arsenal Women (2023/24)
+GET /playerstats/?season__season=2023/24&league__code=WSL&club__name=Arsenal&ordering=-minutes_played&limit=10
 ```
 
 ### ⚡ Advanced Analytics
 ```bash
-# Highest xG performers, forwards in WSL (2023/24, league filter)
-GET /playerstats/?season=2023/24&player__club__league__code=WSL&position=FW&ordering=-xg
+# Highest xG performers, forwards in WSL (2023/24)
+GET /playerstats/?season__season=2023/24&league__code=WSL&position=FW&ordering=-xg
 
-# Underperforming strikers in UWCL (high xG but ≤2 goals, 2023/24, league filter)
-GET /playerstats/?season=2023/24&player__club__league__code=WSL&position=FW&ordering=-xg&goals__lte=2
+# Best defensive midfielders in Arsenal Women (2023/24)
+GET /playerstats/?season__season=2023/24&league__code=WSL&club__name=Arsenal&position=MF&ordering=-tackles&minutes_played__gte=500
 
-# Best defensive midfielders in Arsenal Women (2023/24, league + club filter)
-GET /playerstats/?season=2023/24&player__club__league__code=WSL&player__club__name=Arsenal&position=MF&ordering=-tackles&minutes_played__gte=500
+# Most ball-winning midfielders (tackles + interceptions, 2023/24)
+GET /playerstats/?season__season=2023/24&position=MF&ordering=-tackles&ordering=-interceptions
 
-# Most ball-winning midfielders (global, tackles + interceptions, 2023/24)
-GET /playerstats/?season=2023/24&position=MF&ordering=-tackles&ordering=-interceptions
+# Best young forwards in WSL (under 23, 2023/24)
+GET /playerstats/?season__season=2023/24&league__code=WSL&age__lte=23&position=FW&minutes_played__gte=300&ordering=-goals
 
-# Best young forwards in WSL (under 23, 2023/24, league filter)
-GET /playerstats/?season=2023/24&player__club__league__code=WSL&player__age__lte=23&position=FW&minutes_played__gte=300&ordering=-goals
+# Players with most progressive carries to final third
+GET /playerstats/?season__season=2023/24&ordering=-prog_carries_final_3rd&minutes_played__gte=700
 
-# Ball-playing defenders in Barcelona Femení (2023/24, league + club filter)
-GET /playerstats/?season=2023/24&player__club__league__code=UWCL&player__club__name=Barcelona&position=DF&ordering=-prog_carries&minutes_played__gte=700
+# Players with most shot creation actions
+GET /playerstats/?season__season=2023/24&ordering=-shots_creation_action&minutes_played__gte=500
 ```
 
 ### 🥅 Goalkeeper Analytics
 ```bash
-# Best shot stoppers in WSL (2023/24, league filter)
-GET /goalkeepers/?season=2023/24&player__club__league__code=WSL&ordering=-save_percentage&minutes_played__gte=450
+# Best shot stoppers in WSL (2023/24)
+GET /goalkeepers/?season__season=2023/24&league__code=WSL&ordering=-save_percentage&minutes_played__gte=450
 
-# Goalkeepers with most clean sheets in Chelsea Women (2023/24, club filter)
-GET /goalkeepers/?season=2023/24&player__club__name=Chelsea&ordering=-clean_sheets
+# Goalkeepers with most clean sheets in Chelsea Women (2023/24)
+GET /goalkeepers/?season__season=2023/24&club__name=Chelsea&ordering=-clean_sheets
 
-# Goalkeepers preventing most goals vs xG in UWCL (2023/24, league filter)
-GET /goalkeepers/?season=2023/24&player__club__league__code=UWCL&ordering=-psxg
-# Best shot stoppers (2023/24)
-GET /goalkeepers/?season=2023/24&ordering=-save_percentage&minutes_played__gte=450
+# Goalkeepers preventing most goals vs expected (2023/24)
+GET /goalkeepers/?season__season=2023/24&ordering=-psxg_performance
 
-# Most saves (2023/24)
-GET /goalkeepers/?season=2023/24&ordering=-saves&limit=5
+# Most saves made (2023/24)
+GET /goalkeepers/?season__season=2023/24&ordering=-saves&limit=5
 
-# Most clean sheets (2023/24)
-GET /goalkeepers/?season=2023/24&ordering=-clean_sheets
+# Best penalty savers (2023/24)
+GET /goalkeepers/?season__season=2023/24&ordering=-pen_saved
 
-# Preventing most goals vs xG (2023/24)
-GET /goalkeepers/?season=2023/24&ordering=-psxg
-
+# Most active sweeper keepers (2023/24)
+GET /goalkeepers/?season__season=2023/24&ordering=-sweeper_action_per90
 ```
 
 ---
@@ -617,19 +542,20 @@ GET /goalkeepers/?season=2023/24&ordering=-psxg
 ### 📈 **Statistical Categories**
 
 **Outfield Player Stats:**
-- **Basic Performance:** matches, starts, minutes, goals, assists
-- **Expected Stats:** xG, xA, npxG (non-penalty expected goals)
-- **Shooting:** shots, shots on target
-- **Passing:**  progressive passes,   passes_to_pen_area, 
-- **Ball Progression:** dribbles, carries_to_final_3rd, carries_to_pen_area, passes_to_final_3rd, prog_carries
-- **Defending:** tackles, interceptions
-- **Discipline:** yellow cards, red cards, fouls committed/won
-
+- **Basic Performance:** matches_played, matches_completed, minutes_played, goals, assists
+- **Expected Stats:** xg, npxg, xg_performance, npxg_performance
+- **Shooting:** shots_target, shots_creation_action
+- **Passing:** passes_to_final_3rd, passes_to_pen_area, pass_switches, through_ball
+- **Ball Progression:** prog_carries, prog_carries_final_3rd, prog_passes, carries_to_final_3rd, carries_to_pen_area
+- **Defending:** tackles, tackles_won, interceptions, blocks, ball_recoveries, aerial_duels_won, aerial_duels_lost
+- **Discipline:** yellow_card, red_card, fouls_committed, fouls_won
+- **Advanced:** touches, dispossessed, miscontrols, take_ons, offsides, pen_won, pen_conceded
 
 **Goalkeeper-Specific Stats:**
-- **Shot Stopping:** saves, save percentage, goals conceded
-- **Advanced Metrics:** post-shot xG
-
+- **Shot Stopping:** saves, save_percentage, goals_conceded, shots_faced, clean_sheets
+- **Advanced Metrics:** psxg, psxg_performance, pen_saved
+- **Distribution:** passes, crosses_stopped
+- **Sweeping:** sweeper_action, sweeper_action_per90
 
 *All statistics collected and calculated by [FBref.com](https://fbref.com)*
 
@@ -665,7 +591,6 @@ GET /goalkeepers/?season=2023/24&ordering=-psxg
 - **404** - Resource not found
 - **429** - Rate limit exceeded
 - **500** - Internal server error
-
 
 ---
 
@@ -722,7 +647,7 @@ response = requests.post('https://wosoapi.onrender.com/register/', json={
 # 2. Verify email (check inbox)
 
 # 3. Get tokens
-response = requests.post('https://wosoapi.onrender.com//token/', json={
+response = requests.post('https://wosoapi.onrender.com/token/', json={
     'email': 'dev@example.com',
     'password': 'DevPass123!'
 })
@@ -739,19 +664,19 @@ players = requests.get('https://wosoapi.onrender.com/players/', headers=headers)
 ```python
 # Get top scorers
 top_scorers = requests.get(
-    'https://wosoapi.onrender.com/players/stats/?ordering=-goals&min_minutes=500',
+    'https://wosoapi.onrender.com/playerstats/?ordering=-goals&minutes_played__gte=500',
     headers=headers
 ).json()
 
 # Get Arsenal squad
 arsenal_players = requests.get(
-    'https://wosoapi.onrender.com//clubs/arsenal-women/players/',
+    'https://wosoapi.onrender.com/clubs/1/players/',
     headers=headers  
 ).json()
 
 # Get WSL goalkeepers by save percentage
 best_keepers = requests.get(
-    'https://wosoapi.onrender.com/leagues/wsl/goalkeepers/?ordering=-save_percentage',
+    'https://wosoapi.onrender.com/leagues/1/goalkeepers/?ordering=-save_percentage',
     headers=headers
 ).json()
 ```
@@ -763,7 +688,6 @@ best_keepers = requests.get(
 **Questions or Issues?**
 - 📧 Email: fasolamiracle001@gmail.com
 - 🐦 Twitter: [@Justmimi___]
-<!-- - 📚 Full Documentation: -->
 
 **Data Attribution:**
 Please acknowledge [**FBref.com**](https://fbref.com) when using this API's data in your applications, research, or publications.
@@ -775,13 +699,13 @@ This API is part of an ongoing mission to elevate women's football through bette
 
 ## ⚠️ Important Notes
 
-- **🔒 Security:** All endpoints (except auth) require valid JWT tokens
+- **🔐 Security:** All endpoints (except auth) require valid JWT tokens
 - **📊 Data Quality:** Statistics are sourced from [FBref.com](https://fbref.com) and updated regularly
 - **⚡ Performance:** Responses are typically under 200ms
 - **🔄 Updates:** Data refreshed weekly during season, daily during transfer windows
-- **📝 Admin Rights:** Write operations restricted to superusers only
+- **🔒 Admin Rights:** Write operations restricted to superusers only
 - **📧 Email Verification:** Required for all new accounts
 
 ---
 
-*Built with ❤️ for women's football analytics | Data powered by [FBref.com](https://fbref.com)*
+*Built for women's football analytics | Data powered by [FBref.com](https://fbref.com)*

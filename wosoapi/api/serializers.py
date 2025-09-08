@@ -31,11 +31,9 @@ class SeasonSerializer(serializers.ModelSerializer):
 
 
 class ClubSerializer(serializers.ModelSerializer):
-
-
     class Meta:
         model = Club
-        fields = ["id", "name", "fbref_id","stadium" ]
+        fields = ["id", "name", "fbref_id", "stadium"]
 
 
 class ClubSeasonStatSerializer(serializers.ModelSerializer):
@@ -48,7 +46,7 @@ class ClubSeasonStatSerializer(serializers.ModelSerializer):
     league_id = serializers.PrimaryKeyRelatedField(
         queryset=League.objects.all(), source="league", write_only=True
     )
-    league = serializers.ReadOnlyField(source="league.name")
+    league = serializers.ReadOnlyField(source="league.code")
     club = serializers.ReadOnlyField(source="club.name")
     season = serializers.ReadOnlyField(source="season.season")
 
@@ -62,18 +60,28 @@ class ClubSeasonStatSerializer(serializers.ModelSerializer):
             "season_id",
             "league", 
             "league_id",
-            "points_won",
-            "league_position",
+
+            # Matches / Results
             "matches_played",
             "win",
             "draw",
             "lost",
+            "points_won",
+            "league_position",
+
+            # Goals
             "goals_scored",
             "goals_conceded",
+
+            # Expected goals
             "xg_created",
             "xg_conceded",
+
+            # Shooting
             "shots",
             "shots_target",
+
+            # Passing
             "passes",
             "passes_comp",
             "passes_to_final_third",
@@ -81,12 +89,11 @@ class ClubSeasonStatSerializer(serializers.ModelSerializer):
         ]
 
 
+
 class PlayerSerializer(serializers.ModelSerializer):
-
-
     class Meta:
         model = Player
-        fields = ["id", "full_name", "fbref_id", "nationality","age"]
+        fields = ["id", "full_name", "fbref_id", "nationality", "age"]
 
 
 class PlayerSeasonStatsSerializer(serializers.ModelSerializer):
@@ -96,8 +103,13 @@ class PlayerSeasonStatsSerializer(serializers.ModelSerializer):
     season_id = serializers.PrimaryKeyRelatedField(
         queryset=Season.objects.all(), source="season", write_only=True
     )
-    
-    club_id= serializers.PrimaryKeyRelatedField(queryset=Club.objects.all(), source='club', write_only=True)
+    club_id = serializers.PrimaryKeyRelatedField(
+        queryset=Club.objects.all(), source="club", write_only=True
+    )
+    league_id = serializers.PrimaryKeyRelatedField(
+        queryset=League.objects.all(), source="league", write_only=True
+    )
+    league = serializers.ReadOnlyField(source="league.code")
     player_name = serializers.ReadOnlyField(source="player.full_name")
     club_name = serializers.ReadOnlyField(source="club.name")
     season = serializers.ReadOnlyField(source="season.season")
@@ -109,31 +121,66 @@ class PlayerSeasonStatsSerializer(serializers.ModelSerializer):
             "player_name",
             "club_name",
             "season",
+            "league",
             "player_id",
             "season_id",
             "club_id",
             "position",
             "age",
+
+            # Matches
             "matches_played",
             "minutes_played",
+            "matches_completed",
+            "matches_substituted",
+            "unused_sub",
+
+            # Contributions
             "goals",
             "assists",
+
+            # Expected goals
             "xg",
             "npxg",
+            "xg_performance",
+            "npxg_performance",
+
+            # Carrying / Passing
             "prog_carries",
-            "shots_target",
+            "prog_carries_final_3rd",
+            "carries_to_final_3rd",
+            "carries_to_pen_area",
+            "prog_passes",
             "passes_to_final_3rd",
             "passes_to_pen_area",
+            "pass_switches",
+            "through_ball",
+
+            # Shooting / Creativity
+            "shots_target",
             "shots_creation_action",
+            "offsides",
+            "pen_won",
+            "pen_conceded",
+
+            # Defensive actions
             "tackles",
             "tackles_won",
             "interceptions",
+            "blocks",
+            "ball_recoveries",
+            "aerial_duels_won",
+            "aerial_duels_lost",
+
+            # Possession / touches
             "touches",
+            "dispossessed",
+            "miscontrols",
             "take_ons",
+
+            # Discipline
             "fouls_won",
-            "fouls_commited",
-            "carries_to_final_3rd",
-            "carries_to_pen_area",
+            "fouls_committed",
             "yellow_card",
             "red_card",
         ]
@@ -146,7 +193,13 @@ class GoalkeeperSerializer(serializers.ModelSerializer):
     season_id = serializers.PrimaryKeyRelatedField(
         queryset=Season.objects.all(), source="season", write_only=True
     )
-    club_id= serializers.PrimaryKeyRelatedField(queryset=Club.objects.all(), source='club', write_only=True)
+    club_id = serializers.PrimaryKeyRelatedField(
+        queryset=Club.objects.all(), source="club", write_only=True
+    )
+    league_id = serializers.PrimaryKeyRelatedField(
+        queryset=League.objects.all(), source="league", write_only=True
+    )
+    league = serializers.ReadOnlyField(source="league.code")
     player_name = serializers.ReadOnlyField(source="player.full_name")
     club_name = serializers.ReadOnlyField(source="club.name")
     season = serializers.ReadOnlyField(source="season.season")
@@ -157,16 +210,34 @@ class GoalkeeperSerializer(serializers.ModelSerializer):
             "player_name",
             "club_name",
             "season",
+            "league",
             "player_id",
             "season_id",
             "club_id",
+            "position",
             "age",
+
+            # Matches
             "matches_played",
             "minutes_played",
+
+            # Goalkeeping
             "goals_conceded",
             "shots_faced",
             "saves",
             "save_percentage",
             "clean_sheets",
+
+            # Advanced metrics
             "psxg",
+            "psxg_performance",
+            "pen_saved",
+
+            # Distribution & command
+            "passes",
+            "crosses_stopped",
+
+            # Sweeper actions
+            "sweeper_action",
+            "sweeper_action_per90",
         ]

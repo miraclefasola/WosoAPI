@@ -99,7 +99,7 @@ class PlayerSeasonStats(models.Model):
     club = models.ForeignKey(
         Club, on_delete=models.CASCADE, related_name="player_clubstats"
     )
-    league = models.ForeignKey(League, on_delete=models.CASCADE, related_name="clubs")
+    league = models.ForeignKey(League, on_delete=models.CASCADE, related_name="league_of_player")
     position = models.CharField(max_length=20, null=True, blank=True)
     age = models.SmallIntegerField(null=True, blank=True)
     matches_played = models.IntegerField(null=True, blank=True)
@@ -164,7 +164,7 @@ class Goalkeeper(models.Model):
     club = models.ForeignKey(
         Club, on_delete=models.CASCADE, related_name="goalkeeper_clubstats"
     )
-    league = models.ForeignKey(League, on_delete=models.CASCADE, related_name="clubs")
+    league = models.ForeignKey(League, on_delete=models.CASCADE, related_name="league_of_goalkeeper")
     position = models.CharField(default="GK", max_length=20)
     age = models.SmallIntegerField(null=True, blank=True)
     matches_played = models.IntegerField(null=True, blank=True)

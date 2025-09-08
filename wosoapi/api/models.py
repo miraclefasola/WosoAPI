@@ -34,8 +34,9 @@ class Season(models.Model):
 class Club(models.Model):
     name = models.CharField(max_length=300)
     fbref_id = models.CharField(max_length=50, unique=True, db_index=True)
+    stadium=models.CharField(max_length=200, blank=True, null=True)
 
-    league = models.ForeignKey(League, on_delete=models.CASCADE, related_name="clubs")
+    
 
     def __str__(self):
         return self.name
@@ -48,6 +49,8 @@ class ClubSeasonStat(models.Model):
     season = models.ForeignKey(
         Season, on_delete=models.CASCADE, related_name="club_season", db_index=True
     )
+    league = models.ForeignKey(League, on_delete=models.CASCADE, related_name="clubs")
+    
     points_won = models.IntegerField()
     league_position = models.IntegerField()
     matches_played = models.IntegerField(null=True, blank=True)
@@ -79,7 +82,8 @@ class ClubSeasonStat(models.Model):
 class Player(models.Model):
     full_name = models.CharField(max_length=500)
     fbref_id = models.CharField(max_length=100, unique=True)
-    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="club_player")
+    nationality=models.CharField(max_length=50, null=True, blank=True)
+    age=models.SmallIntegerField(null=True,blank=True)
 
     def __str__(self):
         return self.full_name
@@ -91,6 +95,9 @@ class PlayerSeasonStats(models.Model):
     )
     season = models.ForeignKey(
         Season, on_delete=models.CASCADE, related_name="season_player"
+    )
+    club = models.ForeignKey(
+        Club, on_delete=models.CASCADE, related_name="player_clubstats"
     )
     position = models.CharField(max_length=20, null=True, blank=True)
     age = models.SmallIntegerField(null=True, blank=True)
@@ -120,7 +127,7 @@ class PlayerSeasonStats(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["player", "season"], name="unique_player_season"
+                fields=["player","season","club"], name="unique_player_season_club"
             )
         ]
 
@@ -135,6 +142,9 @@ class Goalkeeper(models.Model):
     season = models.ForeignKey(
         Season, on_delete=models.CASCADE, related_name="season_goalkeeper"
     )
+    club = models.ForeignKey(
+        Club, on_delete=models.CASCADE, related_name="goalkeeper_clubstats"
+    )
     position = models.CharField(default="GK", max_length=20, null=True, blank=True)
     age = models.SmallIntegerField(null=True, blank=True)
     matches_played = models.IntegerField(null=True, blank=True)
@@ -145,6 +155,14 @@ class Goalkeeper(models.Model):
     save_percentage = models.FloatField(null=True, blank=True)
     clean_sheets = models.IntegerField(null=True, blank=True)
     psxg = models.FloatField(null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["player", "season","club"], name="unique_goalkeeper_season_club"
+            )
+        ]
+
 
     def __str__(self):
         return f"{self.player.full_name}, GK ({self.season.season})"

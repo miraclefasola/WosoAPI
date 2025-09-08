@@ -31,14 +31,11 @@ class SeasonSerializer(serializers.ModelSerializer):
 
 
 class ClubSerializer(serializers.ModelSerializer):
-    league_id = serializers.PrimaryKeyRelatedField(
-        queryset=League.objects.all(), source="league", write_only=True
-    )
-    league = serializers.ReadOnlyField(source="league.name")
+
 
     class Meta:
         model = Club
-        fields = ["id", "name", "fbref_id", "league", "league_id"]
+        fields = ["id", "name", "fbref_id","stadium" ]
 
 
 class ClubSeasonStatSerializer(serializers.ModelSerializer):
@@ -48,6 +45,10 @@ class ClubSeasonStatSerializer(serializers.ModelSerializer):
     season_id = serializers.PrimaryKeyRelatedField(
         queryset=Season.objects.all(), source="season", write_only=True
     )
+    league_id = serializers.PrimaryKeyRelatedField(
+        queryset=League.objects.all(), source="league", write_only=True
+    )
+    league = serializers.ReadOnlyField(source="league.name")
     club = serializers.ReadOnlyField(source="club.name")
     season = serializers.ReadOnlyField(source="season.season")
 
@@ -59,6 +60,8 @@ class ClubSeasonStatSerializer(serializers.ModelSerializer):
             "season",
             "club_id",
             "season_id",
+            "league", 
+            "league_id",
             "points_won",
             "league_position",
             "matches_played",
@@ -79,14 +82,11 @@ class ClubSeasonStatSerializer(serializers.ModelSerializer):
 
 
 class PlayerSerializer(serializers.ModelSerializer):
-    club_id = serializers.PrimaryKeyRelatedField(
-        queryset=Club.objects.all(), source="club", write_only=True
-    )
-    club = serializers.ReadOnlyField(source="club.name")
+
 
     class Meta:
         model = Player
-        fields = ["id", "full_name", "fbref_id", "club", "club_id"]
+        fields = ["id", "full_name", "fbref_id", "nationality","age"]
 
 
 class PlayerSeasonStatsSerializer(serializers.ModelSerializer):
@@ -96,8 +96,10 @@ class PlayerSeasonStatsSerializer(serializers.ModelSerializer):
     season_id = serializers.PrimaryKeyRelatedField(
         queryset=Season.objects.all(), source="season", write_only=True
     )
+    
+    club_id= serializers.PrimaryKeyRelatedField(queryset=Club.objects.all(), source='club', write_only=True)
     player_name = serializers.ReadOnlyField(source="player.full_name")
-    club_name = serializers.ReadOnlyField(source="player.club.name")
+    club_name = serializers.ReadOnlyField(source="club.name")
     season = serializers.ReadOnlyField(source="season.season")
 
     class Meta:
@@ -109,6 +111,7 @@ class PlayerSeasonStatsSerializer(serializers.ModelSerializer):
             "season",
             "player_id",
             "season_id",
+            "club_id",
             "position",
             "age",
             "matches_played",
@@ -143,8 +146,9 @@ class GoalkeeperSerializer(serializers.ModelSerializer):
     season_id = serializers.PrimaryKeyRelatedField(
         queryset=Season.objects.all(), source="season", write_only=True
     )
+    club_id= serializers.PrimaryKeyRelatedField(queryset=Club.objects.all(), source='club', write_only=True)
     player_name = serializers.ReadOnlyField(source="player.full_name")
-    club_name = serializers.ReadOnlyField(source="player.club.name")
+    club_name = serializers.ReadOnlyField(source="club.name")
     season = serializers.ReadOnlyField(source="season.season")
 
     class Meta:
@@ -155,6 +159,7 @@ class GoalkeeperSerializer(serializers.ModelSerializer):
             "season",
             "player_id",
             "season_id",
+            "club_id",
             "age",
             "matches_played",
             "minutes_played",

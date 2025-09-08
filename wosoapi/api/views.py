@@ -1,14 +1,11 @@
 from django.shortcuts import render
 from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.views import APIView
 from api.serializers import *
-from django.core.exceptions import PermissionDenied
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from api.permissions import IsSuperUserOrReadOnly
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import filters, DjangoFilterBackend
-from django_filters.filters import OrderingFilter
 from rest_framework import filters
 
 
@@ -29,7 +26,7 @@ class CountryView(ModelViewSet):
     filterset_fields = {
         "id": ["exact"],
         "name": ["exact", "icontains"],
-        "code": ["exact", "icontains"],
+        "code": ["exact"],
     }
 
 
@@ -51,7 +48,7 @@ class LeagueView(ModelViewSet):
         "id": ["exact"],
         "name": ["exact", "icontains"],
         "country__name": ["exact", "icontains"],
-        "code": ["exact", "icontains"],
+        "code": ["exact"],
         "total_clubs": ["exact", "gte", "lte", "range"],
     }
 
@@ -73,7 +70,7 @@ class SeasonView(ModelViewSet):
     ordering = ["season", "league__name"]
     filterset_fields = {
         "id": ["exact"],
-        "season": ["exact", "icontains"],
+        "season": ["exact"],
         "league__name": ["exact", "icontains"],
     }
 
@@ -82,28 +79,28 @@ class Clubview(ModelViewSet):
     permission_classes = [IsSuperUserOrReadOnly]
     authentication_classes = [JWTAuthentication]
     serializer_class = ClubSerializer
-    queryset = Club.objects.select_related("league").all()
+    queryset = Club.objects.all()
     filter_backends = [
         filters.OrderingFilter,
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
 
-    ordering_fields = ["id", "name", "fbref_id", "league__name"]
-    search_fields = ["id", "name", "fbref_id", "league__name"]
+    ordering_fields = ["id", "name", "fbref_id","stadium" ]
+    search_fields = ["id", "name", "fbref_id", "stadium"]
     ordering = ["name", "fbref_id"]
     filterset_fields = {
         "id": ["exact"],
         "name": ["exact", "icontains"],
-        "fbref_id": ["exact", "icontains"],
-        "league__name": ["exact", "icontains"],
+        "fbref_id": ["exact"],
+        "stadium":["exact", "icontains"]
     }
 
 
 class ClubSeasonStatView(ModelViewSet):
     permission_classes = [IsSuperUserOrReadOnly]
     authentication_classes = [JWTAuthentication]
-    queryset = ClubSeasonStat.objects.select_related("club", "season").all()
+    queryset = ClubSeasonStat.objects.select_related("club", "season", "league").all()
     serializer_class = ClubSeasonStatSerializer
     filter_backends = [
         filters.OrderingFilter,
@@ -115,6 +112,7 @@ class ClubSeasonStatView(ModelViewSet):
         "id",
         "club__name",
         "season__season",
+        "league__name",
         "points_won",
         "league_position",
         "matches_played",
@@ -136,6 +134,7 @@ class ClubSeasonStatView(ModelViewSet):
         "id",
         "club__name",
         "season__season",
+        "league__name",
         "points_won",
         "league_position",
         "matches_played",
@@ -157,7 +156,8 @@ class ClubSeasonStatView(ModelViewSet):
     filterset_fields = {
         "id": ["exact"],
         "club__name": ["exact", "icontains"],
-        "season__season": ["exact", "icontains"],
+        "season__season": ["exact"],
+        "league__name":["exact", "icontains"],
         "points_won": ["exact", "gte", "lte", "range"],
         "league_position": ["exact", "gte", "lte", "range"],
         "matches_played": ["exact", "gte", "lte", "range"],
@@ -180,7 +180,7 @@ class ClubSeasonStatView(ModelViewSet):
 class PlayerView(ModelViewSet):
     permission_classes = [IsSuperUserOrReadOnly]
     authentication_classes = [JWTAuthentication]
-    queryset = Player.objects.select_related("club").all()
+    queryset = Player.objects.all()
     serializer_class = PlayerSerializer
     filter_backends = [
         filters.OrderingFilter,
@@ -188,21 +188,22 @@ class PlayerView(ModelViewSet):
         DjangoFilterBackend,
     ]
 
-    ordering_fields = ["id", "full_name", "fbref_id", "club__name"]
-    search_fields = ["id", "full_name", "fbref_id", "club__name"]
+    ordering_fields = ["id", "full_name", "fbref_id",  "nationality","age"]
+    search_fields = ["id", "full_name", "fbref_id", "nationality","age"]
     ordering = ["full_name"]
     filterset_fields = {
         "id": ["exact"],
         "full_name": ["exact", "icontains"],
-        "fbref_id": ["exact", "icontains"],
-        "club__name": ["exact", "icontains"],
+        "fbref_id": ["exact"],
+        "nationality": ["exact", "icontains"],
+        "age": ["exact", "icontains"]
     }
 
 
 class PlayerSeasonStatsView(ModelViewSet):
     permission_classes = [IsSuperUserOrReadOnly]
     authentication_classes = [JWTAuthentication]
-    queryset = PlayerSeasonStats.objects.select_related("player", "player__club", "player__club__league", "season").all()
+    queryset = PlayerSeasonStats.objects.select_related("player", "club", "club__league", "season").all()
     serializer_class = PlayerSeasonStatsSerializer
     filter_backends = [
         filters.OrderingFilter,
@@ -215,8 +216,8 @@ class PlayerSeasonStatsView(ModelViewSet):
         "fouls_commited",
         "fouls_won",
         "player__full_name",
-        "player__club__name",
-        "player__club__league__code",
+        "club__name",
+        "club__league__code",
         "season__season",
         "position",
         "age",
@@ -246,8 +247,8 @@ class PlayerSeasonStatsView(ModelViewSet):
         "fouls_commited",
         "fouls_won",
         "player__full_name",
-        "player__club__name",
-        "player__club__league__code",
+        "club__name",
+        "club__league__code",
         "season__season",
         "position",
         "age",
@@ -278,9 +279,9 @@ class PlayerSeasonStatsView(ModelViewSet):
         "fouls_commited": ["exact", "gte", "lte", "range"],
         "fouls_won": ["exact", "gte", "lte", "range"],
         "player__full_name": ["exact", "icontains"],
-        "player__club__name": ["exact", "icontains"],
-        "player__club__league__code": ["exact", "icontains"],
-        "season__season": ["exact", "icontains"],
+        "club__name": ["exact", "icontains"],
+        "club__league__code": ["exact"],
+        "season__season": ["exact"],
         "position": ["exact", "icontains"],
         "age": ["exact", "gte", "lte", "range"],
         "matches_played": ["exact", "gte", "lte", "range"],
@@ -306,10 +307,11 @@ class PlayerSeasonStatsView(ModelViewSet):
     }
 
 
+
 class GoalkeeperView(ModelViewSet):
     permission_classes = [IsSuperUserOrReadOnly]
     authentication_classes = [JWTAuthentication]
-    queryset = Goalkeeper.objects.select_related("player","player__club","player__club__league", "season").all()
+    queryset = Goalkeeper.objects.select_related("player","club","club__league", "season").all()
     serializer_class = GoalkeeperSerializer
     filter_backends = [
         filters.OrderingFilter,
@@ -320,8 +322,8 @@ class GoalkeeperView(ModelViewSet):
 
     ordering_fields = [
         "player__full_name",
-        "player__club__name",
-        "player__club__league__code",
+        "club__name",
+        "club__league__code",
         "season__season",
         "age",
         "matches_played",
@@ -335,8 +337,8 @@ class GoalkeeperView(ModelViewSet):
     ]
     search_fields = [
         "player__full_name",
-        "player__club__name",
-        "player__club__league__code",
+        "club__name",
+        "club__league__code",
         "season__season",
         "age",
         "matches_played",
@@ -351,9 +353,9 @@ class GoalkeeperView(ModelViewSet):
     ordering = ["matches_played", "minutes_played", "goals_conceded", "player__full_name"]
     filterset_fields = {
         "player__full_name": ["exact", "icontains"],
-        "player__club__name": ["exact", "icontains"],
-        "player__club__league__code": ["exact", "icontains"],
-        "season__season": ["exact", "icontains"],
+        "club__name": ["exact", "icontains"],
+        "club__league__code": ["exact"],
+        "season__season": ["exact"],
         "age": ["exact", "gte", "lte", "range"],
         "matches_played": ["exact", "gte", "lte", "range"],
         "minutes_played": ["exact", "gte", "lte", "range"],
@@ -381,7 +383,7 @@ class LeagueSeasonView(ListAPIView):
     ordering = ["season", "league__name"]
     filterset_fields = {
         "id": ["exact"],
-        "season": ["exact", "icontains"],
+        "season": ["exact"],
         "league__name": ["exact", "icontains"],
     }
 
@@ -395,7 +397,7 @@ class LeagueSeasonView(ListAPIView):
 class LeagueClubView(ListAPIView):
     permission_classes = [IsSuperUserOrReadOnly]
     authentication_classes = [JWTAuthentication]
-    serializer_class = ClubSerializer
+    serializer_class = ClubSeasonStatSerializer
     filter_backends = [
         filters.OrderingFilter,
         filters.SearchFilter,
@@ -408,21 +410,21 @@ class LeagueClubView(ListAPIView):
     filterset_fields = {
         "id": ["exact"],
         "name": ["exact", "icontains"],
-        "fbref_id": ["exact", "icontains"],
+        "fbref_id": ["exact"],
         "league__name": ["exact", "icontains"],
     }
 
     def get_queryset(self):
         league_id = self.kwargs.get("league_id")
         get_object_or_404(League, pk=league_id)
-        queryset = Club.objects.select_related("league").filter(league_id=league_id)
+        queryset = ClubSeasonStat.objects.select_related("club", "league", "season").filter(league_id=league_id)
         return queryset
 
 
 class LeaguePlayerView(ListAPIView):
     permission_classes = [IsSuperUserOrReadOnly]
     authentication_classes = [JWTAuthentication]
-    serializer_class = PlayerSerializer
+    serializer_class = PlayerSeasonStatsSerializer
     filter_backends = [
         filters.OrderingFilter,
         filters.SearchFilter,
@@ -435,14 +437,14 @@ class LeaguePlayerView(ListAPIView):
     filterset_fields = {
         "id": ["exact"],
         "full_name": ["exact", "icontains"],
-        "fbref_id": ["exact", "icontains"],
+        "fbref_id": ["exact"],
         "club__name": ["exact", "icontains"],
     }
 
     def get_queryset(self):
         league_id = self.kwargs.get("league_id")
         get_object_or_404(League, pk=league_id)
-        queryset = Player.objects.select_related("club").filter(club__league_id=league_id)
+        queryset = PlayerSeasonStats.objects.select_related("player", "club", "season").filter(club__league_id=league_id)
         return queryset
 
 
@@ -458,7 +460,7 @@ class LeagueGoalkeeperView(ListAPIView):
 
     ordering_fields = [
         "player__full_name",
-        "player__club__name",
+        "club__name",
         "season__season",
         "age",
         "matches_played",
@@ -472,7 +474,7 @@ class LeagueGoalkeeperView(ListAPIView):
     ]
     search_fields = [
         "player__full_name",
-        "player__club__name",
+        "club__name",
         "season__season",
         "age",
         "matches_played",
@@ -487,9 +489,9 @@ class LeagueGoalkeeperView(ListAPIView):
     ordering = ["matches_played","minutes_played","goals_conceded", "psxg", "player__full_name"]
     filterset_fields = {
         "player__full_name": ["exact", "icontains"],
-        "player__club__name": ["exact", "icontains"],
-        "player__club__league__code": ["exact", "icontains"],
-        "season__season": ["exact", "icontains"],
+        "club__name": ["exact", "icontains"],
+        "club__league__code": ["exact"],
+        "season__season": ["exact"],
         "age": ["exact", "gte", "lte", "range"],
         "matches_played": ["exact", "gte", "lte", "range"],
         "minutes_played": ["exact", "gte", "lte", "range"],
@@ -504,7 +506,7 @@ class LeagueGoalkeeperView(ListAPIView):
     def get_queryset(self):
         league_id = self.kwargs.get("league_id")
         get_object_or_404(League, pk=league_id)
-        queryset = Goalkeeper.objects.select_related("player","player__club", "player__club__league", "season").filter(player__club__league_id=league_id)
+        queryset = queryset = Goalkeeper.objects.select_related("player", "club", "season").filter(club__league_id=league_id)
         return queryset
 
 
@@ -564,7 +566,7 @@ class ClubDetailView(ListAPIView):
     filterset_fields = {
         "id": ["exact"],
         "club__name": ["exact", "icontains"],
-        "season__season": ["exact", "icontains"],
+        "season__season": ["exact"],
         "points_won": ["exact", "gte", "lte", "range"],
         "league_position": ["exact", "gte", "lte", "range"],
         "matches_played": ["exact", "gte", "lte", "range"],
@@ -605,7 +607,7 @@ class ClubPlayerView(ListAPIView):
         "fouls_commited",
         "fouls_won",
         "player__full_name",
-        "player__club__name",
+        "club__name",
         "season__season",
         "position",
         "age",
@@ -635,7 +637,7 @@ class ClubPlayerView(ListAPIView):
         "fouls_commited",
         "fouls_won",
         "player__full_name",
-        "player__club__name",
+        "club__name",
         "season__season",
         "position",
         "age",
@@ -666,8 +668,8 @@ class ClubPlayerView(ListAPIView):
         "fouls_commited": ["exact", "gte", "lte", "range"],
         "fouls_won": ["exact", "gte", "lte", "range"],
         "player__full_name": ["exact", "icontains"],
-        "player__club__name": ["exact", "icontains"],
-        "season__season": ["exact", "icontains"],
+        "club__name": ["exact", "icontains"],
+        "season__season": ["exact"],
         "position": ["exact", "icontains"],
         "age": ["exact", "gte", "lte", "range"],
         "matches_played": ["exact", "gte", "lte", "range"],
@@ -695,7 +697,7 @@ class ClubPlayerView(ListAPIView):
     def get_queryset(self):
         club_id = self.kwargs.get("club_id")
         get_object_or_404(Club, pk=club_id)
-        queryset = PlayerSeasonStats.objects.select_related("player", "player__club", "season").filter(player__club_id=club_id)
+        queryset = PlayerSeasonStats.objects.select_related("player", "club", "season").filter(club_id=club_id)
         return queryset
 
 
@@ -712,7 +714,7 @@ class ClubGoalkeeperView(ListAPIView):
 
     ordering_fields = [
         "player__full_name",
-        "player__club__name",
+        "club__name",
         "season__season",
         "age",
         "matches_played",
@@ -726,7 +728,7 @@ class ClubGoalkeeperView(ListAPIView):
     ]
     search_fields = [
         "player__full_name",
-        "player__club__name",
+        "club__name",
         "season__season",
         "age",
         "matches_played",
@@ -741,8 +743,8 @@ class ClubGoalkeeperView(ListAPIView):
     ordering = ["matches_played","minutes_played","goals_conceded", "psxg", "player__full_name"]
     filterset_fields = {
         "player__full_name": ["exact", "icontains"],
-        "player__club__name": ["exact", "icontains"],
-        "season__season": ["exact", "icontains"],
+        "club__name": ["exact", "icontains"],
+        "season__season": ["exact"],
         "age": ["exact", "gte", "lte", "range"],
         "matches_played": ["exact", "gte", "lte", "range"],
         "minutes_played": ["exact", "gte", "lte", "range"],
@@ -757,5 +759,5 @@ class ClubGoalkeeperView(ListAPIView):
     def get_queryset(self):
         club_id = self.kwargs.get("club_id")
         get_object_or_404(Club, pk=club_id)
-        queryset = Goalkeeper.objects.select_related("player", "player__club", "season").filter(player__club_id=club_id)
+        queryset = Goalkeeper.objects.select_related("player", "club", "season").filter(club_id=club_id)
         return queryset

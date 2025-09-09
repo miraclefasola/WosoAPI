@@ -1,81 +1,79 @@
 import pandas as pd
 from django.core.management.base import BaseCommand
-from django.db import transaction
-from api.models import Club, Player
-
+from api.models import Player  # Assuming your Player model is in api/models.py
+import numpy as np
 
 class Command(BaseCommand):
-    help = "Imports player data from a specified CSV file for a given club."
+    help = "Imports or updates player data from a given CSV file."
 
     def add_arguments(self, parser):
-        parser.add_argument("csv_file", type=str, help="The path to the CSV file.")
-        parser.add_argument(
-            "--club_fbref_id",
-            type=str,
-            required=True,
-            help="The fbref_id of the club to import players for.",
-        )
+        """Adds a command-line argument to specify the CSV file path."""
+        parser.add_argument('csv_file', type=str, help='The path to the CSV file containing player data.')
 
     def handle(self, *args, **kwargs):
-        csv_file_path = kwargs["csv_file"]
-        club_fbref_id = kwargs["club_fbref_id"]
+        """The main logic for the management command."""
+        csv_file_path = kwargs['csv_file']
 
         try:
-            # Find the Club object by its fbref_id
-            club = Club.objects.get(fbref_id=club_fbref_id)
-        except Club.DoesNotExist:
-            self.stdout.write(
-                self.style.ERROR(
-                    f'Club with fbref_id "{club_fbref_id}" does not exist.'
-                )
-            )
-            return
-
-        try:
-            self.stdout.write(f"Reading data from {csv_file_path}...")
+            # Read the CSV file into a pandas DataFrame
             df = pd.read_csv(csv_file_path)
-
-            # Filter the DataFrame to get only the players for the specified club
-            players_df = df[df["team_id"] == club_fbref_id].drop_duplicates(
-                subset=["player_id"]
-            )
-
-            if players_df.empty:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f'No players found for club with fbref_id "{club_fbref_id}" in the CSV.'
-                    )
-                )
+            
+            # Check for the existence of required columns
+            required_cols = ['player_name', 'player_id', 'nationality', 'age']
+            if not all(col in df.columns for col in required_cols):
+                self.stdout.write(self.style.ERROR(
+                    f"CSV file must contain the following columns: {', '.join(required_cols)}"
+                ))
                 return
 
-            players_to_create = []
-            for _, row in players_df.iterrows():
-                # Map CSV columns to Player model fields
-                full_name = row["player_name"]
-                fbref_id = row["player_id"]
+            # Counters for tracking the import process
+            created_count = 0
+            updated_count = 0
 
-                players_to_create.append(
-                    Player(full_name=full_name, fbref_id=fbref_id, club=club)
-                )
+            # Iterate through each row of the DataFrame
+            for _, row in df.iterrows():
+                try:
+                    # Clean and prepare the data from the row
+                    # Pandas might read empty cells as NaN, so we handle that for age and nationality
+                    age = int(row['age']) if pd.notna(row['age']) else None
+                    nationality = row['nationality'] if pd.notna(row['nationality']) else None
 
-            with transaction.atomic():
-                Player.objects.bulk_create(players_to_create, ignore_conflicts=True)
-                self.stdout.write(
-                    self.style.SUCCESS(
-                        f"{len(players_to_create)} players successfully imported for {club.name}."
+                    # Use update_or_create to handle new and existing players
+                    # The 'fbref_id' is used as the unique identifier to prevent duplicates.
+                    player, created = Player.objects.update_or_create(
+                        fbref_id=row['player_id'],
+                        defaults={
+                            'full_name': row['player_name'],
+                            'nationality': nationality,
+                            'age': age,
+                        }
                     )
-                )
+
+                    if created:
+                        created_count += 1
+                        self.stdout.write(
+                            self.style.SUCCESS(f"Created player: {player.full_name} ({player.fbref_id})")
+                        )
+                    else:
+                        updated_count += 1
+                        self.stdout.write(
+                            self.style.WARNING(f"Updated player: {player.full_name} ({player.fbref_id})")
+                        )
+                except Exception as e:
+                    self.stdout.write(self.style.ERROR(
+                        f"Skipping row due to an error for player ID {row['player_id']}: {e}"
+                    ))
+
+            # Final summary
+            self.stdout.write(self.style.SUCCESS(
+                f"\nPlayer import complete! Created: {created_count}, Updated: {updated_count}"
+            ))
 
         except FileNotFoundError:
-            self.stdout.write(
-                self.style.ERROR(f'The file "{csv_file_path}" was not found.')
-            )
-        except KeyError as e:
-            self.stdout.write(
-                self.style.ERROR(f"Missing a required column in the CSV file: {e}")
-            )
+            self.stdout.write(self.style.ERROR(
+                f'The file "{csv_file_path}" was not found.'
+            ))
         except Exception as e:
             self.stdout.write(self.style.ERROR(f"An unexpected error occurred: {e}"))
 
-
-# python manage.py import_players WSL_2024_25_ALL_PLAYER_STATS_20250821_102053.csv --club_fbref_id=78ba1bd4
+#python manage.py import_players WSL_2024_25_ALL_PLAYER_STATS_20250821_102053.csv

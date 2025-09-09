@@ -28,7 +28,7 @@ class Season(models.Model):
     )
 
     def __str__(self):
-        return self.season
+        return f"{self.season} {self.league.name}" 
 
 
 class Club(models.Model):

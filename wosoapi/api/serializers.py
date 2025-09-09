@@ -121,7 +121,7 @@ class PlayerSeasonStatsSerializer(serializers.ModelSerializer):
             "player_name",
             "club_name",
             "season",
-            "league"
+            "league",
             "league_id",
             "player_id",
             "season_id",
@@ -212,7 +212,7 @@ class GoalkeeperSerializer(serializers.ModelSerializer):
             "club_name",
             "season",
             "league",
-            "league_id"
+            "league_id",
             "player_id",
             "season_id",
             "club_id",

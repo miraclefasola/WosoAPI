@@ -1,7 +1,7 @@
 import pandas as pd
 from django.core.management.base import BaseCommand
 from django.db import IntegrityError
-from api.models import Player, Club, Season, League, PlayerSeasonStats, Goalkeeper
+from api.models import Player, Club, Season, League, Goalkeeper
 import numpy as np
 
 class Command(BaseCommand):
@@ -66,13 +66,27 @@ class Command(BaseCommand):
                     player = Player.objects.get(fbref_id=row['player_id'])
                     club = Club.objects.get(fbref_id=row['team_id'])
 
+                    # The age column contains values in the format 'YY-DDD'.
+                    # This code splits the string at the hyphen and takes the year part.
+                    # It also handles cases where age is a float or is missing.
+                    try:
+                        age_str = str(row['age'])
+                        if pd.notna(row['age']) and '-' in age_str:
+                            age = int(age_str.split('-')[0])
+                        elif pd.notna(row['age']):
+                            age = int(float(age_str))
+                        else:
+                            age = None
+                    except (ValueError, TypeError):
+                        age = None
+
                     # Prepare data, handling potential NaN values, commas, and decimals in numbers
                     goals_conceded = int(float(str(row['gk_goals_against']).replace(',', ''))) if pd.notna(row['gk_goals_against']) else 0
                     psxg = float(str(row['gk_psxg']).replace(',', '')) if pd.notna(row['gk_psxg']) else 0.0
 
                     data = {
                         'position': 'GK',
-                        'age': int(float(str(row['age']).replace(',', ''))) if pd.notna(row['age']) else None,
+                        'age': age,
                         'matches_played': int(float(str(row['gk_games']).replace(',', ''))) if pd.notna(row['gk_games']) else 0,
                         'minutes_played': int(float(str(row['gk_minutes']).replace(',', ''))) if pd.notna(row['gk_minutes']) else 0,
                         'goals_conceded': goals_conceded,
@@ -138,4 +152,5 @@ class Command(BaseCommand):
         except Exception as e:
             self.stdout.write(self.style.ERROR(f"An unexpected error occurred: {e}"))
 
-#python manage.py import_goalkeeper_stats WSL_2024_25_ALL_PLAYER_STATS_20250821_102053.csv --season-id=1 --league-id=1
+
+#python manage.py import_goalkeeper_stats WSL_2025_26_ALL_PLAYER_STATS.csv --season-id=2 --league-id=1

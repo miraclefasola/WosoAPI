@@ -112,4 +112,4 @@ class Command(BaseCommand):
                 self.style.ERROR(f"An error occurred: {e}")
             )
 
-#python manage.py import_club_season_stats WSL_2024_25_TEAM_STATS_20250821_102053.csv --season_id=1 --league_id=1
+#python manage.py import_club_season_stats WSL_2025_26_TEAM_STATS.csv --season_id=2 --league_id=1

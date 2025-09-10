@@ -69,10 +69,24 @@ class Command(BaseCommand):
                     player = Player.objects.get(fbref_id=row['player_id'])
                     club = Club.objects.get(fbref_id=row['team_id'])
 
+                    # The age column contains values in the format 'YY-DDD'.
+                    # This code splits the string at the hyphen and takes the year part.
+                    # It also handles cases where age is a float or is missing.
+                    try:
+                        age_str = str(row['age'])
+                        if pd.notna(row['age']) and '-' in age_str:
+                            age = int(age_str.split('-')[0])
+                        elif pd.notna(row['age']):
+                            age = int(float(age_str))
+                        else:
+                            age = None
+                    except (ValueError, TypeError):
+                        age = None
+
                     # Prepare data, handling potential NaN values, commas, and decimals in numbers
                     data = {
                         'position': row['position'] if pd.notna(row['position']) else None,
-                        'age': int(float(str(row['age']).replace(',', ''))) if pd.notna(row['age']) else None,
+                        'age': age,
                         'matches_played': int(float(str(row['games']).replace(',', ''))) if pd.notna(row['games']) else 0,
                         'minutes_played': int(float(str(row['minutes']).replace(',', ''))) if pd.notna(row['minutes']) else 0,
                         'matches_completed': int(float(str(row['games_complete']).replace(',', ''))) if pd.notna(row['games_complete']) else 0,
@@ -165,4 +179,4 @@ class Command(BaseCommand):
         except Exception as e:
             self.stdout.write(self.style.ERROR(f"An unexpected error occurred: {e}"))
 
-#python manage.py import_player_stats WSL_2024_25_ALL_PLAYER_STATS_20250821_102053.csv --season-id=1 --league-id=1
+#python manage.py import_player_stats WSL_2025_26_ALL_PLAYER_STATS.csv --season-id=2 --league-id=1

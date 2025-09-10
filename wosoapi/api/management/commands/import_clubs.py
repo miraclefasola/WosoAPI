@@ -60,4 +60,4 @@ class Command(BaseCommand):
                 self.style.ERROR(f"An error occurred: {e}")
             )
 
-#python manage.py import_clubs WSL_2024_25_TEAM_STATS_20250821_102053.csv
+#python manage.py import_clubs WSL_2025_26_TEAM_STATS.csv

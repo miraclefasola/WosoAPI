@@ -19,6 +19,12 @@ class League(models.Model):
 
     def __str__(self):
         return f"{self.name}, {self.country}"
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["country", "name"], name="unique_country_name"
+            ),
+        ]
 
 
 class Season(models.Model):
@@ -29,10 +35,16 @@ class Season(models.Model):
 
     def __str__(self):
         return f"{self.season} {self.league.name}" 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["league", "season"], name="unique_league_season"
+            ),
+        ]
 
 
 class Club(models.Model):
-    name = models.CharField(max_length=300)
+    name = models.CharField(max_length=300, unique=True)
     fbref_id = models.CharField(max_length=50, unique=True, db_index=True)
     stadium=models.CharField(max_length=200, blank=True, null=True)
 

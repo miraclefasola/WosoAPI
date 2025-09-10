@@ -368,7 +368,8 @@ Get comprehensive club information and detailed season statistics.
 Get statistical data for all clubs across all seasons.
 
 **Query Parameters:**
-- `season__season` - Filter by season (e.g., `2023/24`)
+- `season__season` - Filter by season (e.g., `2024/25
+`)
 - `league__name` - Filter by league name
 - `club__name` - Filter by club name
 - `ordering` - Sort by field (e.g., `points_won`, `-goals_scored`, `xg_created`)
@@ -470,65 +471,69 @@ Get list of all goalkeepers across leagues with specialized filtering.
 
 ### 🎯 Top Performers
 ```bash
-# Top 10 goal scorers in WSL (2023/24, minimum 500 minutes)
-GET /playerstats/?season__season=2023/24&league__code=WSL&ordering=-goals&minutes_played__gte=500&limit=10
+# Top 10 goal scorers in WSL (2024/25, minimum 500 minutes)
+GET /playerstats/?season__season=2024/25&league__code=WSL&ordering=-goals&minutes_played__gte=500&limit=10
 
-# Top 5 goal scorers in Arsenal Women (2023/24)
-GET /playerstats/?season__season=2023/24&league__code=WSL&club__name=Arsenal&ordering=-goals&limit=5
+# Top 5 goal scorers in Arsenal Women (2024/25)
+GET /playerstats/?season__season=2024/25&league__code=WSL&club__name=Arsenal&ordering=-goals&limit=5
 
-# Best passers by progressive passes (all leagues, 2023/24)
-GET /playerstats/?season__season=2023/24&position=MF&ordering=-prog_passes&minutes_played__gte=300
+# Best passers by progressive passes (all leagues, 2024/25
+)
+GET /playerstats/?season__season=2024/25&position=MF&ordering=-prog_passes&minutes_played__gte=300
 
-# Most progressive players in WSL (2023/24)
-GET /playerstats/?season__season=2023/24&league__code=WSL&ordering=-prog_carries&minutes_played__gte=400
+# Most progressive players in WSL (2024/25)
+GET /playerstats/?season__season=2024/25&league__code=WSL&ordering=-prog_carries&minutes_played__gte=400
 
-# Top 10 assist providers in Chelsea Women (2023/24)
-GET /playerstats/?season__season=2023/24&club__name=Chelsea&ordering=-assists&limit=10
+# Top 10 assist providers in Chelsea Women (2024/25)
+GET /playerstats/?season__season=2024/25&club__name=Chelsea&ordering=-assists&limit=10
 
-# Most minutes played in Arsenal Women (2023/24)
-GET /playerstats/?season__season=2023/24&league__code=WSL&club__name=Arsenal&ordering=-minutes_played&limit=10
+# Most minutes played in Arsenal Women (2024/25)
+GET /playerstats/?season__season=2024/25&league__code=WSL&club__name=Arsenal&ordering=-minutes_played&limit=10
 ```
 
 ### ⚡ Advanced Analytics
 ```bash
-# Highest xG performers, forwards in WSL (2023/24)
-GET /playerstats/?season__season=2023/24&league__code=WSL&position=FW&ordering=-xg
+# Highest xG performers, forwards in WSL (2024/25)
+GET /playerstats/?season__season=2024/25&league__code=WSL&position=FW&ordering=-xg
 
-# Best defensive midfielders in Arsenal Women (2023/24)
-GET /playerstats/?season__season=2023/24&league__code=WSL&club__name=Arsenal&position=MF&ordering=-tackles&minutes_played__gte=500
+# Best defensive midfielders in Arsenal Women (2024/25)
+GET /playerstats/?season__season=2024/25&league__code=WSL&club__name=Arsenal&position=MF&ordering=-tackles&minutes_played__gte=500
 
-# Most ball-winning midfielders (tackles + interceptions, 2023/24)
-GET /playerstats/?season__season=2023/24&position=MF&ordering=-tackles&ordering=-interceptions
+# Most ball-winning midfielders (tackles + interceptions, 2024/25
+)
+GET /playerstats/?season__season=2024/25&position=MF&ordering=-tackles&ordering=-interceptions
 
-# Best young forwards in WSL (under 23, 2023/24)
-GET /playerstats/?season__season=2023/24&league__code=WSL&age__lte=23&position=FW&minutes_played__gte=300&ordering=-goals
+# Best young forwards in WSL (under 23, 2024/25
+)
+GET /playerstats/?season__season=2024/25&league__code=WSL&age__lte=23&position=FW&minutes_played__gte=300&ordering=-goals
 
 # Players with most progressive carries to final third
-GET /playerstats/?season__season=2023/24&ordering=-prog_carries_final_3rd&minutes_played__gte=700
+GET /playerstats/?season__season=2024/25&ordering=-prog_carries_final_3rd&minutes_played__gte=700
 
 # Players with most shot creation actions
-GET /playerstats/?season__season=2023/24&ordering=-shots_creation_action&minutes_played__gte=500
+GET /playerstats/?season__season=2024/25&ordering=-shots_creation_action&minutes_played__gte=500
 ```
 
 ### 🥅 Goalkeeper Analytics
 ```bash
-# Best shot stoppers in WSL (2023/24)
-GET /goalkeepers/?season__season=2023/24&league__code=WSL&ordering=-save_percentage&minutes_played__gte=450
+# Best shot stoppers in WSL (2024/25)
+GET /goalkeepers/?season__season=2024/25
+&league__code=WSL&ordering=-save_percentage&minutes_played__gte=450
 
-# Goalkeepers with most clean sheets in Chelsea Women (2023/24)
-GET /goalkeepers/?season__season=2023/24&club__name=Chelsea&ordering=-clean_sheets
+# Goalkeepers with most clean sheets in Chelsea Women (2024/25)
+GET /goalkeepers/?season__season=2024/25&club__name=Chelsea&ordering=-clean_sheets
 
-# Goalkeepers preventing most goals vs expected (2023/24)
-GET /goalkeepers/?season__season=2023/24&ordering=-psxg_performance
+# Goalkeepers preventing most goals vs expected (2024/25)
+GET /goalkeepers/?season__season=2024/25&ordering=-psxg_performance
 
-# Most saves made (2023/24)
-GET /goalkeepers/?season__season=2023/24&ordering=-saves&limit=5
+# Most saves made (2024/25)
+GET /goalkeepers/?season__season=2024/25&ordering=-saves&limit=5
 
-# Best penalty savers (2023/24)
-GET /goalkeepers/?season__season=2023/24&ordering=-pen_saved
+# Best penalty savers (2024/25)
+GET /goalkeepers/?season__season=2024/25&ordering=-pen_saved
 
-# Most active sweeper keepers (2023/24)
-GET /goalkeepers/?season__season=2023/24&ordering=-sweeper_action_per90
+# Most active sweeper keepers (2024/25)
+GET /goalkeepers/?season__season=2024/25&ordering=-sweeper_action_per90
 ```
 
 ---

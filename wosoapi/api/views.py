@@ -7,6 +7,11 @@ from api.permissions import IsSuperUserOrReadOnly
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import filters, DjangoFilterBackend
 from rest_framework import filters
+from django.views.generic import TemplateView
+
+
+class HomeView(TemplateView):
+    template_name="api/documentation.html"
 
 
 class CountryView(ModelViewSet):
@@ -1074,3 +1079,4 @@ class ClubGoalkeeperView(ListAPIView):
         get_object_or_404(Club, pk=club_id)
         queryset = Goalkeeper.objects.select_related("player", "club", "season").filter(club_id=club_id)
         return queryset
+    

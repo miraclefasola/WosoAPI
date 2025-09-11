@@ -3,7 +3,7 @@
 This document explains how to construct API queries for the WOSO API and what responses to expect.
 
 ## Base URL
-All API endpoints start with: `https://wosoapi.onrender.com/`
+All API endpoints start with: `https://wosoapi.onrender.com/api`
 
 ## Authentication
 All requests (except auth endpoints) require a JWT token in the header:
@@ -38,7 +38,7 @@ Use `search` parameter for text search across multiple fields.
 
 ### Countries
 ```http
-GET /countries/
+GET /api/countries/
 ```
 Returns all countries with women's football data.
 
@@ -49,7 +49,7 @@ Returns all countries with women's football data.
 
 ### Leagues
 ```http
-GET /leagues/
+GET /api/leagues/
 ```
 Returns all leagues with basic information.
 
@@ -62,13 +62,13 @@ Returns all leagues with basic information.
 
 ### League Seasons
 ```http
-GET /leagues/{league_id}/seasons/
+GET /api/leagues/{league_id}/seasons/
 ```
 Returns all seasons for a specific league.
 
 ### League Clubs
 ```http
-GET /leagues/{league_id}/clubs/
+GET /api/leagues/{league_id}/clubs/
 ```
 Returns all clubs in a specific league with current season performance.
 
@@ -81,7 +81,7 @@ Returns all clubs in a specific league with current season performance.
 
 ### League Players
 ```http
-GET /leagues/{league_id}/players/
+GET /api/leagues/{league_id}/players/
 ```
 Returns all players across all clubs in a league with comprehensive statistics.
 
@@ -97,7 +97,7 @@ Returns all players across all clubs in a league with comprehensive statistics.
 
 ### League Goalkeepers
 ```http
-GET /leagues/{league_id}/goalkeepers/
+GET /api/leagues/{league_id}/goalkeepers/
 ```
 Returns all goalkeepers across all clubs in a league with specialized goalkeeper statistics.
 
@@ -112,7 +112,7 @@ Returns all goalkeepers across all clubs in a league with specialized goalkeeper
 
 ### Seasons
 ```http
-GET /seasons/
+GET /api/seasons/
 ```
 Returns all seasons across all leagues.
 
@@ -123,7 +123,7 @@ Returns all seasons across all leagues.
 
 ### All Clubs
 ```http
-GET /clubs/
+GET /api/clubs/
 ```
 Returns list of all clubs across all leagues and seasons.
 
@@ -136,7 +136,7 @@ Returns list of all clubs across all leagues and seasons.
 
 ### Club Detail
 ```http
-GET /clubs/{club_id}/
+GET /api/clubs/{club_id}/
 ```
 Returns comprehensive club information and detailed season statistics.
 
@@ -147,7 +147,7 @@ Returns comprehensive club information and detailed season statistics.
 
 ### Club Statistics
 ```http
-GET /clubstats/
+GET /api/clubstats/
 ```
 Returns statistical data for all clubs across all seasons.
 
@@ -162,19 +162,19 @@ Returns statistical data for all clubs across all seasons.
 
 ### Club Players
 ```http
-GET /clubs/{club_id}/players/
+GET /api/clubs/{club_id}/players/
 ```
 Returns all players in a specific club with their comprehensive season statistics.
 
 ### Club Goalkeepers
 ```http
-GET /clubs/{club_id}/goalkeepers/
+GET /api/clubs/{club_id}/goalkeepers/
 ```
 Returns all goalkeepers in a specific club with specialized goalkeeper statistics.
 
 ### All Players
 ```http
-GET /players/
+GET /api/players/
 ```
 Returns list of all players across all clubs and leagues.
 
@@ -188,7 +188,7 @@ Returns list of all players across all clubs and leagues.
 
 ### Player Statistics
 ```http
-GET /playerstats/
+GET /api/playerstats/
 ```
 Returns comprehensive statistical data for all players with advanced analytics.
 
@@ -208,7 +208,7 @@ Returns comprehensive statistical data for all players with advanced analytics.
 
 ### All Goalkeepers
 ```http
-GET /goalkeepers/
+GET /api/goalkeepers/
 ```
 Returns list of all goalkeepers across leagues with specialized filtering.
 
@@ -228,72 +228,72 @@ Returns list of all goalkeepers across leagues with specialized filtering.
 
 ### Top Scorers in WSL
 ```http
-GET /playerstats/?league__code=WSL&ordering=-goals&minutes_played__gte=500
+GET /api/playerstats/?league__code=WSL&ordering=-goals&minutes_played__gte=500
 ```
 
 ### Arsenal Players in 2023/24 Season
 ```http
-GET /playerstats/?club__name=Arsenal&season__season=2023/24
+GET /api/playerstats/?club__name=Arsenal&season__season=2023/24
 ```
 
 ### Best Passers by Progressive Passes
 ```http
-GET /playerstats/?ordering=-prog_passes&minutes_played__gte=300
+GET /api/playerstats/?ordering=-prog_passes&minutes_played__gte=300
 ```
 
 ### Top Goalkeepers by Save Percentage
 ```http
-GET /goalkeepers/?ordering=-save_percentage&minutes_played__gte=450
+GET /api/goalkeepers/?ordering=-save_percentage&minutes_played__gte=450
 ```
 
 ### Young Forwards Under 23
 ```http
-GET /playerstats/?age__lte=23&position=FW&minutes_played__gte=300&ordering=-goals
+GET /api/playerstats/?age__lte=23&position=FW&minutes_played__gte=300&ordering=-goals
 ```
 
 ### Defensive Midfielders with Most Tackles
 ```http
-GET /playerstats/?position=MF&ordering=-tackles&minutes_played__gte=500
+GET /api/playerstats/?position=MF&ordering=-tackles&minutes_played__gte=500
 ```
 
 ### Players with Most Progressive Carries
 ```http
-GET /playerstats/?ordering=-prog_carries&minutes_played__gte=400
+GET /api/playerstats/?ordering=-prog_carries&minutes_played__gte=400
 ```
 
 ### Best Shot Creation Players
 ```http
-GET /playerstats/?ordering=-shots_creation_action&minutes_played__gte=500
+GET /api/playerstats/?ordering=-shots_creation_action&minutes_played__gte=500
 ```
 
 ### Goalkeepers with Most Clean Sheets
 ```http
-GET /goalkeepers/?ordering=-clean_sheets&season__season=2023/24
+GET /api/goalkeepers/?ordering=-clean_sheets&season__season=2023/24
 ```
 
 ### Players by Expected Goals Performance
 ```http
-GET /playerstats/?ordering=-xg_performance&minutes_played__gte=500
+GET /api/playerstats/?ordering=-xg_performance&minutes_played__gte=500
 ```
 
 ### Most Disciplined Players (Fewest Cards)
 ```http
-GET /playerstats/?ordering=yellow_card&minutes_played__gte=800
+GET /api/playerstats/?ordering=yellow_card&minutes_played__gte=800
 ```
 
 ### Players with Most Ball Recoveries
 ```http
-GET /playerstats/?ordering=-ball_recoveries&minutes_played__gte=600
+GET /api/playerstats/?ordering=-ball_recoveries&minutes_played__gte=600
 ```
 
 ### Goalkeepers Preventing Most Goals vs Expected
 ```http
-GET /goalkeepers/?ordering=-psxg_performance&minutes_played__gte=450
+GET /api/goalkeepers/?ordering=-psxg_performance&minutes_played__gte=450
 ```
 
 ### Most Active Sweeper Keepers
 ```http
-GET /goalkeepers/?ordering=-sweeper_action_per90&minutes_played__gte=450
+GET /api/goalkeepers/?ordering=-sweeper_action_per90&minutes_played__gte=450
 ```
 
 ## Response Format
@@ -330,38 +330,38 @@ All successful responses return JSON data with the following structure:
 ### Examples
 ```http
 # Exact match
-GET /players/?full_name=Mariona Caldentey
+GET /api/players/?full_name=Mariona Caldentey
 
 # Case-insensitive contains
-GET /players/?full_name__icontains=mari
+GET /api/players/?full_name__icontains=mari
 
 # Age range
-GET /players/?age__range=20,25
+GET /api/players/?age__range=20,25
 
 # Goals greater than or equal to 5
-GET /playerstats/?goals__gte=5
+GET /api/playerstats/?goals__gte=5
 ```
 
 ## Common Filter Combinations
 
 ### High-Performing Forwards
 ```http
-GET /playerstats/?position=FW&goals__gte=5&xg__gte=4.0&minutes_played__gte=500&ordering=-goals
+GET /api/playerstats/?position=FW&goals__gte=5&xg__gte=4.0&minutes_played__gte=500&ordering=-goals
 ```
 
 ### Defensive Specialists
 ```http
-GET /playerstats/?position=DF&tackles__gte=20&interceptions__gte=15&minutes_played__gte=800&ordering=-tackles
+GET /api/playerstats/?position=DF&tackles__gte=20&interceptions__gte=15&minutes_played__gte=800&ordering=-tackles
 ```
 
 ### Creative Midfielders
 ```http
-GET /playerstats/?position=MF&assists__gte=3&shots_creation_action__gte=20&prog_passes__gte=30&ordering=-assists
+GET /api/playerstats/?position=MF&assists__gte=3&shots_creation_action__gte=20&prog_passes__gte=30&ordering=-assists
 ```
 
 ### Reliable Goalkeepers
 ```http
-GET /goalkeepers/?save_percentage__gte=70.0&clean_sheets__gte=5&minutes_played__gte=900&ordering=-save_percentage
+GET /api/goalkeepers/?save_percentage__gte=70.0&clean_sheets__gte=5&minutes_played__gte=900&ordering=-save_percentage
 ```
 
 ## Error Responses

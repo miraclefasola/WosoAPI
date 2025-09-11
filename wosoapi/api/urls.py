@@ -15,7 +15,7 @@ router.register(r"goalkeepers", GoalkeeperView, basename="goalkeepers")
 
 
 urlpatterns = [
-    path("", include(router.urls)),
+    path("api/", include(router.urls)),
     path(
         "leagues/<int:league_id>/seasons/",
         LeagueSeasonView.as_view(),
@@ -48,5 +48,6 @@ urlpatterns = [
         ClubGoalkeeperView.as_view(),
         name="club_goalkeepers",
     ),
+    path('', HomeView.as_view(), name='documentation_view')
     #  Returns all goalkeepers (with stats) that belong to a specific club (by club_id)
 ]

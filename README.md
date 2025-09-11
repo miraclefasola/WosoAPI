@@ -38,13 +38,13 @@
 
 ### Base URL
 ```
-https://wosoapi.onrender.com/
+https://wosoapi.onrender.com/api/
 ```
 
 ### 1. Register & Authenticate
 ```bash
 # 1. Register new account
-curl -X POST https://wosoapi.onrender.com/register/ \
+curl -X POST https://wosoapi.onrender.com/api/register/ \
   -H "Content-Type: application/json" \
   -d '{
     "email": "analyst@example.com",
@@ -55,7 +55,7 @@ curl -X POST https://wosoapi.onrender.com/register/ \
 # 2. Check email and click verification link
 
 # 3. Get JWT tokens
-curl -X POST https://wosoapi.onrender.com/token/ \
+curl -X POST https://wosoapi.onrender.com/api/token/ \
   -H "Content-Type: application/json" \
   -d '{
     "email": "analyst@example.com", 
@@ -67,19 +67,19 @@ curl -X POST https://wosoapi.onrender.com/token/ \
 ```bash
 # Get all leagues
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  https://wosoapi.onrender.com/leagues/
+  https://wosoapi.onrender.com/api/leagues/
 
 # Get all clubs in a specific league
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  https://wosoapi.onrender.com/leagues/1/clubs/
+  https://wosoapi.onrender.com/api/leagues/1/clubs/
 
 # Get all players in a specific club
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-   https://wosoapi.onrender.com/clubs/1/players/
+   https://wosoapi.onrender.com/api/clubs/1/players/
 
 # Get top scorers with minimum 500 minutes played
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  "https://wosoapi.onrender.com/playerstats/?ordering=-goals&minutes_played__gte=500"
+  "https://wosoapi.onrender.com/api/playerstats/?ordering=-goals&minutes_played__gte=500"
 ```
 
 ---
@@ -91,7 +91,7 @@ curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
 ### Registration & Verification Flow
 
 <details>
-<summary><strong>POST</strong> /register/ - Register New User</summary>
+<summary><strong>POST</strong> /api/register/ - Register New User</summary>
 
 Create a new user account. Account starts inactive until email verification.
 
@@ -124,7 +124,7 @@ Create a new user account. Account starts inactive until email verification.
 </details>
 
 <details>
-<summary><strong>GET</strong> /verify/{uid}/{token}/ - Verify Email</summary>
+<summary><strong>GET</strong> /api/verify/{uid}/{token}/ - Verify Email</summary>
 
 Activate user account using verification link from email.
 
@@ -148,7 +148,7 @@ Activate user account using verification link from email.
 </details>
 
 <details>
-<summary><strong>POST</strong> /resend/verify/ - Resend Verification Email</summary>
+<summary><strong>POST</strong> /api/resend/verify/ - Resend Verification Email</summary>
 
 Request new verification email for unverified accounts.
 
@@ -177,7 +177,7 @@ Request new verification email for unverified accounts.
 ### JWT Token Management
 
 <details>
-<summary><strong>POST</strong> /token/ - Obtain JWT Tokens</summary>
+<summary><strong>POST</strong> /api/token/ - Obtain JWT Tokens</summary>
 
 Get access and refresh tokens for authenticated API requests.
 
@@ -209,7 +209,7 @@ Get access and refresh tokens for authenticated API requests.
 </details>
 
 <details>
-<summary><strong>POST</strong> /token/refresh/ - Refresh Access Token</summary>
+<summary><strong>POST</strong> /api/token/refresh/ - Refresh Access Token</summary>
 
 Get new access token using valid refresh token.
 
@@ -238,7 +238,7 @@ Get new access token using valid refresh token.
 ### 🌍 Countries & Leagues
 
 <details>
-<summary><strong>GET</strong> /countries/ - List All Countries</summary>
+<summary><strong>GET</strong> /api/countries/ - List All Countries</summary>
 
 Get all countries with women's football leagues in the database.
 
@@ -256,7 +256,7 @@ Get all countries with women's football leagues in the database.
 </details>
 
 <details>
-<summary><strong>GET</strong> /leagues/ - List All Leagues</summary>
+<summary><strong>GET</strong> /api/leagues/ - List All Leagues</summary>
 
 Get all women's football leagues with basic information.
 
@@ -278,27 +278,27 @@ Get all women's football leagues with basic information.
 </details>
 
 <details>
-<summary><strong>GET</strong> /leagues/{league_id}/seasons/ - League Seasons</summary>
+<summary><strong>GET</strong> /api/leagues/{league_id}/seasons/ - League Seasons</summary>
 
 Get all available seasons for a specific league.
 
-**Example:** `/leagues/1/seasons/`
+**Example:** `/api/leagues/1/seasons/`
 
 </details>
 
 <details>
-<summary><strong>GET</strong> /leagues/{league_id}/clubs/ - Clubs in League</summary>
+<summary><strong>GET</strong> /api/leagues/{league_id}/clubs/ - Clubs in League</summary>
 
 Get all clubs in a specific league with current season performance.
 
-**Example:** `/leagues/1/clubs/`
+**Example:** `/api/leagues/1/clubs/`
 
 *All team statistics sourced from [FBref.com](https://fbref.com)*
 
 </details>
 
 <details>
-<summary><strong>GET</strong> /leagues/{league_id}/players/ - All League Players</summary>
+<summary><strong>GET</strong> /api/leagues/{league_id}/players/ - All League Players</summary>
 
 Get all players across all clubs in a league with comprehensive statistics.
 
@@ -315,7 +315,7 @@ Get all players across all clubs in a league with comprehensive statistics.
 </details>
 
 <details>
-<summary><strong>GET</strong> /leagues/{league_id}/goalkeepers/ - All League Goalkeepers</summary>
+<summary><strong>GET</strong> /api/leagues/{league_id}/goalkeepers/ - All League Goalkeepers</summary>
 
 Get all goalkeepers across all clubs in a league with specialized goalkeeper statistics.
 
@@ -326,7 +326,7 @@ Get all goalkeepers across all clubs in a league with specialized goalkeeper sta
 ### 📅 Seasons
 
 <details>
-<summary><strong>GET</strong> /seasons/ - List All Seasons</summary>
+<summary><strong>GET</strong> /api/seasons/ - List All Seasons</summary>
 
 Get all seasons across all leagues in the database.
 
@@ -335,7 +335,7 @@ Get all seasons across all leagues in the database.
 ### 🏟️ Clubs & Teams
 
 <details>
-<summary><strong>GET</strong> /clubs/ - List All Clubs</summary>
+<summary><strong>GET</strong> /api/clubs/ - List All Clubs</summary>
 
 Get all clubs across all leagues and seasons.
 
@@ -347,11 +347,11 @@ Get all clubs across all leagues and seasons.
 </details>
 
 <details>
-<summary><strong>GET</strong> /clubs/{club_id}/ - Club Profile & Stats</summary>
+<summary><strong>GET</strong> /api/clubs/{club_id}/ - Club Profile & Stats</summary>
 
 Get comprehensive club information and detailed season statistics.
 
-**Example:** `/clubs/1/`
+**Example:** `/api/clubs/1/`
 
 **Response includes:**
 - Club basic information
@@ -363,7 +363,7 @@ Get comprehensive club information and detailed season statistics.
 </details>
 
 <details>
-<summary><strong>GET</strong> /clubstats/ - All Club Statistics</summary>
+<summary><strong>GET</strong> /api/clubstats/ - All Club Statistics</summary>
 
 Get statistical data for all clubs across all seasons.
 
@@ -381,7 +381,7 @@ Get statistical data for all clubs across all seasons.
 </details>
 
 <details>
-<summary><strong>GET</strong> /clubs/{club_id}/players/ - Club Players</summary>
+<summary><strong>GET</strong> /api/clubs/{club_id}/players/ - Club Players</summary>
 
 Get all players in a specific club with their comprehensive season statistics.
 
@@ -392,7 +392,7 @@ Get all players in a specific club with their comprehensive season statistics.
 </details>
 
 <details>
-<summary><strong>GET</strong> /clubs/{club_id}/goalkeepers/ - Club Goalkeepers</summary>
+<summary><strong>GET</strong> /api/clubs/{club_id}/goalkeepers/ - Club Goalkeepers</summary>
 
 Get all goalkeepers in a specific club with specialized goalkeeper statistics.
 
@@ -403,7 +403,7 @@ Get all goalkeepers in a specific club with specialized goalkeeper statistics.
 ### 👩‍⚽ Players
 
 <details>
-<summary><strong>GET</strong> /players/ - All Players</summary>
+<summary><strong>GET</strong> /api/players/ - All Players</summary>
 
 Get list of all players across all clubs and leagues.
 
@@ -423,7 +423,7 @@ Get list of all players across all clubs and leagues.
 </details>
 
 <details>
-<summary><strong>GET</strong> /playerstats/ - All Player Statistics</summary>
+<summary><strong>GET</strong> /api/playerstats/ - All Player Statistics</summary>
 
 Get comprehensive statistical data for all players with advanced analytics.
 
@@ -452,7 +452,7 @@ Get comprehensive statistical data for all players with advanced analytics.
 ### 🥅 Goalkeepers
 
 <details>
-<summary><strong>GET</strong> /goalkeepers/ - All Goalkeepers</summary>
+<summary><strong>GET</strong> /api/goalkeepers/ - All Goalkeepers</summary>
 
 Get list of all goalkeepers across leagues with specialized filtering.
 
@@ -472,68 +472,65 @@ Get list of all goalkeepers across leagues with specialized filtering.
 ### 🎯 Top Performers
 ```bash
 # Top 10 goal scorers in WSL (2024/25, minimum 500 minutes)
-GET /playerstats/?season__season=2024/25&league__code=WSL&ordering=-goals&minutes_played__gte=500&limit=10
+GET /api/playerstats/?season__season=2024/25&league__code=WSL&ordering=-goals&minutes_played__gte=500&limit=10
 
 # Top 5 goal scorers in Arsenal Women (2024/25)
-GET /playerstats/?season__season=2024/25&league__code=WSL&club__name=Arsenal&ordering=-goals&limit=5
+GET /api/playerstats/?season__season=2024/25&league__code=WSL&club__name=Arsenal&ordering=-goals&limit=5
 
-# Best passers by progressive passes (all leagues, 2024/25
-)
-GET /playerstats/?season__season=2024/25&position=MF&ordering=-prog_passes&minutes_played__gte=300
+# Best passers by progressive passes (all leagues, 2024/25)
+GET /api/playerstats/?season__season=2024/25&position=MF&ordering=-prog_passes&minutes_played__gte=300
 
 # Most progressive players in WSL (2024/25)
-GET /playerstats/?season__season=2024/25&league__code=WSL&ordering=-prog_carries&minutes_played__gte=400
+GET /api/playerstats/?season__season=2024/25&league__code=WSL&ordering=-prog_carries&minutes_played__gte=400
 
 # Top 10 assist providers in Chelsea Women (2024/25)
-GET /playerstats/?season__season=2024/25&club__name=Chelsea&ordering=-assists&limit=10
+GET /api/playerstats/?season__season=2024/25&club__name=Chelsea&ordering=-assists&limit=10
 
 # Most minutes played in Arsenal Women (2024/25)
-GET /playerstats/?season__season=2024/25&league__code=WSL&club__name=Arsenal&ordering=-minutes_played&limit=10
+GET /api/playerstats/?season__season=2024/25&league__code=WSL&club__name=Arsenal&ordering=-minutes_played&limit=10
 ```
 
 ### ⚡ Advanced Analytics
 ```bash
 # Highest xG performers, forwards in WSL (2024/25)
-GET /playerstats/?season__season=2024/25&league__code=WSL&position=FW&ordering=-xg
+GET /api/playerstats/?season__season=2024/25&league__code=WSL&position=FW&ordering=-xg
 
 # Best defensive midfielders in Arsenal Women (2024/25)
-GET /playerstats/?season__season=2024/25&league__code=WSL&club__name=Arsenal&position=MF&ordering=-tackles&minutes_played__gte=500
+GET /api/playerstats/?season__season=2024/25&league__code=WSL&club__name=Arsenal&position=MF&ordering=-tackles&minutes_played__gte=500
 
-# Most ball-winning midfielders (tackles + interceptions, 2024/25
-)
-GET /playerstats/?season__season=2024/25&position=MF&ordering=-tackles&ordering=-interceptions
+# Most ball-winning midfielders (tackles + interceptions, 2024/25)
+GET /api/playerstats/?season__season=2024/25&position=MF&ordering=-tackles&ordering=-interceptions
 
-# Best young forwards in WSL (under 23, 2024/25
-)
-GET /playerstats/?season__season=2024/25&league__code=WSL&age__lte=23&position=FW&minutes_played__gte=300&ordering=-goals
+# Best young forwards in WSL (under 23, 2024/25)
+GET /api/playerstats/?season__season=2024/25&league__code=WSL&age__lte=23&position=FW&minutes_played__gte=300&ordering=-goals
 
 # Players with most progressive carries to final third
-GET /playerstats/?season__season=2024/25&ordering=-prog_carries_final_3rd&minutes_played__gte=700
+GET /api/playerstats/?season__season=2024/25&ordering=-prog_carries_final_3rd&minutes_played__gte=700
 
 # Players with most shot creation actions
-GET /playerstats/?season__season=2024/25&ordering=-shots_creation_action&minutes_played__gte=500
+GET /api/playerstats/?season__season=2024/25&ordering=-shots_creation_action&minutes_played__gte=500
 ```
 
 ### 🥅 Goalkeeper Analytics
 ```bash
 # Best shot stoppers in WSL (2024/25)
-GET /goalkeepers/?season__season=2024/25
+GET /api/goalkeepers/?season__season=2024/25
 &league__code=WSL&ordering=-save_percentage&minutes_played__gte=450
 
 # Goalkeepers with most clean sheets in Chelsea Women (2024/25)
-GET /goalkeepers/?season__season=2024/25&club__name=Chelsea&ordering=-clean_sheets
+GET /api/goalkeepers/?season__season=2024/25&club__name=Chelsea&ordering=-clean_sheets
 
 # Goalkeepers preventing most goals vs expected (2024/25)
-GET /goalkeepers/?season__season=2024/25&ordering=-psxg_performance
+GET /api/goalkeepers/?season__season=2024/25&ordering=-psxg_performance
 
 # Most saves made (2024/25)
-GET /goalkeepers/?season__season=2024/25&ordering=-saves&limit=5
+GET /api/goalkeepers/?season__season=2024/25&ordering=-saves&limit=5
 
 # Best penalty savers (2024/25)
-GET /goalkeepers/?season__season=2024/25&ordering=-pen_saved
+GET /api/goalkeepers/?season__season=2024/25&ordering=-pen_saved
 
 # Most active sweeper keepers (2024/25)
-GET /goalkeepers/?season__season=2024/25&ordering=-sweeper_action_per90
+GET /api/goalkeepers/?season__season=2024/25&ordering=-sweeper_action_per90
 ```
 
 ---
@@ -643,7 +640,7 @@ python manage.py runserver
 import requests
 
 # 1. Register
-response = requests.post('https://wosoapi.onrender.com/register/', json={
+response = requests.post('https://wosoapi.onrender.com/api/register/', json={
     'email': 'dev@example.com',
     'password': 'DevPass123!',
     'password_confirm': 'DevPass123!'
@@ -652,7 +649,7 @@ response = requests.post('https://wosoapi.onrender.com/register/', json={
 # 2. Verify email (check inbox)
 
 # 3. Get tokens
-response = requests.post('https://wosoapi.onrender.com/token/', json={
+response = requests.post('https://wosoapi.onrender.com/api/token/', json={
     'email': 'dev@example.com',
     'password': 'DevPass123!'
 })
@@ -662,26 +659,26 @@ access_token = tokens['access']
 
 # 4. Make authenticated requests
 headers = {'Authorization': f'Bearer {access_token}'}
-players = requests.get('https://wosoapi.onrender.com/players/', headers=headers)
+players = requests.get('https://wosoapi.onrender.com/api/players/', headers=headers)
 ```
 
 ### 3. Common Patterns
 ```python
 # Get top scorers
 top_scorers = requests.get(
-    'https://wosoapi.onrender.com/playerstats/?ordering=-goals&minutes_played__gte=500',
+    'https://wosoapi.onrender.com/api/playerstats/?ordering=-goals&minutes_played__gte=500',
     headers=headers
 ).json()
 
 # Get Arsenal squad
 arsenal_players = requests.get(
-    'https://wosoapi.onrender.com/clubs/1/players/',
+    'https://wosoapi.onrender.com/api/clubs/1/players/',
     headers=headers  
 ).json()
 
 # Get WSL goalkeepers by save percentage
 best_keepers = requests.get(
-    'https://wosoapi.onrender.com/leagues/1/goalkeepers/?ordering=-save_percentage',
+    'https://wosoapi.onrender.com/api/leagues/1/goalkeepers/?ordering=-save_percentage',
     headers=headers
 ).json()
 ```

@@ -58,9 +58,8 @@ class ClubSeasonStatSerializer(serializers.ModelSerializer):
             "season",
             "club_id",
             "season_id",
-            "league", 
+            "league",
             "league_id",
-
             # Matches / Results
             "matches_played",
             "win",
@@ -68,26 +67,21 @@ class ClubSeasonStatSerializer(serializers.ModelSerializer):
             "lost",
             "points_won",
             "league_position",
-
             # Goals
             "goals_scored",
             "goals_conceded",
-
             # Expected goals
             "xg_created",
             "xg_conceded",
-
             # Shooting
             "shots",
             "shots_target",
-
             # Passing
             "passes",
             "passes_comp",
             "passes_to_final_third",
             "passes_to_pen_area",
         ]
-
 
 
 class PlayerSerializer(serializers.ModelSerializer):
@@ -128,24 +122,20 @@ class PlayerSeasonStatsSerializer(serializers.ModelSerializer):
             "club_id",
             "position",
             "age",
-
             # Matches
             "matches_played",
             "minutes_played",
             "matches_completed",
             "matches_substituted",
             "unused_sub",
-
             # Contributions
             "goals",
             "assists",
-
             # Expected goals
             "xg",
             "npxg",
             "xg_performance",
             "npxg_performance",
-
             # Carrying / Passing
             "prog_carries",
             "prog_carries_final_3rd",
@@ -156,14 +146,12 @@ class PlayerSeasonStatsSerializer(serializers.ModelSerializer):
             "passes_to_pen_area",
             "pass_switches",
             "through_ball",
-
             # Shooting / Creativity
             "shots_target",
             "shots_creation_action",
             "offsides",
             "pen_won",
             "pen_conceded",
-
             # Defensive actions
             "tackles",
             "tackles_won",
@@ -172,13 +160,11 @@ class PlayerSeasonStatsSerializer(serializers.ModelSerializer):
             "ball_recoveries",
             "aerial_duels_won",
             "aerial_duels_lost",
-
             # Possession / touches
             "touches",
             "dispossessed",
             "miscontrols",
             "take_ons",
-
             # Discipline
             "fouls_won",
             "fouls_committed",
@@ -218,27 +204,22 @@ class GoalkeeperSerializer(serializers.ModelSerializer):
             "club_id",
             "position",
             "age",
-
             # Matches
             "matches_played",
             "minutes_played",
-
             # Goalkeeping
             "goals_conceded",
             "shots_faced",
             "saves",
             "save_percentage",
             "clean_sheets",
-
             # Advanced metrics
             "psxg",
             "psxg_performance",
             "pen_saved",
-
             # Distribution & command
             "passes",
             "crosses_stopped",
-
             # Sweeper actions
             "sweeper_action",
             "sweeper_action_per90",

@@ -19,6 +19,7 @@ class League(models.Model):
 
     def __str__(self):
         return f"{self.name}, {self.country.code}"
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -34,7 +35,8 @@ class Season(models.Model):
     )
 
     def __str__(self):
-        return f"{self.season} {self.league.name}" 
+        return f"{self.season} {self.league.name}"
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -46,9 +48,7 @@ class Season(models.Model):
 class Club(models.Model):
     name = models.CharField(max_length=300, unique=True)
     fbref_id = models.CharField(max_length=50, unique=True, db_index=True)
-    stadium=models.CharField(max_length=200, blank=True, null=True)
-
-    
+    stadium = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -62,7 +62,7 @@ class ClubSeasonStat(models.Model):
         Season, on_delete=models.CASCADE, related_name="club_season", db_index=True
     )
     league = models.ForeignKey(League, on_delete=models.CASCADE, related_name="clubs")
-    
+
     points_won = models.IntegerField()
     league_position = models.IntegerField()
     matches_played = models.IntegerField(null=True, blank=True)
@@ -94,8 +94,8 @@ class ClubSeasonStat(models.Model):
 class Player(models.Model):
     full_name = models.CharField(max_length=500)
     fbref_id = models.CharField(max_length=100, unique=True)
-    nationality=models.CharField(max_length=50, null=True, blank=True)
-    age=models.SmallIntegerField(null=True,blank=True)
+    nationality = models.CharField(max_length=50, null=True, blank=True)
+    age = models.SmallIntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.full_name
@@ -111,44 +111,46 @@ class PlayerSeasonStats(models.Model):
     club = models.ForeignKey(
         Club, on_delete=models.CASCADE, related_name="player_clubstats"
     )
-    league = models.ForeignKey(League, on_delete=models.CASCADE, related_name="league_of_player")
+    league = models.ForeignKey(
+        League, on_delete=models.CASCADE, related_name="league_of_player"
+    )
     position = models.CharField(max_length=20, null=True, blank=True)
     age = models.SmallIntegerField(null=True, blank=True)
     matches_played = models.IntegerField(null=True, blank=True)
     minutes_played = models.IntegerField(null=True, blank=True)
-    matches_completed=models.IntegerField(null=True, blank=True)
-    matches_substituted=models.IntegerField(null=True, blank=True)
-    unused_sub=models.IntegerField(null=True, blank=True)
+    matches_completed = models.IntegerField(null=True, blank=True)
+    matches_substituted = models.IntegerField(null=True, blank=True)
+    unused_sub = models.IntegerField(null=True, blank=True)
     goals = models.IntegerField(null=True, blank=True)
     assists = models.IntegerField(null=True, blank=True)
     xg = models.FloatField(null=True, blank=True)
     npxg = models.FloatField(null=True, blank=True)
-    xg_performance=models.FloatField(null=True, blank=True)
-    npxg_performance= models.FloatField(null=True, blank=True)
+    xg_performance = models.FloatField(null=True, blank=True)
+    npxg_performance = models.FloatField(null=True, blank=True)
     prog_carries = models.IntegerField(null=True, blank=True)
-    prog_carries_final_3rd= models.IntegerField(null=True, blank=True)
-    prog_passes=models.IntegerField(null=True, blank=True)
+    prog_carries_final_3rd = models.IntegerField(null=True, blank=True)
+    prog_passes = models.IntegerField(null=True, blank=True)
     shots_target = models.IntegerField(null=True, blank=True)
     passes_to_final_3rd = models.IntegerField(null=True, blank=True)
     passes_to_pen_area = models.IntegerField(null=True, blank=True)
-    pass_switches=models.IntegerField(null=True, blank=True)
-    through_ball=models.IntegerField(null=True, blank=True)
+    pass_switches = models.IntegerField(null=True, blank=True)
+    through_ball = models.IntegerField(null=True, blank=True)
     shots_creation_action = models.IntegerField(null=True, blank=True)
-    offsides=models.IntegerField(null=True, blank=True)
-    pen_won=models.IntegerField(null=True, blank=True)
-    pen_conceded=models.IntegerField(null=True, blank=True)
+    offsides = models.IntegerField(null=True, blank=True)
+    pen_won = models.IntegerField(null=True, blank=True)
+    pen_conceded = models.IntegerField(null=True, blank=True)
     tackles = models.IntegerField(null=True, blank=True)
-    ball_recoveries=models.IntegerField(null=True, blank=True)
-    aerial_duels_won=models.IntegerField(null=True, blank=True)
-    aerial_duels_lost=models.IntegerField(null=True, blank=True)
-    blocks=models.IntegerField(null=True, blank=True)
+    ball_recoveries = models.IntegerField(null=True, blank=True)
+    aerial_duels_won = models.IntegerField(null=True, blank=True)
+    aerial_duels_lost = models.IntegerField(null=True, blank=True)
+    blocks = models.IntegerField(null=True, blank=True)
     tackles_won = models.IntegerField(null=True, blank=True)
     interceptions = models.IntegerField(null=True, blank=True)
     touches = models.IntegerField(null=True, blank=True)
-    dispossessed=models.IntegerField(null=True, blank=True)
-    miscontrols=models.IntegerField(null=True, blank=True)
+    dispossessed = models.IntegerField(null=True, blank=True)
+    miscontrols = models.IntegerField(null=True, blank=True)
     take_ons = models.IntegerField(null=True, blank=True)
-    take_ons_won= models.IntegerField(null=True, blank=True)
+    take_ons_won = models.IntegerField(null=True, blank=True)
     fouls_won = models.IntegerField(null=True, blank=True)
     fouls_committed = models.IntegerField(null=True, blank=True)
     carries_to_final_3rd = models.IntegerField(null=True, blank=True)
@@ -159,7 +161,7 @@ class PlayerSeasonStats(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["player","season","club"], name="unique_player_season_club"
+                fields=["player", "season", "club"], name="unique_player_season_club"
             )
         ]
 
@@ -177,7 +179,9 @@ class Goalkeeper(models.Model):
     club = models.ForeignKey(
         Club, on_delete=models.CASCADE, related_name="goalkeeper_clubstats"
     )
-    league = models.ForeignKey(League, on_delete=models.CASCADE, related_name="league_of_goalkeeper")
+    league = models.ForeignKey(
+        League, on_delete=models.CASCADE, related_name="league_of_goalkeeper"
+    )
     position = models.CharField(default="GK", max_length=20)
     age = models.SmallIntegerField(null=True, blank=True)
     matches_played = models.IntegerField(null=True, blank=True)
@@ -188,21 +192,20 @@ class Goalkeeper(models.Model):
     save_percentage = models.FloatField(null=True, blank=True)
     clean_sheets = models.IntegerField(null=True, blank=True)
     psxg = models.FloatField(null=True, blank=True)
-    psxg_performance=models.FloatField(null=True,blank=True)
-    pen_saved=models.IntegerField(null=True, blank=True)
-    passes=models.IntegerField(null=True, blank=True)
-    crosses_stopped=models.IntegerField(null=True, blank=True)
-    sweeper_action=models.IntegerField(null=True, blank=True)
-    sweeper_action_per90=models.FloatField(null=True, blank=True)
-
+    psxg_performance = models.FloatField(null=True, blank=True)
+    pen_saved = models.IntegerField(null=True, blank=True)
+    passes = models.IntegerField(null=True, blank=True)
+    crosses_stopped = models.IntegerField(null=True, blank=True)
+    sweeper_action = models.IntegerField(null=True, blank=True)
+    sweeper_action_per90 = models.FloatField(null=True, blank=True)
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["player", "season","club"], name="unique_goalkeeper_season_club"
+                fields=["player", "season", "club"],
+                name="unique_goalkeeper_season_club",
             )
         ]
-
 
     def __str__(self):
         return f"{self.player.full_name}, GK ({self.season.season})"

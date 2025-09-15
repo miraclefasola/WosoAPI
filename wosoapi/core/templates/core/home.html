@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+    {%load static%}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Leagues</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Variables for consistent theming */
+        :root {
+            --primary-color: #1a1a2e;
+            --secondary-color: #16213e;
+            --accent-color: #0f3460;
+            --highlight-color: #e94560;
+            --text-color: #f1f1f1;
+            --card-bg: #ffffff;
+            --card-text: #333333;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            --transition: all 0.3s ease;
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            color: var(--highlight-color);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* League Grid */
+        .leagues-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* League Card */
+        .league-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+        }
+
+        .league-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .league-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .league-link {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 1rem;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .league-link img {
+            max-width: 100%;
+            height: auto;
+            max-height: 180px;
+            object-fit: contain;
+            transition: var(--transition);
+        }
+
+        .league-card:hover .league-link img {
+            transform: scale(1.05);
+        }
+
+        .league-content h2 {
+            color: var(--card-text);
+            font-size: 1.4rem;
+            text-align: center;
+            margin-top: auto;
+            padding: 0.5rem 0;
+        }
+
+        /* Coming Soon Style */
+        .coming-soon {
+            position: relative;
+        }
+
+        .coming-soon::after {
+            content: "COMING SOON";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 12px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .coming-soon:hover::after {
+            opacity: 1;
+        }
+
+        .coming-soon .league-link img {
+            filter: brightness(0.7);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .leagues-container {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1.8rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .leagues-container {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .league-content {
+                padding: 1.2rem;
+            }
+            
+            .league-content h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .leagues-container {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+                padding: 1.5rem 1rem;
+            }
+            
+            .league-card {
+                max-width: 350px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+        }
+
+        /* Animation for page load */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .league-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Stagger the animations for a nice effect */
+        .league-card:nth-child(1) { animation-delay: 0.1s; }
+        .league-card:nth-child(2) { animation-delay: 0.2s; }
+        .league-card:nth-child(3) { animation-delay: 0.3s; }
+        .league-card:nth-child(4) { animation-delay: 0.4s; }
+        .league-card:nth-child(5) { animation-delay: 0.5s; }
+        .league-card:nth-child(6) { animation-delay: 0.6s; }
+
+        /* Search and filter bar */
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0;
+            gap: 1rem;
+        }
+
+        .search-input {
+            padding: 0.8rem 1.2rem;
+            border: none;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 400px;
+            font-size: 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        .filter-select {
+            padding: 0.8rem 1.2rem;
+            border: none;
+            border-radius: 30px;
+            background: white;
+            box-shadow: var(--shadow);
+            font-size: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Football Leagues</h1>
+            <p class="subtitle">Explore the most exciting women's football leagues from around the world</p>
+        </header>
+
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search leagues..." id="searchInput">
+            <select class="filter-select" id="filterSelect">
+                <option value="all">All Leagues</option>
+                <option value="available">Available Now</option>
+                <option value="coming-soon">Coming Soon</option>
+            </select>
+        </div>
+        
+        <div class="leagues-container" id="leaguesContainer">
+            {% for league in leagues %}
+                {% if league.code == "WSL" %}
+                    <div class="league-card">
+                        <div class="league-content">
+                            <a href="{% url 'club_stats_by_league' league_code=league.code %}" class="league-link">
+                                <img src="{% static 'images/WSL.png' %}" alt="WSL">
+                            </a>
+                            <h2>Women's Super League</h2>
+                        </div>
+                    </div>
+                {% elif league.code == "UWCL" %}
+                    <div class="league-card coming-soon">
+                        <div class="league-content">
+                            <a href="#" class="league-link">
+                                <img src="{% static 'images/UWCL.png' %}" alt="UWCL">
+                            </a>
+                            <h2>UEFA Women's Champions League</h2>
+                        </div>
+                    </div>
+                {% elif league.code == "LigaF" %}
+                    <div class="league-card coming-soon">
+                        <div class="league-content">
+                            <a href="#" class="league-link">
+                                <img src="{% static 'images/LigaF.png' %}" alt="LigaF">
+                            </a>
+                            <h2>Liga F Moeve</h2>
+                        </div>
+                    </div>
+                {% elif league.code == "Arkema" %}
+                    <div class="league-card coming-soon">
+                        <div class="league-content">
+                            <a href="#" class="league-link">
+                                <img src="{% static 'images/Akerma.png' %}" alt="D1 Arkema">
+                            </a>
+                            <h2>Arkema Première Ligue</h2>
+                        </div>
+                    </div>
+                {% elif league.code == "NWSL" %}
+                    <div class="league-card coming-soon">
+                        <div class="league-content">
+                            <a href="#" class="league-link">
+                                <img src="{% static 'images/NWSL.png' %}" alt="NWSL">
+                            </a>
+                            <h2>National Women's Soccer League</h2>
+                        </div>
+                    </div>
+                {% elif league.code == "Frauen" %}
+                    <div class="league-card coming-soon">
+                        <div class="league-content">
+                            <a href="#" class="league-link">
+                                <img src="{% static 'images/Frauen.png' %}" alt="Frauen-Bundesliga">
+                            </a>
+                            <h2>Frauen-Bundesliga</h2>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <footer>
+            <p>&copy; 2025 WOSO API. All rights reserved.</p>
+        </footer>
+    </div>
+
+
+    <script>
+        // JavaScript for filtering and search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const filterSelect = document.getElementById('filterSelect');
+            const leaguesContainer = document.getElementById('leaguesContainer');
+            const leagueCards = document.querySelectorAll('.league-card');
+            
+            // Filter leagues based on search and filter criteria
+            function filterLeagues() {
+                const searchText = searchInput.value.toLowerCase();
+                const filterValue = filterSelect.value;
+                
+                leagueCards.forEach(card => {
+                    const leagueName = card.querySelector('h2').textContent.toLowerCase();
+                    const isComingSoon = card.classList.contains('coming-soon');
+                    const matchesSearch = leagueName.includes(searchText);
+                    
+                    let matchesFilter = true;
+                    if (filterValue === 'available') {
+                        matchesFilter = !isComingSoon;
+                    } else if (filterValue === 'coming-soon') {
+                        matchesFilter = isComingSoon;
+                    }
+                    
+                    if (matchesSearch && matchesFilter) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Add event listeners
+            searchInput.addEventListener('input', filterLeagues);
+            filterSelect.addEventListener('change', filterLeagues);
+            
+            // Add click event to each card
+            leagueCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    if (this.classList.contains('coming-soon')) {
+                        alert('This league is coming soon! Check back later for updates.');
+                    } else {
+                        const leagueName = this.querySelector('h2').textContent;
+                       // alert(`Navigating to ${leagueName} page...`);
+                        // In a real application, you would navigate to the league page
+                        window.location.href = '/league-details';
+                    }
+                });
+            });
+            
+            // Add keyboard navigation support
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    document.documentElement.classList.add('keyboard-nav');
+                }
+            });
+            
+            document.addEventListener('mousedown', function() {
+                document.documentElement.classList.remove('keyboard-nav');
+            });
+        });
+    </script>
+</body>
+</html>

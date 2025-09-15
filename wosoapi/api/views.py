@@ -128,12 +128,12 @@ class ClubSeasonStatView(ModelViewSet):
         "goals_conceded",
         "xg_created",
         "xg_conceded",
-        "shots",
-        "shots_target",
-        "passes",
-        "passes_comp",
-        "passes_to_final_third",
-        "passes_to_pen_area",
+        "shots_allowed",
+        "shots_target_allowed",
+        "attempted_passes_against",
+        "comp_passes_allowed",
+        "passes_to_final_third_allowed",
+        "passes_to_pen_area_allowed",
     ]
     search_fields = [
         "id",
@@ -150,12 +150,12 @@ class ClubSeasonStatView(ModelViewSet):
         "goals_conceded",
         "xg_created",
         "xg_conceded",
-        "shots",
-        "shots_target",
-        "passes",
-        "passes_comp",
-        "passes_to_final_third",
-        "passes_to_pen_area",
+        "shots_allowed",
+        "shots_target_allowed",
+        "attempted_passes_against",
+        "comp_passes_allowed",
+        "passes_to_final_third_allowed",
+        "passes_to_pen_area_allowed",
     ]
     ordering = ["league_position"]
     filterset_fields = {
@@ -173,12 +173,12 @@ class ClubSeasonStatView(ModelViewSet):
         "goals_conceded": ["exact", "gte", "lte", "range"],
         "xg_created": ["exact", "gte", "lte", "range"],
         "xg_conceded": ["exact", "gte", "lte", "range"],
-        "shots": ["exact", "gte", "lte", "range"],
-        "shots_target": ["exact", "gte", "lte", "range"],
-        "passes": ["exact", "gte", "lte", "range"],
-        "passes_comp": ["exact", "gte", "lte", "range"],
-        "passes_to_final_third": ["exact", "gte", "lte", "range"],
-        "passes_to_pen_area": ["exact", "gte", "lte", "range"],
+        "shots_allowed": ["exact", "gte", "lte", "range"],
+        "shots_target_allowed": ["exact", "gte", "lte", "range"],
+        "attempted_passes_against": ["exact", "gte", "lte", "range"],
+        "comp_passes_allowed": ["exact", "gte", "lte", "range"],
+        "passes_to_final_third_allowed": ["exact", "gte", "lte", "range"],
+        "passes_to_pen_area_allowed": ["exact", "gte", "lte", "range"],
     }
 
 
@@ -261,6 +261,7 @@ class PlayerSeasonStatsView(ModelViewSet):
         "dispossessed",
         "miscontrols",
         "take_ons",
+        "take_ons_won"
         "carries_to_final_3rd",
         "carries_to_pen_area",
         "yellow_card",
@@ -311,6 +312,7 @@ class PlayerSeasonStatsView(ModelViewSet):
         "dispossessed",
         "miscontrols",
         "take_ons",
+        "take_ons_won"
         "carries_to_final_3rd",
         "carries_to_pen_area",
         "yellow_card",
@@ -362,6 +364,7 @@ class PlayerSeasonStatsView(ModelViewSet):
         "dispossessed": ["exact", "gte", "lte", "range"],
         "miscontrols": ["exact", "gte", "lte", "range"],
         "take_ons": ["exact", "gte", "lte", "range"],
+        "take_ons_won": ["exact", "gte", "lte", "range"],
         "carries_to_final_3rd": ["exact", "gte", "lte", "range"],
         "carries_to_pen_area": ["exact", "gte", "lte", "range"],
         "yellow_card": ["exact", "gte", "lte", "range"],
@@ -559,6 +562,7 @@ class LeaguePlayerView(ListAPIView):
         "dispossessed",
         "miscontrols",
         "take_ons",
+        "take_ons_won"
         "carries_to_final_3rd",
         "carries_to_pen_area",
         "yellow_card",
@@ -609,6 +613,7 @@ class LeaguePlayerView(ListAPIView):
         "dispossessed",
         "miscontrols",
         "take_ons",
+        "take_ons_won"
         "carries_to_final_3rd",
         "carries_to_pen_area",
         "yellow_card",
@@ -660,6 +665,7 @@ class LeaguePlayerView(ListAPIView):
         "dispossessed": ["exact", "gte", "lte", "range"],
         "miscontrols": ["exact", "gte", "lte", "range"],
         "take_ons": ["exact", "gte", "lte", "range"],
+        "take_ons_won": ["exact", "gte", "lte", "range"],
         "carries_to_final_3rd": ["exact", "gte", "lte", "range"],
         "carries_to_pen_area": ["exact", "gte", "lte", "range"],
         "yellow_card": ["exact", "gte", "lte", "range"],
@@ -778,12 +784,13 @@ class ClubDetailView(ListAPIView):
         "goals_conceded",
         "xg_created",
         "xg_conceded",
-        "shots",
-        "shots_target",
-        "passes",
-        "passes_comp",
-        "passes_to_final_third",
-        "passes_to_pen_area",
+        "shots_allowed",
+        "shots_target_allowed",
+        "attempted_passes_against",
+        "comp_passes_allowed",
+        "passes_to_final_third_allowed",
+        "passes_to_pen_area_allowed",
+
     ]
     search_fields = [
         "id",
@@ -799,12 +806,13 @@ class ClubDetailView(ListAPIView):
         "goals_conceded",
         "xg_created",
         "xg_conceded",
-        "shots",
-        "shots_target",
-        "passes",
-        "passes_comp",
-        "passes_to_final_third",
-        "passes_to_pen_area",
+        "shots_allowed",
+        "shots_target_allowed",
+        "attempted_passes_against",
+        "comp_passes_allowed",
+        "passes_to_final_third_allowed",
+        "passes_to_pen_area_allowed",
+
     ]
     ordering = ["league_position"]
     filterset_fields = {
@@ -821,12 +829,13 @@ class ClubDetailView(ListAPIView):
         "goals_conceded": ["exact", "gte", "lte", "range"],
         "xg_created": ["exact", "gte", "lte", "range"],
         "xg_conceded": ["exact", "gte", "lte", "range"],
-        "shots": ["exact", "gte", "lte", "range"],
-        "shots_target": ["exact", "gte", "lte", "range"],
-        "passes": ["exact", "gte", "lte", "range"],
-        "passes_comp": ["exact", "gte", "lte", "range"],
-        "passes_to_final_third": ["exact", "gte", "lte", "range"],
-        "passes_to_pen_area": ["exact", "gte", "lte", "range"],
+        "shots_allowed": ["exact", "gte", "lte", "range"],
+        "shots_target_allowed": ["exact", "gte", "lte", "range"],
+        "attempted_passes_against": ["exact", "gte", "lte", "range"],
+        "comp_passes_allowed": ["exact", "gte", "lte", "range"],
+        "passes_to_final_third_allowed": ["exact", "gte", "lte", "range"],
+        "passes_to_pen_area_allowed": ["exact", "gte", "lte", "range"],
+
     }
 
     def get_queryset(self):
@@ -889,6 +898,7 @@ class ClubPlayerView(ListAPIView):
         "dispossessed",
         "miscontrols",
         "take_ons",
+        "take_ons_won"
         "carries_to_final_3rd",
         "carries_to_pen_area",
         "yellow_card",
@@ -937,6 +947,7 @@ class ClubPlayerView(ListAPIView):
         "dispossessed",
         "miscontrols",
         "take_ons",
+        "take_ons_won"
         "carries_to_final_3rd",
         "carries_to_pen_area",
         "yellow_card",
@@ -988,6 +999,7 @@ class ClubPlayerView(ListAPIView):
         "dispossessed": ["exact", "gte", "lte", "range"],
         "miscontrols": ["exact", "gte", "lte", "range"],
         "take_ons": ["exact", "gte", "lte", "range"],
+        "take_ons_won": ["exact", "gte", "lte", "range"],
         "carries_to_final_3rd": ["exact", "gte", "lte", "range"],
         "carries_to_pen_area": ["exact", "gte", "lte", "range"],
         "yellow_card": ["exact", "gte", "lte", "range"],

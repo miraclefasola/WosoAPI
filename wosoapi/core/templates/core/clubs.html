@@ -1,0 +1,435 @@
+{% comment %} <h1>Clubs</h1>
+{% for season, clubs in league_table.items%}
+        {{season}} <br> 
+    {%for club in clubs%}
+  {{club.club.name}}
+    {% endfor %}<br> 
+{% endfor %}
+
+{% for season, clubs in league_table.items%}
+
+    <h3> {{season}}<h3>
+    {%for club in clubs%}
+
+
+{{ club.club.name }} -{{ club.points_won }}-{{ club.matches_played }}-{{ club.win }}-{{ club.draw }}-{{ club.lost }}-{{ club.goal_diff }} <br>
+
+    {% endfor %}  
+
+
+{% endfor %} 
+
+ <h1>Teams Stats</h1>
+
+<h2>Goals Scored</h2>
+{% for season,clubs in goal_scored.items %}
+{{season}}<br>
+{%for club in clubs%}
+{{club.club.name}}- {{club.goals_scored}}<br>
+{% endfor %}
+{% endfor %}
+
+
+<h2>xg Created</h2>
+{% for season,clubs in xg_create.items %}
+{{season}}<br>
+{%for club in clubs%}
+{{club.club.name}}- {{club.xg_created}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>xg Conceded</h2>
+{% for season,clubs in xg_concede.items %}
+{{season}}<br>
+{%for club in clubs%}
+{{club.club.name}}- {{club.xg_conceded}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Shots Faced</h2>
+{% for season,clubs in shot.items %}
+{{season}}<br>
+{%for club in clubs%}
+{{club.club.name}}- {{club.shots}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Shots on Target Faced</h2>
+{% for season,clubs in shots_on_target.items %}
+{{season}}<br>
+{%for club in clubs%}
+{{club.club.name}}- {{club.shots_target}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Attempted Passes(against)</h2>
+{% for season,clubs in attempted_passes.items %}
+{{season}}<br>
+{%for club in clubs%}
+{{club.club.name}}- {{club.passes}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Completed Passes allowed</h2>
+{% for season,clubs in completed_passes.items %}
+{{season}}<br>
+{%for club in clubs%}
+{{club.club.name}}- {{club.passes_comp}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Passes allowed into own Final Third</h2>
+{% for season,clubs in passes_into_final_third.items %}
+{{season}}<br>
+{%for club in clubs%}
+{{club.club.name}}- {{club.passes_to_final_third}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Passes allowed into own  Pen Area</h2>  
+{% for season,clubs in passes_into_pen_area.items %}
+{{season}}<br>
+{%for club in clubs%}
+{{club.club.name}}- {{club.passes_to_pen_area}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Goals Conceded</h2>
+{% for season, clubs in goal_conceded.items %}
+  <h3>{{ season }}</h3>
+  <ul>
+    {% for club in clubs %}
+      <li>{{ club.club.name }} - {{ club.goals_conceded }}</li>
+    {% endfor %}
+  </ul>
+{% endfor %} {% endcomment %}
+
+<h1>Player Season Stats</h1>
+
+<h2>Minutes Played</h2>
+{% for season, players in player_minutes_played.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.minutes_played}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Matches Played</h2>
+{% for season, players in player_matches_played.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.matches_played}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Matches Completed</h2>
+{% for season, players in player_games_completed.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.matches_completed}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Matches Substituted</h2>
+{% for season, players in player_matches_substituted.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.matches_substituted}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Unused Sub</h2>
+{% for season, players in player_unused_sub.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.unused_sub}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Goals</h2>
+{% for season, players in player_goals.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.goals}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Assists</h2>
+{% for season, players in player_assists.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.assists}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Expected Goals (xG)</h2>
+{% for season, players in player_xg.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.xg|floatformat:"-1"}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Non-Penalty Expected Goals (npxg)</h2>
+{% for season, players in player_npxg.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.npxg|floatformat:"-1"}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>xG Performance</h2>
+{% for season, players in player_xg_performance.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.xg_performance|floatformat:"-1"}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>npxg Performance</h2>
+{% for season, players in player_npxg_performance.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.npxg_performance|floatformat:"-1"}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Progressive Carries</h2>
+{% for season, players in player_prog_carries.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.prog_carries}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Progressive Carries to Final 3rd</h2>
+{% for season, players in player_prog_carries_final_3rd.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.prog_carries_final_3rd}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Progressive Passes</h2>
+{% for season, players in player_prog_passes.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.prog_passes}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Shots on Target</h2>
+{% for season, players in player_shots_target.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.shots_target}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Passes to Final 3rd</h2>
+{% for season, players in player_passes_to_final_3rd.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.passes_to_final_3rd}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Passes to Penalty Area</h2>
+{% for season, players in player_passes_to_pen_area.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.passes_to_pen_area}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Pass Switches</h2>
+{% for season, players in player_pass_switches.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.pass_switches}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Through Balls</h2>
+{% for season, players in player_through_ball.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.through_ball}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Shot Creation Actions</h2>
+{% for season, players in player_shots_creation_action.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.shots_creation_action}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Offsides</h2>
+{% for season, players in player_offsides.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.offsides}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Penalties Won</h2>
+{% for season, players in player_pen_won.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.pen_won}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Penalties Conceded</h2>
+{% for season, players in player_pen_conceded.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.pen_conceded}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Tackles</h2>
+{% for season, players in player_tackles.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.tackles}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Ball Recoveries</h2>
+{% for season, players in player_ball_recoveries.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.ball_recoveries}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Aerial Duels Won</h2>
+{% for season, players in player_aerial_duels_won.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.aerial_duels_won}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Aerial Duels Lost</h2>
+{% for season, players in player_aerial_duels_lost.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.aerial_duels_lost}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Blocks</h2>
+{% for season, players in player_blocks.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.blocks}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Tackles Won</h2>
+{% for season, players in player_tackles_won.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.tackles_won}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Interceptions</h2>
+{% for season, players in player_interceptions.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.interceptions}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Touches</h2>
+{% for season, players in player_touches.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.touches}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Dispossessed</h2>
+{% for season, players in player_dispossessed.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.dispossessed}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Miscontrols</h2>
+{% for season, players in player_miscontrols.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.miscontrols}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Take-Ons</h2>
+{% for season, players in player_take_ons.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.take_ons}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Take-Ons-Won</h2>
+{% for season, players in player_take_ons_won.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.take_ons_won}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Fouls Won</h2>
+{% for season, players in player_fouls_won.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.fouls_won}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Fouls Committed</h2>
+{% for season, players in player_fouls_committed.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.fouls_committed}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Carries to Final 3rd</h2>
+{% for season, players in player_carries_to_final_3rd.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.carries_to_final_3rd}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Carries to Penalty Area</h2>
+{% for season, players in player_carries_to_pen_area.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.carries_to_pen_area}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Yellow Cards</h2>
+{% for season, players in player_yellow_card.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.yellow_card}}<br>
+{% endfor %}
+{% endfor %}
+
+<h2>Red Cards</h2>
+{% for season, players in player_red_card.items %}
+<br>{{season}}<br>
+{% for player in players %}
+{{player.player.full_name}} - {{player.red_card}}<br>
+{% endfor %}
+{% endfor %}

@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 'passes_into_final_third', 'passes_into_penalty_area', 'passes_switches',
                 'through_balls', 'sca', 'offsides', 'pens_won', 'pens_conceded', 'tackles',
                 'ball_recoveries', 'aerials_won', 'aerials_lost', 'blocks', 'tackles_won',
-                'interceptions', 'touches', 'dispossessed', 'miscontrols', 'take_ons', 'fouled',
+                'interceptions', 'touches', 'dispossessed', 'miscontrols', 'take_ons', 'take_ons_won' ,'fouled',
                 'fouls', 'carries_into_final_third', 'carries_into_penalty_area', 'cards_yellow',
                 'cards_red', 'games_complete', 'games_subs', 'unused_subs'
             ]
@@ -121,6 +121,7 @@ class Command(BaseCommand):
                         'dispossessed': int(float(str(row['dispossessed']).replace(',', ''))) if pd.notna(row['dispossessed']) else 0,
                         'miscontrols': int(float(str(row['miscontrols']).replace(',', ''))) if pd.notna(row['miscontrols']) else 0,
                         'take_ons': int(float(str(row['take_ons']).replace(',', ''))) if pd.notna(row['take_ons']) else 0,
+                        'take_ons_won': int(float(str(row['take_ons_won']).replace(',', ''))) if pd.notna(row['take_ons_won']) else 0,
                         'fouls_won': int(float(str(row['fouled']).replace(',', ''))) if pd.notna(row['fouled']) else 0,
                         'fouls_committed': int(float(str(row['fouls']).replace(',', ''))) if pd.notna(row['fouls']) else 0,
                         'carries_to_final_3rd': int(float(str(row['carries_into_final_third']).replace(',', ''))) if pd.notna(row['carries_into_final_third']) else 0,

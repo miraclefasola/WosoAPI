@@ -18,7 +18,7 @@ class League(models.Model):
     code = models.CharField(max_length=10, unique=True, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.name}, {self.country}"
+        return f"{self.name}, {self.country.code}"
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -73,12 +73,12 @@ class ClubSeasonStat(models.Model):
     goals_conceded = models.IntegerField(null=True, blank=True)
     xg_created = models.FloatField(null=True, blank=True)
     xg_conceded = models.FloatField(null=True, blank=True)
-    shots = models.IntegerField(null=True, blank=True)
-    shots_target = models.IntegerField(null=True, blank=True)
-    passes = models.IntegerField(null=True, blank=True)
-    passes_comp = models.IntegerField(null=True, blank=True)
-    passes_to_final_third = models.IntegerField(null=True, blank=True)
-    passes_to_pen_area = models.IntegerField(null=True, blank=True)
+    shots_allowed = models.IntegerField(null=True, blank=True)
+    shots_target_allowed = models.IntegerField(null=True, blank=True)
+    attempted_passes_against = models.IntegerField(null=True, blank=True)
+    comp_passes_allowed = models.IntegerField(null=True, blank=True)
+    passes_to_final_third_allowed = models.IntegerField(null=True, blank=True)
+    passes_to_pen_area_allowed = models.IntegerField(null=True, blank=True)
 
     class Meta:
         constraints = [
@@ -148,6 +148,7 @@ class PlayerSeasonStats(models.Model):
     dispossessed=models.IntegerField(null=True, blank=True)
     miscontrols=models.IntegerField(null=True, blank=True)
     take_ons = models.IntegerField(null=True, blank=True)
+    take_ons_won= models.IntegerField(null=True, blank=True)
     fouls_won = models.IntegerField(null=True, blank=True)
     fouls_committed = models.IntegerField(null=True, blank=True)
     carries_to_final_3rd = models.IntegerField(null=True, blank=True)

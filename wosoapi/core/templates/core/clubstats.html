@@ -1,0 +1,34 @@
+{%for club in clubs %}
+<br>{{club.club.name}} - {{club.season.season}}<br>
+{{club.league.name}} : {{club.league.country}}<br>
+{%if club.league_position == 1 %}
+Position: {{club.league_position}}st<br>
+{% elif club.league_position == 2 %}
+Position: {{club.league_position}}nd<br>
+{% elif club.league_position == 3 %}
+Position: {{club.league_position}}rd<br>
+{% else %}
+Position: {{club.league_position}}th<br>
+{% endif %}
+Matches : {{club.win}} - {{club.draw}} - {{club.lost}}<br>
+Goals: {{club.goals_scored}}<br>
+Goals Conceded: {{club.goals_conceded}}<br>
+Expected goals : {{club.xg_created}}<br>
+Expected goals(against): {{club.xg_conceded}}<br>
+{% endfor %}
+
+<h1>Players</h1>
+
+{% for season, goalkeepers in goalkeeper_season.items %} 
+<br>{{season}}<br>
+{%for goalkeeper in goalkeepers%}
+{{goalkeeper.player.full_name}} - {{goalkeeper.age}} {{goalkeeper.matches_palyed}} {{goalkeeper.minutes_played}}  <br>
+{% endfor %}
+{% endfor %}
+{%for season, players in player_season.items%}
+<br>{{season}}<br>
+{%for player in players%}
+{{player.player.full_name}} - {{player.position}} {{player.age}} {{player.matches_played}} {{player.minutes_played}} <br>
+{% endfor %}
+{% endfor %}
+    

@@ -48,6 +48,6 @@ urlpatterns = [
         ClubGoalkeeperView.as_view(),
         name="club_goalkeepers",
     ),
-    path("/documentation", HomeView.as_view(), name="documentation_view"),
+    path("documentation/", HomeView.as_view(), name="documentation_view"),
     #  Returns all goalkeepers (with stats) that belong to a specific club (by club_id)
 ]

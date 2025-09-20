@@ -14,3 +14,7 @@ def div(value, arg):
     if arg and value:
         return value / arg
     return 0
+
+@register.filter
+def dict_get(d, key):
+    return d.get(key)

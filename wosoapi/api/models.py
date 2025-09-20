@@ -96,7 +96,7 @@ class Player(models.Model):
     fbref_id = models.CharField(max_length=100, unique=True)
     nationality = models.CharField(max_length=50, null=True, blank=True)
     age = models.SmallIntegerField(null=True, blank=True)
-
+    
     def __str__(self):
         return self.full_name
 

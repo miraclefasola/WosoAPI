@@ -1,4 +1,4 @@
-# ⚽ WOSO API
+# ⚽ Wosostat
 *Comprehensive Women's Football Data Platform*
 
 [![Django](https://img.shields.io/badge/Django-4.2+-green.svg)](https://djangoproject.com)
@@ -13,7 +13,7 @@
 
 ## 🌟 Overview
 
-**WOSO API** provides comprehensive football data specifically focused on women's leagues, with rich statistical analysis capabilities. Built for analysts, developers, journalists, and anyone passionate about women's football analytics.
+**Wosostat** provides comprehensive football data specifically focused on women's leagues, with rich statistical analysis capabilities. Built for analysts, developers, journalists, and anyone passionate about women's football analytics.
 
 **🔥 Data Source:** All football statistics are sourced from [FBref.com](https://fbref.com) - the premier destination for football statistics and analytics. We are grateful to FBref for providing comprehensive women's football data that makes this API possible.
 
@@ -38,13 +38,13 @@
 
 ### Base URL
 ```
-https://wosoapi.onrender.com/api/
+https://wosostat.com/api/
 ```
 
 ### 1. Register & Authenticate
 ```bash
 # 1. Register new account
-curl -X POST https://wosoapi.onrender.com/api/register/ \
+curl -X POST https://wosostat.com/api/register/ \
   -H "Content-Type: application/json" \
   -d '{
     "email": "analyst@example.com",
@@ -55,7 +55,7 @@ curl -X POST https://wosoapi.onrender.com/api/register/ \
 # 2. Check email and click verification link
 
 # 3. Get JWT tokens
-curl -X POST https://wosoapi.onrender.com/api/token/ \
+curl -X POST https://wosostat.com/api/token/ \
   -H "Content-Type: application/json" \
   -d '{
     "email": "analyst@example.com", 
@@ -67,19 +67,19 @@ curl -X POST https://wosoapi.onrender.com/api/token/ \
 ```bash
 # Get all leagues
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  https://wosoapi.onrender.com/api/leagues/
+  https://wosostat.com/api/leagues/
 
 # Get all clubs in a specific league
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  https://wosoapi.onrender.com/api/leagues/1/clubs/
+  https://wosostat.com/api/leagues/1/clubs/
 
 # Get all players in a specific club
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-   https://wosoapi.onrender.com/api/clubs/1/players/
+   https://wosostat.com/api/clubs/1/players/
 
 # Get top scorers with minimum 500 minutes played
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  "https://wosoapi.onrender.com/api/playerstats/?ordering=-goals&minutes_played__gte=500"
+  "https://wosostat.com/api/playerstats/?ordering=-goals&minutes_played__gte=500"
 ```
 
 ---
@@ -640,7 +640,7 @@ python manage.py runserver
 import requests
 
 # 1. Register
-response = requests.post('https://wosoapi.onrender.com/api/register/', json={
+response = requests.post('https://wosostat.com/api/register/', json={
     'email': 'dev@example.com',
     'password': 'DevPass123!',
     'password_confirm': 'DevPass123!'
@@ -649,7 +649,7 @@ response = requests.post('https://wosoapi.onrender.com/api/register/', json={
 # 2. Verify email (check inbox)
 
 # 3. Get tokens
-response = requests.post('https://wosoapi.onrender.com/api/token/', json={
+response = requests.post('https://wosostat.com/api/token/', json={
     'email': 'dev@example.com',
     'password': 'DevPass123!'
 })
@@ -659,26 +659,26 @@ access_token = tokens['access']
 
 # 4. Make authenticated requests
 headers = {'Authorization': f'Bearer {access_token}'}
-players = requests.get('https://wosoapi.onrender.com/api/players/', headers=headers)
+players = requests.get('https://wosostat.com/api/players/', headers=headers)
 ```
 
 ### 3. Common Patterns
 ```python
 # Get top scorers
 top_scorers = requests.get(
-    'https://wosoapi.onrender.com/api/playerstats/?ordering=-goals&minutes_played__gte=500',
+    'https://wosostat.com/api/playerstats/?ordering=-goals&minutes_played__gte=500',
     headers=headers
 ).json()
 
 # Get Arsenal squad
 arsenal_players = requests.get(
-    'https://wosoapi.onrender.com/api/clubs/1/players/',
+    'https://wosostat.com/api/clubs/1/players/',
     headers=headers  
 ).json()
 
 # Get WSL goalkeepers by save percentage
 best_keepers = requests.get(
-    'https://wosoapi.onrender.com/api/leagues/1/goalkeepers/?ordering=-save_percentage',
+    'https://wosostat.com/api/leagues/1/goalkeepers/?ordering=-save_percentage',
     headers=headers
 ).json()
 ```

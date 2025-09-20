@@ -1,435 +1,3083 @@
-{% comment %} <h1>Clubs</h1>
-{% for season, clubs in league_table.items%}
-        {{season}} <br> 
-    {%for club in clubs%}
-  {{club.club.name}}
-    {% endfor %}<br> 
-{% endfor %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Comprehensive Women's football statistics website including league tables, team stats, player stats, and more.">
+    <title>Football Stats Hub</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+        .stats-table th,
+        .stats-table td {
+            text-align: left;
+        }
 
-{% for season, clubs in league_table.items%}
+        .header {
+            background: rgba(40, 40, 40, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #404040;
+            padding: 0.8rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            text-align: center;
+        }
 
-    <h3> {{season}}<h3>
-    {%for club in clubs%}
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
 
+        .logo h1 {
+            color: #8b9dc3;
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+        }
 
-{{ club.club.name }} -{{ club.points_won }}-{{ club.matches_played }}-{{ club.win }}-{{ club.draw }}-{{ club.lost }}-{{ club.goal_diff }} <br>
+        .season-filter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-    {% endfor %}  
+        .season-filter label {
+            font-weight: 500;
+            color: #b0b0b0;
+            font-size: 0.9rem;
+        }
 
+        .season-select {
+            padding: 0.4rem 0.8rem;
+            border: 1px solid #555;
+            border-radius: 4px;
+            background: #333;
+            color: #e0e0e0;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
 
-{% endfor %} 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            text-align: center;
+        }
 
- <h1>Teams Stats</h1>
+        .stats-content {
+            background: rgba(40, 40, 40, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            border: 1px solid #404040;
+            overflow: hidden;
+        }
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }        
+        .api-button {
+            padding: 0.5rem 1rem;
+            background: #3b5998;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
 
-<h2>Goals Scored</h2>
-{% for season,clubs in goal_scored.items %}
-{{season}}<br>
-{%for club in clubs%}
-{{club.club.name}}- {{club.goals_scored}}<br>
-{% endfor %}
-{% endfor %}
+        .api-button:hover {
+            background: #4c70ba;
+        }
 
+        .section { padding: 1rem; }
 
-<h2>xg Created</h2>
-{% for season,clubs in xg_create.items %}
-{{season}}<br>
-{%for club in clubs%}
-{{club.club.name}}- {{club.xg_created}}<br>
-{% endfor %}
-{% endfor %}
+        h1 {
+            color: #8b9dc3;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #555;
+        }
 
-<h2>xg Conceded</h2>
-{% for season,clubs in xg_concede.items %}
-{{season}}<br>
-{%for club in clubs%}
-{{club.club.name}}- {{club.xg_conceded}}<br>
-{% endfor %}
-{% endfor %}
+        /* General style for h2 (like League Table) */
+        h2 {
+            color: #e0e0e0;
+            font-size: 1.1rem;
+            margin: 1.5rem 0 0.5rem 0;
+            padding: 0.4rem 0.8rem;
+            background: #444;
+            border-radius: 4px;
+            display: inline-block;
+        }
 
-<h2>Shots Faced</h2>
-{% for season,clubs in shot.items %}
-{{season}}<br>
-{%for club in clubs%}
-{{club.club.name}}- {{club.shots}}<br>
-{% endfor %}
-{% endfor %}
+        /* New header for each stat block */
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1.5rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #555;
+        }
 
-<h2>Shots on Target Faced</h2>
-{% for season,clubs in shots_on_target.items %}
-{{season}}<br>
-{%for club in clubs%}
-{{club.club.name}}- {{club.shots_target}}<br>
-{% endfor %}
-{% endfor %}
+        /* Overrides for h2 inside the new header */
+        .stats-header h2 {
+            background: none;
+            padding: 0;
+            margin: 0;
+            border-radius: 0;
+            text-align: left;
+            font-weight: 500;
+        }
 
-<h2>Attempted Passes(against)</h2>
-{% for season,clubs in attempted_passes.items %}
-{{season}}<br>
-{%for club in clubs%}
-{{club.club.name}}- {{club.passes}}<br>
-{% endfor %}
-{% endfor %}
+        h3 {
+            color: #b0b0b0;
+            font-size: 1rem;
+            margin: 1rem 0 0.5rem 0;
+            font-weight: 500;
+        }
 
-<h2>Completed Passes allowed</h2>
-{% for season,clubs in completed_passes.items %}
-{{season}}<br>
-{%for club in clubs%}
-{{club.club.name}}- {{club.passes_comp}}<br>
-{% endfor %}
-{% endfor %}
+        .tab-navigation {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+            border-bottom: 1px solid #404040;
+            gap: 0;
+        }
 
-<h2>Passes allowed into own Final Third</h2>
-{% for season,clubs in passes_into_final_third.items %}
-{{season}}<br>
-{%for club in clubs%}
-{{club.club.name}}- {{club.passes_to_final_third}}<br>
-{% endfor %}
-{% endfor %}
+        .tab-button {
+            padding: 0.6rem 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #b0b0b0;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
 
-<h2>Passes allowed into own  Pen Area</h2>  
-{% for season,clubs in passes_into_pen_area.items %}
-{{season}}<br>
-{%for club in clubs%}
-{{club.club.name}}- {{club.passes_to_pen_area}}<br>
-{% endfor %}
-{% endfor %}
+        .tab-button.active {
+            color: #8b9dc3;
+            border-bottom-color: #8b9dc3;
+        }
 
-<h2>Goals Conceded</h2>
-{% for season, clubs in goal_conceded.items %}
-  <h3>{{ season }}</h3>
-  <ul>
-    {% for club in clubs %}
-      <li>{{ club.club.name }} - {{ club.goals_conceded }}</li>
-    {% endfor %}
-  </ul>
-{% endfor %} {% endcomment %}
+        .tab-button:hover { color: #e0e0e0; }
 
-<h1>Player Season Stats</h1>
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
-<h2>Minutes Played</h2>
-{% for season, players in player_minutes_played.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.minutes_played}}<br>
-{% endfor %}
-{% endfor %}
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem auto; 
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+            font-size: 0.85rem;
+        }
 
-<h2>Matches Played</h2>
-{% for season, players in player_matches_played.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.matches_played}}<br>
-{% endfor %}
-{% endfor %}
+        .stats-table th {
+            background: #444;
+            color: #e0e0e0;
+            padding: 0.5rem;
+            text-align: left;
+            font-weight: 500;
+            border-bottom: 1px solid #555;
+        }
 
-<h2>Matches Completed</h2>
-{% for season, players in player_games_completed.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.matches_completed}}<br>
-{% endfor %}
-{% endfor %}
+        .stats-table td {
+            padding: 0.4rem 0.5rem;
+            border-bottom: 1px solid #3a3a3a;
+        }
 
-<h2>Matches Substituted</h2>
-{% for season, players in player_matches_substituted.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.matches_substituted}}<br>
-{% endfor %}
-{% endfor %}
+        .stats-table tr:nth-child(even) { background: #3a3a3a; }
+        .stats-table tr:hover { background: #404040; }
 
-<h2>Unused Sub</h2>
-{% for season, players in player_unused_sub.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.unused_sub}}<br>
-{% endfor %}
-{% endfor %}
+        .stats-table a {
+            color: #8b9dc3;
+            text-decoration: none;
+            font-weight: 500;
+        }
 
-<h2>Goals</h2>
-{% for season, players in player_goals.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.goals}}<br>
-{% endfor %}
-{% endfor %}
+        .stats-table a:hover { color: #a5b5d1; }
 
-<h2>Assists</h2>
-{% for season, players in player_assists.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.assists}}<br>
-{% endfor %}
-{% endfor %}
+        .stat-value {
+            font-weight: 600;
+            color: #9bb3d6;
+        }
 
-<h2>Expected Goals (xG)</h2>
-{% for season, players in player_xg.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.xg|floatformat:"-1"}}<br>
-{% endfor %}
-{% endfor %}
+        .season-data { display: none; }
+        .season-data.active { display: block; }
 
-<h2>Non-Penalty Expected Goals (npxg)</h2>
-{% for season, players in player_npxg.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.npxg|floatformat:"-1"}}<br>
-{% endfor %}
-{% endfor %}
+        .league-image {
+            max-width: 150px;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+        
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-<h2>xG Performance</h2>
-{% for season, players in player_xg_performance.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.xg_performance|floatformat:"-1"}}<br>
-{% endfor %}
-{% endfor %}
+        /* Collapsible stats: show only first row by default */
+        .stats-table.collapsed tbody tr:not(:first-child) {
+            display: none;
+        }
+        .toggle-stats-btn {
+            background: none;
+            border: 1px solid #8b9dc3;
+            color: #8b9dc3;
+            font-size: 1rem;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .toggle-stats-btn:hover {
+            background-color: #8b9dc3;
+            color: #1a1a1a;
+        }
+        /* Two-column layout for stats blocks */
+        .stats-grid-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: space-between;
+        }
+        .stats-block {
+            flex: 1 1 calc(50% - 1rem);
+            min-width: 300px;
+            box-sizing: border-box;
+            margin-bottom: 1rem;
+        }
 
-<h2>npxg Performance</h2>
-{% for season, players in player_npxg_performance.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.npxg_performance|floatformat:"-1"}}<br>
-{% endfor %}
-{% endfor %}
+        @media (max-width: 768px) {
+            .container { padding: 0.5rem; }
+            .section { padding: 0.8rem; }
+            h1 { font-size: 1.3rem; }
+            .stats-table { font-size: 0.8rem; }
+            .stats-table th, .stats-table td { padding: 0.3rem; }
+            .tab-button { padding: 0.5rem 0.8rem; font-size: 0.85rem; }
 
-<h2>Progressive Carries</h2>
-{% for season, players in player_prog_carries.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.prog_carries}}<br>
-{% endfor %}
-{% endfor %}
+            .stats-grid-container {
+                flex-direction: column;
+                gap: 0;
+            }
+            .stats-block {
+                width: 100%;
+                min-width: 0;
+            }
+        }
 
-<h2>Progressive Carries to Final 3rd</h2>
-{% for season, players in player_prog_carries_final_3rd.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.prog_carries_final_3rd}}<br>
-{% endfor %}
-{% endfor %}
+        @media (min-width: 1024px) {
+            .stats-table { max-width: 800px; }
+            .stats-table th, .stats-table td { padding: 0.6rem 0.8rem; }
+            h1 { font-size: 1.6rem; }
+            .stats-header h2, h2 { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>{{league.name}}</h1>
+            </div>
+             <div class="header-controls">
+                <a href="{% url 'documentation_view' %}" class="api-button">API Documentation</a>
+                <div class="season-filter">
+            
+                </div>
+            <div class="season-filter">
+                <label for="seasonSelect">Season:</label>
+                <select id="seasonSelect" class="season-select"></select>
+            </div>
+        </div>
+    </header>
 
-<h2>Progressive Passes</h2>
-{% for season, players in player_prog_passes.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.prog_passes}}<br>
-{% endfor %}
-{% endfor %}
+    <main class="container">
+        <div class="stats-content">
+            <section class="section">
+                {% load static %}
+                {% with image_path="images/"|add:league.code|add:".png"%}
+                <img src="{% static image_path %}" alt="{{league.name}} crest" class="league-image">
+                {% endwith %}
 
-<h2>Shots on Target</h2>
-{% for season, players in player_shots_target.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.shots_target}}<br>
-{% endfor %}
-{% endfor %}
+                {% for season, clubs in league_table.items %}
+                <div class="season-data" data-season="{{season}}">
+                    <h2>League Table - {{season}}</h2>
+                    <table class="stats-table">
+                        <thead>
+                            <tr>
+                                <th>Pos</th>
+                                <th>Club</th>
+                                <th>Pts</th>
+                                <th>MP</th>
+                                <th>W</th>
+                                <th>D</th>
+                                <th>L</th>
+                                <th>GD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for club in clubs %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td><strong><a href="{% url "club_stats_by_club" club_name=club.club.name %}">{{ club.club.name }}</a></strong></td>
+                                <td class="stat-value">{{club.points_won}}</td>
+                                <td>{{club.matches_played}}</td>
+                                <td>{{club.win}}</td>
+                                <td>{{club.draw}}</td>
+                                <td>{{club.lost}}</td>
+                                <td>{{club.goal_diff}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endfor %}
+            </section>
 
-<h2>Passes to Final 3rd</h2>
-{% for season, players in player_passes_to_final_3rd.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.passes_to_final_3rd}}<br>
-{% endfor %}
-{% endfor %}
+            <div class="tab-navigation">
+                <button class="tab-button active" data-tab="team-stats">Team Stats</button>
+                <button class="tab-button" data-tab="player-stats">Player Stats</button>
+                <button class="tab-button" data-tab="u23-stats">U23 Stats</button>
+                <button class="tab-button" data-tab="goalkeeper-stats">Goalkeeper Stats</button>
+            </div>
 
-<h2>Passes to Penalty Area</h2>
-{% for season, players in player_passes_to_pen_area.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.passes_to_pen_area}}<br>
-{% endfor %}
-{% endfor %}
+            <div id="team-stats" class="tab-content active">
+                <section class="section">
+                    <h1>Teams Stats</h1>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Goals Scored</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, clubs in goal_scored.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Pos</th><th>Club</th><th>Goals</th></tr></thead>
+                                    <tbody>
+                                        {% for club in clubs %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{club.club.name}}</td>
+                                            <td class="stat-value">{{club.goals_scored}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Goals Conceded</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, clubs in goal_conceded.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Pos</th><th>Club</th><th>Goals</th></tr></thead>
+                                    <tbody>
+                                        {% for club in clubs %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{club.club.name}}</td>
+                                            <td class="stat-value">{{club.goals_conceded}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>xG Created</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, clubs in xg_create.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Pos</th><th>Club</th><th>xG</th></tr></thead>
+                                    <tbody>
+                                        {% for club in clubs %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{club.club.name}}</td>
+                                            <td class="stat-value">{{club.xg_created}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>xG Conceded</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, clubs in xg_concede.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Pos</th><th>Club</th><th>xG</th></tr></thead>
+                                    <tbody>
+                                        {% for club in clubs %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{club.club.name}}</td>
+                                            <td class="stat-value">{{club.xg_conceded}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                             <div class="stats-header">
+                                <h2>Shots Faced</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, clubs in shot.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Pos</th><th>Club</th><th>Shots</th></tr></thead>
+                                    <tbody>
+                                        {% for club in clubs %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{club.club.name}}</td>
+                                            <td class="stat-value">{{club.shots_allowed}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Shots on Target Faced</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, clubs in shots_on_target.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Pos</th><th>Club</th><th>Shots</th></tr></thead>
+                                    <tbody>
+                                        {% for club in clubs %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{club.club.name}}</td>
+                                            <td class="stat-value">{{club.shots_target_allowed}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Attempted Passes (against)</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, clubs in attempted_passes.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Pos</th><th>Club</th><th>Passes</th></tr></thead>
+                                    <tbody>
+                                        {% for club in clubs %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{club.club.name}}</td>
+                                            <td class="stat-value">{{club.attempted_passes_against}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Completed Passes Allowed</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, clubs in completed_passes.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Pos</th><th>Club</th><th>Passes</th></tr></thead>
+                                    <tbody>
+                                        {% for club in clubs %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{club.club.name}}</td>
+                                            <td class="stat-value">{{club.comp_passes_allowed}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Passes Allowed into Own Final Third</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, clubs in passes_into_final_third.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Pos</th><th>Club</th><th>Passes</th></tr></thead>
+                                    <tbody>
+                                        {% for club in clubs %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{club.club.name}}</td>
+                                            <td class="stat-value">{{club.passes_to_final_third_allowed}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Passes Allowed into Own Penalty Area</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, clubs in passes_into_pen_area.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Pos</th><th>Club</th><th>Passes</th></tr></thead>
+                                    <tbody>
+                                        {% for club in clubs %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{club.club.name}}</td>
+                                            <td class="stat-value">{{club.passes_to_pen_area_allowed}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+            </div>
 
-<h2>Pass Switches</h2>
-{% for season, players in player_pass_switches.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.pass_switches}}<br>
-{% endfor %}
-{% endfor %}
+            <div id="player-stats" class="tab-content">
+                <section class="section">
+                    <h1>Player Season Stats</h1>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Minutes Played</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_minutes_played.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Minutes</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.minutes_played}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Matches Played</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_matches_played.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Matches</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.matches_played}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Matches Completed</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_games_completed.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Completed</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.matches_completed}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Matches Substituted</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_matches_substituted.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Substituted</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.matches_substituted}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Unused Sub</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_unused_sub.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Unused</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.unused_sub}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Goals</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_goals.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Goals</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.goals}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Assists</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_assists.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Assists</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.assists}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>G/A</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_GA.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>G/A</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.GA}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Expected Goals (xG)</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_xg.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>xG</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.xg|floatformat:"-1"}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Non-Penalty Expected Goals (npxg)</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_npxg.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>npxG</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.npxg|floatformat:"-1"}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>xG Performance</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_xg_performance.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Performance</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.xg_performance|floatformat:"-1"}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>npxg Performance</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_npxg_performance.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Performance</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.npxg_performance|floatformat:"-1"}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Progressive Carries</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_prog_carries.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Carries</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.prog_carries}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Progressive Carries to Final 3rd</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_prog_carries_final_3rd.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Carries</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.prog_carries_final_3rd}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Progressive Passes</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_prog_passes.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Passes</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.prog_passes}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Shots on Target</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_shots_target.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Shots</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.shots_target}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Passes to Final 3rd</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_passes_to_final_3rd.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Passes</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.passes_to_final_3rd}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Passes to Penalty Area</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_passes_to_pen_area.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Passes</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.passes_to_pen_area}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Pass Switches</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_pass_switches.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Switches</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.pass_switches}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Through Balls</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_through_ball.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Through Balls</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.through_ball}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Shot Creation Actions</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_shots_creation_action.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Actions</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.shots_creation_action}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Offsides</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_offsides.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Offsides</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.offsides}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Penalties Won</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_pen_won.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Penalties</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.pen_won}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Penalties Conceded</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_pen_conceded.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Penalties</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.pen_conceded}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Tackles</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_tackles.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Tackles</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.tackles}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Ball Recoveries</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_ball_recoveries.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Recoveries</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.ball_recoveries}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Aerial Duels Won</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_aerial_duels_won.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Won</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.aerial_duels_won}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Aerial Duels Lost</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_aerial_duels_lost.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Lost</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.aerial_duels_lost}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Blocks</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_blocks.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Blocks</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.blocks}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Tackles Won</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_tackles_won.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Won</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.tackles_won}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Interceptions</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_interceptions.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Interceptions</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.interceptions}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Touches</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_touches.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Touches</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.touches}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Dispossessed</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_dispossessed.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Dispossessed</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.dispossessed}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Miscontrols</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_miscontrols.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Miscontrols</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.miscontrols}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Take-Ons</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_take_ons.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Take-Ons</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.take_ons}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Take-Ons Won</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_take_ons_won.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Won</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.take_ons_won}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Fouls Won</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_fouls_won.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Won</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.fouls_won}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Fouls Committed</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_fouls_committed.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Committed</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.fouls_committed}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Carries to Final 3rd</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_carries_to_final_3rd.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Carries</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.carries_to_final_3rd}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Carries to Penalty Area</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_carries_to_pen_area.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Carries</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.carries_to_pen_area}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Yellow Cards</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_yellow_card.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Yellow</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.yellow_card}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Red Cards</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in player_red_card.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Red</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.red_card}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+            </div>
 
-<h2>Through Balls</h2>
-{% for season, players in player_through_ball.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.through_ball}}<br>
-{% endfor %}
-{% endfor %}
+            <div id="u23-stats" class="tab-content">
+                <section class="section">
+                    <h1>U23 Player Season Stats</h1>
+                     <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Minutes Played</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_minutes_played.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Minutes</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.minutes_played}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Matches Played</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_matches_played.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Matches</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.matches_played}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Matches Completed</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_games_completed.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Completed</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.matches_completed}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Matches Substituted</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_matches_substituted.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Substituted</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.matches_substituted}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Unused Sub</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_unused_sub.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Unused</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.unused_sub}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Goals</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_goals.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Goals</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.goals}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Assists</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_assists.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Assists</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.assists}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>G/A</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_GA.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>G/A</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.GA}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Expected Goals (xG)</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_xg.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>xG</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.xg|floatformat:"-1"}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Non-Penalty Expected Goals (npxg)</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_npxg.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>npxG</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.npxg|floatformat:"-1"}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>xG Performance</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_xg_performance.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Performance</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.xg_performance|floatformat:"-1"}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>npxg Performance</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_npxg_performance.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Performance</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.npxg_performance|floatformat:"-1"}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Progressive Carries</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_prog_carries.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Carries</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.prog_carries}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Progressive Carries to Final 3rd</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_prog_carries_final_3rd.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Carries</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.prog_carries_final_3rd}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Progressive Passes</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_prog_passes.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Passes</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.prog_passes}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Shots on Target</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_shots_target.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Shots</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.shots_target}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Passes to Final 3rd</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_passes_to_final_3rd.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Passes</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.passes_to_final_3rd}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Passes to Penalty Area</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_passes_to_pen_area.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Passes</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.passes_to_pen_area}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Pass Switches</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_pass_switches.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Switches</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.pass_switches}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Through Balls</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_through_ball.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Through Balls</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.through_ball}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Shot Creation Actions</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_shots_creation_action.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Actions</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.shots_creation_action}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Offsides</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_offsides.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Offsides</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.offsides}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Penalties Won</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_pen_won.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Penalties</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.pen_won}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Penalties Conceded</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_pen_conceded.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Penalties</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.pen_conceded}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Tackles</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_tackles.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Tackles</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.tackles}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Ball Recoveries</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_ball_recoveries.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Recoveries</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.ball_recoveries}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Aerial Duels Won</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_aerial_duels_won.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Won</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.aerial_duels_won}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Aerial Duels Lost</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_aerial_duels_lost.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Lost</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.aerial_duels_lost}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Blocks</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_blocks.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Blocks</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.blocks}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Tackles Won</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_tackles_won.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Won</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.tackles_won}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Interceptions</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_interceptions.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Interceptions</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.interceptions}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Touches</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_touches.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Touches</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.touches}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Dispossessed</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_dispossessed.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Dispossessed</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.dispossessed}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Miscontrols</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_miscontrols.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Miscontrols</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.miscontrols}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Take-Ons</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_take_ons.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Take-Ons</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.take_ons}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Take-Ons Won</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_take_ons_won.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Won</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.take_ons_won}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Fouls Won</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_fouls_won.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Won</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.fouls_won}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Fouls Committed</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_fouls_committed.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Committed</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.fouls_committed}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Carries to Final 3rd</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_carries_to_final_3rd.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Carries</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.carries_to_final_3rd}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Carries to Penalty Area</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_carries_to_pen_area.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Carries</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.carries_to_pen_area}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Yellow Cards</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_yellow_card.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Yellow</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.yellow_card}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Red Cards</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, players in U23_player_red_card.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Player</th><th>Red</th></tr></thead>
+                                    <tbody>
+                                        {% for player in players %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><a href="{% url "player_detail" player_id=player.player.full_name %}">{{player.player.full_name}}</a></td>
+                                            <td class="stat-value">{{player.red_card}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+            </div>
 
-<h2>Shot Creation Actions</h2>
-{% for season, players in player_shots_creation_action.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.shots_creation_action}}<br>
-{% endfor %}
-{% endfor %}
+            <div id="goalkeeper-stats" class="tab-content">
+                <section class="section">
+                    <h1>Goalkeeper Season Stats</h1>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Matches Played</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, goalkeepers in goalkeeper_games_played.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Goalkeeper</th><th>Matches</th></tr></thead>
+                                    <tbody>
+                                        {% for goalkeeper in goalkeepers %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{goalkeeper.player.full_name}}</td>
+                                            <td class="stat-value">{{goalkeeper.matches_played}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Minutes Played</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, goalkeepers in goalkeeper_minutes_played.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Goalkeeper</th><th>Minutes</th></tr></thead>
+                                    <tbody>
+                                        {% for goalkeeper in goalkeepers %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{goalkeeper.player.full_name}}</td>
+                                            <td class="stat-value">{{goalkeeper.minutes_played}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Goals Conceded</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, goalkeepers in goalkeeper_goals_conceded.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Goalkeeper</th><th>Conceded</th></tr></thead>
+                                    <tbody>
+                                        {% for goalkeeper in goalkeepers %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{goalkeeper.player.full_name}}</td>
+                                            <td class="stat-value">{{goalkeeper.goals_conceded}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Shots Faced</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, goalkeepers in goalkeeper_shots_faced.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Goalkeeper</th><th>Shots</th></tr></thead>
+                                    <tbody>
+                                        {% for goalkeeper in goalkeepers %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{goalkeeper.player.full_name}}</td>
+                                            <td class="stat-value">{{goalkeeper.shots_faced}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Saves</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, goalkeepers in goalkeeper_saves.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Goalkeeper</th><th>Saves</th></tr></thead>
+                                    <tbody>
+                                        {% for goalkeeper in goalkeepers %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{goalkeeper.player.full_name}}</td>
+                                            <td class="stat-value">{{goalkeeper.saves}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Save Percentage</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, goalkeepers in goalkeeper_save_percentage.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Goalkeeper</th><th>%</th></tr></thead>
+                                    <tbody>
+                                        {% for goalkeeper in goalkeepers %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{goalkeeper.player.full_name}}</td>
+                                            <td class="stat-value">{{goalkeeper.save_percentage}}%</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Clean Sheets</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, goalkeepers in goalkeeper_clean_sheets.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Goalkeeper</th><th>Clean Sheets</th></tr></thead>
+                                    <tbody>
+                                        {% for goalkeeper in goalkeepers %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{goalkeeper.player.full_name}}</td>
+                                            <td class="stat-value">{{goalkeeper.clean_sheets}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>PSxG (Post-Shot Expected Goals)</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, goalkeepers in goalkeeper_psxg.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Goalkeeper</th><th>PSxG</th></tr></thead>
+                                    <tbody>
+                                        {% for goalkeeper in goalkeepers %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{goalkeeper.player.full_name}}</td>
+                                            <td class="stat-value">{{goalkeeper.psxg}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>PSxG Performance</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, goalkeepers in goalkeeper_psxg_performance.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Goalkeeper</th><th>Performance</th></tr></thead>
+                                    <tbody>
+                                        {% for goalkeeper in goalkeepers %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{goalkeeper.player.full_name}}</td>
+                                            <td class="stat-value">{{goalkeeper.psxg_performance}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Penalties Saved</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, goalkeepers in goalkeeper_pen_saved.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Goalkeeper</th><th>Saved</th></tr></thead>
+                                    <tbody>
+                                        {% for goalkeeper in goalkeepers %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{goalkeeper.player.full_name}}</td>
+                                            <td class="stat-value">{{goalkeeper.pen_saved}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Passes</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, goalkeepers in goalkeeper_passes.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Goalkeeper</th><th>Passes</th></tr></thead>
+                                    <tbody>
+                                        {% for goalkeeper in goalkeepers %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{goalkeeper.player.full_name}}</td>
+                                            <td class="stat-value">{{goalkeeper.passes}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Crosses Stopped</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, goalkeepers in goalkeeper_crosses_stopped.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Goalkeeper</th><th>Stopped</th></tr></thead>
+                                    <tbody>
+                                        {% for goalkeeper in goalkeepers %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{goalkeeper.player.full_name}}</td>
+                                            <td class="stat-value">{{goalkeeper.crosses_stopped}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="stats-grid-container">
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Sweeper Actions</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, goalkeepers in goalkeeper_sweeper_action.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Goalkeeper</th><th>Actions</th></tr></thead>
+                                    <tbody>
+                                        {% for goalkeeper in goalkeepers %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{goalkeeper.player.full_name}}</td>
+                                            <td class="stat-value">{{goalkeeper.sweeper_action}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="stats-block">
+                            <div class="stats-header">
+                                <h2>Sweeper Actions Per 90</h2>
+                                <button class="toggle-stats-btn">[+]</button>
+                            </div>
+                            {% for season, goalkeepers in goalkeeper_sweeper_action_per90.items %}
+                            <div class="season-data" data-season="{{season}}">
+                                <h3>{{season}}</h3>
+                                <table class="stats-table collapsed">
+                                    <thead><tr><th>Rank</th><th>Goalkeeper</th><th>Per 90</th></tr></thead>
+                                    <tbody>
+                                        {% for goalkeeper in goalkeepers %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{goalkeeper.player.full_name}}</td>
+                                            <td class="stat-value">{{goalkeeper.sweeper_action_per90}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
 
-<h2>Offsides</h2>
-{% for season, players in player_offsides.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.offsides}}<br>
-{% endfor %}
-{% endfor %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const seasonSelect = document.getElementById('seasonSelect');
+            const seasonData = document.querySelectorAll('.season-data');
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            const seasons = Array.from(seasonData).map(el => el.getAttribute('data-season')).filter((season, index, arr) => arr.indexOf(season) === index);
+            
+            seasons.forEach(season => {
+                const option = document.createElement('option');
+                option.value = season;
+                option.textContent = season;
+                seasonSelect.appendChild(option);
+            });
 
-<h2>Penalties Won</h2>
-{% for season, players in player_pen_won.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.pen_won}}<br>
-{% endfor %}
-{% endfor %}
+            if (seasons.length > 0) {
+                const latestSeason = seasons[0];
+                seasonSelect.value = latestSeason;
+                filterBySeason(latestSeason);
+            }
 
-<h2>Penalties Conceded</h2>
-{% for season, players in player_pen_conceded.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.pen_conceded}}<br>
-{% endfor %}
-{% endfor %}
+            function filterBySeason(selectedSeason) {
+                seasonData.forEach(element => {
+                    const season = element.getAttribute('data-season');
+                    if (season === selectedSeason) {
+                        element.classList.add('active', 'fade-in');
+                        element.style.display = 'block';
+                    } else {
+                        element.classList.remove('active', 'fade-in');
+                        element.style.display = 'none';
+                    }
+                });
+            }
 
-<h2>Tackles</h2>
-{% for season, players in player_tackles.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.tackles}}<br>
-{% endfor %}
-{% endfor %}
+            seasonSelect.addEventListener('change', function() {
+                const selectedSeason = this.value;
+                filterBySeason(selectedSeason);
+                localStorage.setItem('selectedSeason', selectedSeason);
+            });
 
-<h2>Ball Recoveries</h2>
-{% for season, players in player_ball_recoveries.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.ball_recoveries}}<br>
-{% endfor %}
-{% endfor %}
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetTab = this.getAttribute('data-tab');
+                    
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    document.getElementById(targetTab).classList.add('active');
+                    
+                    localStorage.setItem('selectedTab', targetTab);
+                });
+            });
 
-<h2>Aerial Duels Won</h2>
-{% for season, players in player_aerial_duels_won.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.aerial_duels_won}}<br>
-{% endfor %}
-{% endfor %}
+            const savedSeason = localStorage.getItem('selectedSeason');
+            if (savedSeason && seasons.includes(savedSeason)) {
+                seasonSelect.value = savedSeason;
+                filterBySeason(savedSeason);
+            }
 
-<h2>Aerial Duels Lost</h2>
-{% for season, players in player_aerial_duels_lost.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.aerial_duels_lost}}<br>
-{% endfor %}
-{% endfor %}
+            const savedTab = localStorage.getItem('selectedTab');
+            if (savedTab) {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                const savedButton = document.querySelector(`[data-tab="${savedTab}"]`);
+                const savedContent = document.getElementById(savedTab);
+                
+                if (savedButton && savedContent) {
+                    savedButton.classList.add('active');
+                    savedContent.classList.add('active');
+                }
+            }
 
-<h2>Blocks</h2>
-{% for season, players in player_blocks.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.blocks}}<br>
-{% endfor %}
-{% endfor %}
-
-<h2>Tackles Won</h2>
-{% for season, players in player_tackles_won.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.tackles_won}}<br>
-{% endfor %}
-{% endfor %}
-
-<h2>Interceptions</h2>
-{% for season, players in player_interceptions.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.interceptions}}<br>
-{% endfor %}
-{% endfor %}
-
-<h2>Touches</h2>
-{% for season, players in player_touches.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.touches}}<br>
-{% endfor %}
-{% endfor %}
-
-<h2>Dispossessed</h2>
-{% for season, players in player_dispossessed.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.dispossessed}}<br>
-{% endfor %}
-{% endfor %}
-
-<h2>Miscontrols</h2>
-{% for season, players in player_miscontrols.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.miscontrols}}<br>
-{% endfor %}
-{% endfor %}
-
-<h2>Take-Ons</h2>
-{% for season, players in player_take_ons.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.take_ons}}<br>
-{% endfor %}
-{% endfor %}
-
-<h2>Take-Ons-Won</h2>
-{% for season, players in player_take_ons_won.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.take_ons_won}}<br>
-{% endfor %}
-{% endfor %}
-
-<h2>Fouls Won</h2>
-{% for season, players in player_fouls_won.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.fouls_won}}<br>
-{% endfor %}
-{% endfor %}
-
-<h2>Fouls Committed</h2>
-{% for season, players in player_fouls_committed.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.fouls_committed}}<br>
-{% endfor %}
-{% endfor %}
-
-<h2>Carries to Final 3rd</h2>
-{% for season, players in player_carries_to_final_3rd.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.carries_to_final_3rd}}<br>
-{% endfor %}
-{% endfor %}
-
-<h2>Carries to Penalty Area</h2>
-{% for season, players in player_carries_to_pen_area.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.carries_to_pen_area}}<br>
-{% endfor %}
-{% endfor %}
-
-<h2>Yellow Cards</h2>
-{% for season, players in player_yellow_card.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.yellow_card}}<br>
-{% endfor %}
-{% endfor %}
-
-<h2>Red Cards</h2>
-{% for season, players in player_red_card.items %}
-<br>{{season}}<br>
-{% for player in players %}
-{{player.player.full_name}} - {{player.red_card}}<br>
-{% endfor %}
-{% endfor %}
+            // Collapsible stats functionality
+            document.querySelectorAll('.toggle-stats-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const statsBlock = this.closest('.stats-block');
+                    if (statsBlock) {
+                        const tables = statsBlock.querySelectorAll('.stats-table');
+                        let isCollapsed;
+                        tables.forEach(table => {
+                            table.classList.toggle('collapsed');
+                            isCollapsed = table.classList.contains('collapsed');
+                        });
+                        button.textContent = isCollapsed ? '[+]' : '[-]';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

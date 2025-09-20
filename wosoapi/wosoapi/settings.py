@@ -20,10 +20,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-19qr15)al6o=0$=6h-b%8l9d1^&mv-el4lh8(_(2dr3w-hru)u"
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # only needed if you’re using python-dotenv locally
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 
 # Application definition
@@ -40,6 +46,7 @@ INSTALLED_APPS = [
     "django_filters",
     "accounts",
     "core",
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -47,6 +54,7 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -77,28 +85,25 @@ WSGI_APPLICATION = "wosoapi.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 
+# Add these at the top of your settings.py
 import os
 from dotenv import load_dotenv
+from urllib.parse import urlparse, parse_qsl
 
 load_dotenv()
 
-
-user = os.environ.get("DB_USER")
-password = os.environ.get("DB_PASSWORD")
-host = os.environ.get("DB_HOST")
-db_name = os.environ.get("DB_NAME")
-db_port = os.environ.get("DB_PORT")
-# smtp config for password reset
-
+# Replace the DATABASES section of your settings.py with this
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": db_name,
-        "USER": user,
-        "PASSWORD": password,
-        "HOST": host,
-        "PORT": db_port,
+        "NAME": tmpPostgres.path.replace("/", ""),
+        "USER": tmpPostgres.username,
+        "PASSWORD": tmpPostgres.password,
+        "HOST": tmpPostgres.hostname,
+        "PORT": 5432,
+        "OPTIONS": dict(parse_qsl(tmpPostgres.query)),
     }
 }
 
@@ -199,7 +204,20 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_SECONDS = 86400
     SECURE_REDIRECT_EXEMPT = []
-    # SECURE_SSL_REDIRECT = True
-    # SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+
+
+# import socket
+
+# hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+# INTERNAL_IPS = ["127.0.0.1"] + [ip for ip in ips]
+
+
+# def show_toolbar(request):
+#     return True
+
+
+# SHOW_TOOLBAR_CALLBACK = show_toolbar

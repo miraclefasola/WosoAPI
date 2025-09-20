@@ -1,9 +1,9 @@
 # API Query Guide
 
-This document explains how to construct API queries for the WOSO API and what responses to expect.
+This document explains how to construct API queries for the Wosostat API and what responses to expect.
 
 ## Base URL
-All API endpoints start with: `https://wosoapi.onrender.com/api`
+All API endpoints start with: `https://wosostat/api`
 
 ## Authentication
 All requests (except auth endpoints) require a JWT token in the header:
@@ -303,7 +303,7 @@ All successful responses return JSON data with the following structure:
 ```json
 {
   "count": 100,
-  "next": "https://wosoapi.onrender.com/endpoint/?page=2",
+  "next": "https://wosostat/endpoint/?page=2",
   "previous": null,
   "results": [
     {

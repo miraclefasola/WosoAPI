@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from itertools import groupby
 from django.db.models import F, Q, Value
 from django.db.models.functions import Replace
+from django.http import HttpResponse
 
 
 
@@ -476,6 +477,7 @@ class PlayerSeasonDetailView(DetailView):
     model = PlayerSeasonStats
     template_name = "core/player.html"
     context_object_name = "player"
+    
 
     def get_object(self):
         player = self.kwargs.get("player_id")
@@ -554,14 +556,17 @@ class PlayerSeasonDetailView(DetailView):
                 .filter(player=current_player_season.player)
                 .order_by("season__season")
             )
-        nationality = current_player_season.player.nationality.strip()
-        parts = nationality.split()
+        if current_player_season.player.nationality:   
+            nationality = current_player_season.player.nationality.strip()
+            parts = nationality.split()
 
-        if len(parts) > 1:
-            cleaned_nationality = " ".join(parts[1:])
+            if len(parts) > 1:
+                cleaned_nationality = " ".join(parts[1:])
+            else:
+                cleaned_nationality = parts[0]
+                return cleaned_nationality
         else:
-            cleaned_nationality = parts[0]
-            return cleaned_nationality
+            cleaned_nationality = "Unknown"
 
         context["player_profile"] = cleaned_nationality
         context["players"] = player_qs

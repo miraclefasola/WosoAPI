@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ player.player.full_name }} | Player Stats</title>
     <style>
         body {
@@ -108,6 +109,27 @@
             .player-headshot { width: 80px; height: 80px; }
             ul { max-width: 100%; }
         }
+        @media (max-width: 768px) {
+    .container { 
+        margin: 1rem;
+        padding: 1rem;
+    }
+    .player-headshot { 
+        width: 80px; 
+        height: 80px; 
+    }
+    ul { 
+        max-width: 100%; 
+    }
+    li {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0.5rem 0;
+    }
+    strong {
+        padding-right: 0;
+    }
+}
     </style>
 </head>
 <body>
@@ -227,10 +249,29 @@
             {% endfor %}
         {% endif %}
     </div>
+        <footer style="background-color: #141212; color: white; padding: 2rem 0; text-align: center;">
+        <div class="container">
+            <p style="margin-bottom: 1rem;">
+                <strong>Data powered by <a href="https://fbref.com" target="_blank" style="color: var(--secondary);">FBref.com</a></strong>
+            </p>
+            <p style="color: var(--text-light); font-size: 0.875rem;">
+                © 2025 Wosostat. All rights reserved. Original data belongs to FBref.com and their data providers.
+            </p>
+        </div>
+    </footer>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const select = document.getElementById('season-select');
             const sections = document.querySelectorAll('.season-section');
+            // Get all seasons from the dropdown
+            const seasons = Array.from(select.options).map(opt => opt.value);
+            // Sort seasons descending (latest first, assuming format "2024/25")
+            seasons.sort((a, b) => b.localeCompare(a));
+            // Set dropdown to latest season
+            if (seasons.length > 0) {
+                select.value = seasons[0];
+                showSeason(seasons[0]);
+            }
             function showSeason(season) {
                 sections.forEach(sec => {
                     if (sec.getAttribute('data-season') === season) {
@@ -240,12 +281,10 @@
                     }
                 });
             }
-            // Show first season by default
-            if (select.value) showSeason(select.value);
             select.addEventListener('change', function() {
                 showSeason(this.value);
             });
         });
-    </script>
+        </script>
 </body>
 </html>

@@ -392,6 +392,35 @@
             border-radius: 4px;
             margin: 0.2rem 0;
         }
+.club-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns on desktop/tablet */
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+}
+
+.stat-item {
+    min-width: 0;
+    padding: 1.2rem 0.5rem;
+}
+
+@media (max-width: 600px) {
+    .club-stats-grid {
+        grid-template-columns: repeat(2, 1fr); /* keep mobile as is */
+        gap: 0.3rem;
+    }
+    .stat-item {
+        min-width: 80px;
+        padding: 0.5rem 0.2rem;
+        font-size: 0.9rem;
+    }
+    .stat-value {
+        font-size: 1.1rem;
+    }
+    .stat-label {
+        font-size: 0.7rem;
+    }
+}
 
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -412,7 +441,25 @@
             .club-stats-grid { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); }
             .stat-value { font-size: 1.5rem; }
             .stat-label { font-size: 0.7rem; }
+            }
+        .stat-value.wdl {
+            white-space: nowrap;
+            font-size: 1.3rem;
+            letter-spacing: 0.1em;
         }
+        .club-stats-grid .stat-item:nth-child(2) {
+            padding: 0.4rem 0.2rem !important;
+            margin: 0 !important;
+            min-width: 0;
+        }
+        .club-stats-grid .stat-item:nth-child(2) .stat-value.wdl {
+            font-size: 1.1rem !important;
+            letter-spacing: 0.05em;
+        }
+        .club-stats-grid .stat-item:nth-child(2) .stat-label {
+            font-size: 0.7rem !important;
+            margin-top: 0.1rem;
+        }        
     </style>
 </head>
 <body>
@@ -450,10 +497,10 @@
                     </span>
                     <span class="stat-label">Position</span>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-value">{{club.win}} - {{club.draw}} - {{club.lost}}</span>
-                    <span class="stat-label">W-D-L</span>
-                </div>
+                    <div class="stat-item">
+                        <span class="stat-value wdl">{{club.win}} - {{club.draw}} - {{club.lost}}</span>
+                        <span class="stat-label">W-D-L</span>
+                    </div>
                 <div class="stat-item">
                     <span class="stat-value">{{club.goals_scored}}</span>
                     <span class="stat-label">Goals</span>
@@ -1995,8 +2042,7 @@
                             <table class="stats-table collapsible">
                                 <thead>
                                     <tr>
-                                        <th>Player</th>
-                                        <th>Crosses Stopped</th>
+                                        <th>Player</th>Crosses Stopped</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -2066,6 +2112,16 @@
 
         </div>
     </main>
+    <footer style="background-color: #141212; color: white; padding: 2rem 0; text-align: center;">
+        <div class="container">
+            <p style="margin-bottom: 1rem;">
+                <strong>Data powered by <a href="https://fbref.com" target="_blank" style="color: var(--secondary);">FBref.com</a></strong>
+            </p>
+            <p style="color: var(--text-light); font-size: 0.875rem;">
+                © 2025 Wosostat. All rights reserved. Original data belongs to FBref.com and their data providers.
+            </p>
+        </div>
+    </footer>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const tabs = document.querySelectorAll('.tab-button');
@@ -2136,13 +2192,14 @@
             // Add event listener for collapsible buttons
             document.querySelectorAll('.toggle-stats-btn').forEach(button => {
                 button.addEventListener('click', () => {
-                    const table = button.closest('.subsection-title').nextElementSibling.querySelector('table');
-                    table.classList.toggle('collapsed');
-                    
-                    if (table.classList.contains('collapsed')) {
-                        button.textContent = '[+]';
-                    } else {
-                        button.textContent = '[-]';
+                    const statsBlock = button.parentElement.parentElement;
+                    const visibleSeason = statsBlock.querySelector('.season-data[style="display: block;"]');
+                    if (visibleSeason) {
+                        const table = visibleSeason.querySelector('table');
+                        if (table) {
+                            table.classList.toggle('collapsed');
+                            button.textContent = table.classList.contains('collapsed') ? '[+]' : '[-]';
+                        }
                     }
                 });
             });

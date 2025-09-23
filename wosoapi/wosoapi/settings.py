@@ -194,7 +194,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".onrender.com",    "www.wosostat.ducdns.org",
-    "wosostat.ducdns.org",".amazonaws.com"
+    "wosostat.ducdns.org",".amazonaws.com", '*.amazonaws.com', '*']
  ]
 CSRF_TRUSTED_ORIGINS = ["https://*.onrender.com"]
 

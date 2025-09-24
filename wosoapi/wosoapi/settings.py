@@ -25,7 +25,10 @@ from dotenv import load_dotenv
 
 load_dotenv()  # only needed if you’re using python-dotenv locally
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+RAW_SECRET_KEY = os.getenv("SECRET_KEY")
+if isinstance(RAW_SECRET_KEY, bytes):
+    RAW_SECRET_KEY = RAW_SECRET_KEY.decode('utf-8')
+SECRET_KEY = RAW_SECRET_KEY
 
 
 # SECURITY WARNING: don't run with debug turned on in production!

@@ -94,9 +94,10 @@ from urllib.parse import urlparse, parse_qsl
 load_dotenv()
 
 raw_url = os.getenv("DATABASE_URL")
-if isinstance(raw_url, bytes):
-    raw_url = raw_url.decode('utf-8')
-tmpPostgres = urlparse(raw_url)
+url=urlparse(raw_url)
+if isinstance(url.path, bytes):
+    url = url._replace(path=url.path.decode('utf-8'))
+tmpPostgres = (url)
 
 
 DATABASES = {

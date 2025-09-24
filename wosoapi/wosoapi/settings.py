@@ -90,13 +90,16 @@ from urllib.parse import urlparse, parse_qsl
 
 load_dotenv()
 
-# Replace the DATABASES section of your settings.py with this
-tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
+raw_url = os.getenv("DATABASE_URL")
+if isinstance(raw_url, bytes):
+    raw_url = raw_url.decode('utf-8')
+tmpPostgres = urlparse(raw_url)
+
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": tmpPostgres.path.decode('utf-8').replace("/", ""),
+        "NAME": tmpPostgres.path.replace("/", ""),
         "USER": tmpPostgres.username,
         "PASSWORD": tmpPostgres.password,
         "HOST": tmpPostgres.hostname,

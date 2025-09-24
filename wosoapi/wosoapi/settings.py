@@ -177,8 +177,14 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 load_dotenv()
-email = os.environ.get("smtp_email")
-smtp_password = os.environ.get("smtp_password")
+raw_email = os.environ.get("smtp_email")
+if isinstance(raw_email, bytes):
+    raw_email = raw_email.decode('utf-8')
+email = raw_email
+raw_smtp_password = os.environ.get("smtp_password")
+if isinstance(raw_smtp_password, bytes):
+    raw_smtp_password = raw_smtp_password.decode('utf-8')
+smtp_password = raw_smtp_password
 
 # SMTP configuratioon for password rest functionality
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

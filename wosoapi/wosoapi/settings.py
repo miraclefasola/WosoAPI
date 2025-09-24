@@ -206,12 +206,20 @@ PASSWORD_RESET_TIMEOUT = 86400  # 1 day in seconds
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".onrender.com",    "www.wosostat.ducdns.org",
-    "wosostat.ducdns.org",".amazonaws.com", '*.amazonaws.com','https://35.159.128.167/', '*']
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".onrender.com",    "www.wosostat.duckdns.org",
+    "wosostat.duckdns.org",".amazonaws.com", '*.amazonaws.com',"35.159.128.167", '*']
 
-CSRF_TRUSTED_ORIGINS = ["https://*.onrender.com", 'https://35.159.128.167/', 'http://localhost:8000','*.amazonaws.com',    "https://www.wosostat.ducdns.org",
-    "https://wosostat.ducdns.org", 
-    "https://*.amazonaws.com", 'https://ec2-35-159-128-167.eu-central-1.compute.amazonaws.com' ]
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.onrender.com", 
+    "https://35.159.128.167",  
+    "http://35.159.128.167",   
+    "http://localhost:8000",
+    "https://*.amazonaws.com",  
+    "https://www.wosostat.duckdns.org",
+    "https://wosostat.duckdns.org", 
+    "https://ec2-35-159-128-167.eu-central-1.compute.amazonaws.com",
+    "http://ec2-35-159-128-167.eu-central-1.compute.amazonaws.com",
+]
 
 if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
@@ -219,10 +227,10 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_SECONDS = 86400
     SECURE_REDIRECT_EXEMPT = []
-    SECURE_SSL_REDIRECT = True
+    # SECURE_SSL_REDIRECT = True      # ❌ Comment out until SSL ready
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    # SESSION_COOKIE_SECURE = True    # ❌ Comment out until SSL ready
+    # CSRF_COOKIE_SECURE = True       # ❌ Comment out until SSL ready
 
 if DEBUG:
     INSTALLED_APPS += ["debug_toolbar"]

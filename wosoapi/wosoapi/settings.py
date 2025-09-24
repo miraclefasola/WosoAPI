@@ -207,9 +207,11 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".onrender.com",    "www.wosostat.ducdns.org",
-    "wosostat.ducdns.org",".amazonaws.com", '*.amazonaws.com', '*']
+    "wosostat.ducdns.org",".amazonaws.com", '*.amazonaws.com','https://35.159.128.167/', '*']
 
-CSRF_TRUSTED_ORIGINS = ["https://*.onrender.com"]
+CSRF_TRUSTED_ORIGINS = ["https://*.onrender.com", 'https://35.159.128.167/', 'http://localhost:8000','*.amazonaws.com',    "https://www.wosostat.ducdns.org",
+    "https://wosostat.ducdns.org", 
+    "https://*.amazonaws.com", 'https://ec2-35-159-128-167.eu-central-1.compute.amazonaws.com' ]
 
 if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True

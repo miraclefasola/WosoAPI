@@ -10,8 +10,6 @@ from django.db.models.functions import Replace
 from django.http import HttpResponse
 
 
-
-
 class HomeView(ListView):
     queryset = League.objects.all()
     template_name = "core/home.html"
@@ -21,14 +19,15 @@ class HomeView(ListView):
 class LeagueSeasonDetailView(DetailView):
     model = ClubSeasonStat
     template_name = "core/clubs.html"
-    context_object_name = 'league'
+    context_object_name = "league"
 
     def get_object(self):
         league_code = self.kwargs.get("league_code")
         return get_object_or_404(League, code=league_code)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        league=self.get_object()
+        league = self.get_object()
 
         base_qs = ClubSeasonStat.objects.select_related(
             "club", "season", "league"
@@ -477,7 +476,6 @@ class PlayerSeasonDetailView(DetailView):
     model = PlayerSeasonStats
     template_name = "core/player.html"
     context_object_name = "player"
-    
 
     def get_object(self):
         player = self.kwargs.get("player_id")
@@ -485,7 +483,7 @@ class PlayerSeasonDetailView(DetailView):
 
         # First: Try PlayerSeasonStats
         try:
-            search= PlayerSeasonStats.objects.get(
+            search = PlayerSeasonStats.objects.get(
                 Q(player__full_name__iexact=player) | Q(player__fbref_id=player)
             )
 
@@ -550,13 +548,13 @@ class PlayerSeasonDetailView(DetailView):
                 .filter(player=current_player_season.player)
                 .order_by("season__season")
             )
-        else:  
+        else:
             player_qs = (
                 Goalkeeper.objects.select_related("club", "season", "player")
                 .filter(player=current_player_season.player)
                 .order_by("season__season")
             )
-        if current_player_season.player.nationality:   
+        if current_player_season.player.nationality:
             nationality = current_player_season.player.nationality.strip()
             parts = nationality.split()
 
@@ -571,5 +569,7 @@ class PlayerSeasonDetailView(DetailView):
         context["player_profile"] = cleaned_nationality
         context["players"] = player_qs
         context["is_goalkeeper"] = isinstance(current_player_season, Goalkeeper)
-        context['ga']=getattr(current_player_season, 'goals', 0) + getattr(current_player_season, 'assists', 0)
+        context["ga"] = getattr(current_player_season, "goals", 0) + getattr(
+            current_player_season, "assists", 0
+        )
         return context

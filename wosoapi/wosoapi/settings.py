@@ -27,7 +27,7 @@ load_dotenv()  # only needed if you’re using python-dotenv locally
 
 RAW_SECRET_KEY = os.getenv("SECRET_KEY")
 if isinstance(RAW_SECRET_KEY, bytes):
-    RAW_SECRET_KEY = RAW_SECRET_KEY.decode('utf-8')
+    RAW_SECRET_KEY = RAW_SECRET_KEY.decode("utf-8")
 SECRET_KEY = RAW_SECRET_KEY
 
 
@@ -94,10 +94,10 @@ from urllib.parse import urlparse, parse_qsl
 load_dotenv()
 
 raw_url = os.getenv("DATABASE_URL")
-url=urlparse(raw_url)
+url = urlparse(raw_url)
 if isinstance(url.path, bytes):
-    url = url._replace(path=url.path.decode('utf-8'))
-tmpPostgres = (url)
+    url = url._replace(path=url.path.decode("utf-8"))
+tmpPostgres = url
 
 
 DATABASES = {
@@ -183,11 +183,11 @@ AUTHENTICATION_BACKENDS = [
 load_dotenv()
 raw_email = os.environ.get("smtp_email")
 if isinstance(raw_email, bytes):
-    raw_email = raw_email.decode('utf-8')
+    raw_email = raw_email.decode("utf-8")
 email = raw_email
 raw_smtp_password = os.environ.get("smtp_password")
 if isinstance(raw_smtp_password, bytes):
-    raw_smtp_password = raw_smtp_password.decode('utf-8')
+    raw_smtp_password = raw_smtp_password.decode("utf-8")
 smtp_password = raw_smtp_password
 
 # SMTP configuratioon for password rest functionality
@@ -206,17 +206,26 @@ PASSWORD_RESET_TIMEOUT = 86400  # 1 day in seconds
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".onrender.com",    "www.wosostat.duckdns.org",
-    "wosostat.duckdns.org",".amazonaws.com", '*.amazonaws.com',"35.159.128.167", '*']
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    ".onrender.com",
+    "www.wosostat.duckdns.org",
+    "wosostat.duckdns.org",
+    ".amazonaws.com",
+    "*.amazonaws.com",
+    "35.159.128.167",
+    "*",
+]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.onrender.com", 
-    "https://35.159.128.167",  
-    "http://35.159.128.167",   
+    "https://*.onrender.com",
+    "https://35.159.128.167",
+    "http://35.159.128.167",
     "http://localhost:8000",
-    "https://*.amazonaws.com",  
+    "https://*.amazonaws.com",
     "https://www.wosostat.duckdns.org",
-    "https://wosostat.duckdns.org", 
+    "https://wosostat.duckdns.org",
     "https://ec2-35-159-128-167.eu-central-1.compute.amazonaws.com",
     "http://ec2-35-159-128-167.eu-central-1.compute.amazonaws.com",
 ]
@@ -227,10 +236,10 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_SECONDS = 86400
     SECURE_REDIRECT_EXEMPT = []
-    SECURE_SSL_REDIRECT = True      
+    SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SESSION_COOKIE_SECURE = True    
-    CSRF_COOKIE_SECURE = True       
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 if DEBUG:
     INSTALLED_APPS += ["debug_toolbar"]

@@ -227,10 +227,10 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_SECONDS = 86400
     SECURE_REDIRECT_EXEMPT = []
-    # SECURE_SSL_REDIRECT = True      # ❌ Comment out until SSL ready
+    SECURE_SSL_REDIRECT = True      
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    # SESSION_COOKIE_SECURE = True    # ❌ Comment out until SSL ready
-    # CSRF_COOKIE_SECURE = True       # ❌ Comment out until SSL ready
+    SESSION_COOKIE_SECURE = True    
+    CSRF_COOKIE_SECURE = True       
 
 if DEBUG:
     INSTALLED_APPS += ["debug_toolbar"]

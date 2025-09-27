@@ -475,7 +475,7 @@
                 <img src="https://cdn.ssref.net/req/202509031/tlogo/fb/{{ club.club.fbref_id }}.png" 
                      alt="{{ club.club.fbref_id }} Crest" 
                      class="club-crest"
-                     onerror="this.onerror=null; this.src='{% static 'images/default_crest.png' %}';">
+                     onerror="this.onerror=null; this.src='https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/default_crest.png';">
                 <div class="club-info">
                     <h1>{{club.club.name}}</h1>
                     <div class="league-info">{{club.league.name}} : {{club.league.country}}</div>
@@ -544,7 +544,7 @@
                             <img src="https://fbref.com/req/202302030/images/headshots/{{ goalkeeper.player.fbref_id }}_2022.jpg" 
                                  alt="{{ goalkeeper.player.name }} headshot"
                                  class="player-headshot"
-                                 onerror="this.onerror=null; this.src='{% static 'images/default_headshot.jpeg' %}';">
+                                 onerror="this.onerror=null; this.src='https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/default_headshot.jpeg';">
                             <a href="{% url 'player_detail' player_id=goalkeeper.player.full_name %}" class="player-name">
                                 {{goalkeeper.player.full_name}}
                             </a>
@@ -566,7 +566,7 @@
                             <img src="https://fbref.com/req/202302030/images/headshots/{{ player.player.fbref_id }}_2022.jpg" 
                                  alt="{{ player.player.name }} headshot"
                                  class="player-headshot"
-                                 onerror="this.onerror=null; this.src='{% static 'images/default_headshot.jpeg' %}';">
+                                 onerror="this.onerror=null; this.src='https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/default_headshot.jpeg';">
                             <a href="{% url 'player_detail' player_id=player.player.full_name %}" class="player-name">
                                 {{player.player.full_name}}
                             </a>
@@ -588,7 +588,7 @@
                             <img src="https://fbref.com/req/202302030/images/headshots/{{ player.player.fbref_id }}_2022.jpg" 
                                  alt="{{ player.player.name }} headshot"
                                  class="player-headshot"
-                                 onerror="this.onerror=null; this.src='{% static 'images/default_headshot.jpeg' %}';">
+                                 onerror="this.onerror=null; this.src='https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/default_headshot.jpeg';">
                             <a href="{% url 'player_detail' player_id=player.player.full_name %}" class="player-name">
                                 {{player.player.full_name}}
                             </a>
@@ -610,7 +610,7 @@
                             <img src="https://fbref.com/req/202302030/images/headshots/{{ player.player.fbref_id }}_2022.jpg" 
                                  alt="{{ player.player.name }} headshot"
                                  class="player-headshot"
-                                 onerror="this.onerror=null; this.src='{% static 'images/default_headshot.jpeg' %}';">
+                                 onerror="this.onerror=null; this.src='https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/default_headshot.jpeg';">
                             <a href="{% url 'player_detail' player_id=player.player.full_name %}" class="player-name">
                                 {{player.player.full_name}}
                             </a>
@@ -2046,7 +2046,8 @@
                             <table class="stats-table collapsible">
                                 <thead>
                                     <tr>
-                                        <th>Player</th>Crosses Stopped</th>
+                                        <th>Player</th>
+                                        <th>Crosses Stopped</th> 
                                     </tr>
                                 </thead>
                                 <tbody>

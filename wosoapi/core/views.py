@@ -256,7 +256,7 @@ class LeagueSeasonDetailView(DetailView):
             goalkeeper_qs, "-matches_played"
         )
         context["goalkeeper_minutes_played"] = group_by_distinct(
-            goalkeeper_qs, "minutes_played"
+            goalkeeper_qs, "-minutes_played"
         )
         context["goalkeeper_goals_conceded"] = group_by_distinct(
             goalkeeper_qs, "-goals_conceded"
@@ -436,7 +436,7 @@ class ClubSeasonStatView(DetailView):
             goalkeeper_qs, "-matches_played"
         )
         context["goalkeeper_minutes_played"] = Top_players(
-            goalkeeper_qs, "minutes_played"
+            goalkeeper_qs, "-minutes_played"
         )
         context["goalkeeper_goals_conceded"] = Top_players(
             goalkeeper_qs, "-goals_conceded"

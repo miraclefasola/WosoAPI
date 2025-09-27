@@ -327,9 +327,9 @@
         <div class="stats-content">
             <section class="section">
                 {% load static %}
-                {% with image_path="images/"|add:league.code|add:".png"%}
-                <img src="{% static image_path %}" alt="{{league.name}} crest" class="league-image">
-                {% endwith %}
+ 
+                <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/{{league.code}}.png" alt="{{league.name}} crest" class="league-image">
+
 
                 {% for season, clubs in league_table.items %}
                 <div class="season-data" data-season="{{season}}">

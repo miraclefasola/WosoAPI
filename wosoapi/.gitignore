@@ -18,5 +18,11 @@ LigaF_2025_26_TEAM_STATS.csv
 LigaF_2025_26_ALL_PLAYER_STATS.csv
 NWSL_2025_26_TEAM_STATS.csv
 NWSL_2025_26_ALL_PLAYER_STATS.csv
+# Python bytecode files
+__pycache__/
 
+# Compiled files
+*.pyc
+*.pyo
+*.pyd
 

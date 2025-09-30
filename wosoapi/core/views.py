@@ -575,8 +575,10 @@ class PlayerSeasonDetailView(DetailView):
         # )
 
         return context
-    
+
+
 from django.http import HttpResponse
+
 
 def robots_txt(request):
     content = """# Allow important search engine bots for SEO
@@ -654,4 +656,3 @@ Disallow: /api/auth/
 Disallow: /private/
 """
     return HttpResponse(content, content_type="text/plain")
-

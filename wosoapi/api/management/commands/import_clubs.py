@@ -63,4 +63,4 @@ class Command(BaseCommand):
 # python manage.py import_clubs Frauen_2025_26_TEAM_STATS.csv
 # python manage.py import_clubs Arkema_2025_26_TEAM_STATS.csv
 # python manage.py import_clubs NWSL_2025_26_TEAM_STATS.csv
-#python manage.py import_clubs LigaF_2025_26_TEAM_STATS.csv
+# python manage.py import_clubs LigaF_2025_26_TEAM_STATS.csv

@@ -20,5 +20,5 @@ urlpatterns = [
         PlayerSeasonDetailView.as_view(),
         name="player_detail",
     ),
-    path('robots.txt', views.robots_txt, name='robots_txt')
+    path("robots.txt", views.robots_txt, name="robots_txt"),
 ]

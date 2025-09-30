@@ -107,8 +107,8 @@
         }
 
         .logo-box {
-            width: 120px;
-            height: 120px;
+            width: 90px;
+            height: 90px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -157,7 +157,7 @@
 
         @media (max-width: 1024px) {
             .container { max-width: 980px; }
-            .logo-box { width: 110px; height: 110px; }
+            .logo-box { width: 80px; height: 80px; }
             .league-card { max-width: 300px; padding: 10px; }
             .leagues-container { gap: 12px; }
             h1 { font-size: 2rem; }
@@ -165,7 +165,7 @@
 
         @media (max-width: 768px) {
             .container { max-width: 720px; padding: 0 0.8rem; }
-            .logo-box { width: 100px; height: 100px; }
+            .logo-box { width: 70px; height: 70px; }
             .league-card { max-width: 260px; padding: 9px; }
             .leagues-container { gap: 10px; }
             h1 { font-size: 1.8rem; }
@@ -174,7 +174,7 @@
         @media (max-width: 420px) {
             .container { max-width: 380px; padding: 0 0.6rem; }
             .league-card { max-width: 120px; padding: 8px; }
-            .logo-box { width: 72px; height: 72px; }
+            .logo-box { width: 60px; height: 60px; }
             .league-content h2 { font-size: 0.92rem; padding: 4px; }
             .leagues-container { gap: 8px; }
         }
@@ -246,9 +246,9 @@
                         </div>
                     </div>
                 {% elif league.code == "LigaF" %}
-                    <div class="league-card coming-soon">
+                    <div class="league-card">
                         <div class="league-content">
-                            <a href="#" class="league-link">
+                            <a href="{% url 'club_stats_by_league' league_code=league.code %}" class="league-link">
                                 <div class="logo-box">
                                     <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/Ligaf.png" alt="LigaF">
                                 </div>
@@ -257,9 +257,9 @@
                         </div>
                     </div>
                 {% elif league.code == "Arkema" %}
-                    <div class="league-card coming-soon">
+                    <div class="league-card">
                         <div class="league-content">
-                            <a href="#" class="league-link">
+                            <a href="{% url 'club_stats_by_league' league_code=league.code %}" class="league-link">
                                 <div class="logo-box">
                                     <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/Arkema.png" alt="D1 Arkema">
                                 </div>
@@ -268,9 +268,9 @@
                         </div>
                     </div>
                 {% elif league.code == "NWSL" %}
-                    <div class="league-card coming-soon">
+                    <div class="league-card">
                         <div class="league-content">
-                            <a href="#" class="league-link">
+                            <a href="{% url 'club_stats_by_league' league_code=league.code %}" class="league-link">
                                 <div class="logo-box">
                                     <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/NWSL.png" alt="NWSL">
                                 </div>
@@ -279,9 +279,9 @@
                         </div>
                     </div>
                 {% elif league.code == "Frauen" %}
-                    <div class="league-card coming-soon">
+                    <div class="league-card">
                         <div class="league-content">
-                            <a href="#" class="league-link">
+                            <a href="{% url 'club_stats_by_league' league_code=league.code %}" class="league-link">
                                 <div class="logo-box">
                                     <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/Frauen.png" alt="Frauen-Bundesliga">
                                 </div>

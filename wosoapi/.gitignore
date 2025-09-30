@@ -7,4 +7,16 @@ combined_players.py
 resetdb.py
 scripts_danger
 fbref_scrap_modified.py
+fbref_scrap_NWSL.py
+fbref_scrap_frauen.py
 latest_render_backup.dump
+Frauen_2025_26_ALL_PLAYER_STATS.csv
+Frauen_2025_26_TEAM_STATS.csv
+Arkema_2025_26_TEAM_STATS.csv
+Arkema_2025_26_ALL_PLAYER_STATS.csv
+LigaF_2025_26_TEAM_STATS.csv
+LigaF_2025_26_ALL_PLAYER_STATS.csv
+NWSL_2025_26_TEAM_STATS.csv
+NWSL_2025_26_ALL_PLAYER_STATS.csv
+
+

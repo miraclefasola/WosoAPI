@@ -108,3 +108,7 @@ class Command(BaseCommand):
 
 
 # python manage.py import_players WSL_2025_26_ALL_PLAYER_STATS.csv
+# python manage.py import_players Frauen_2025_26_ALL_PLAYER_STATS.csv
+# python manage.py import_players Arkema_2025_26_ALL_PLAYER_STATS.csv
+# python manage.py import_players NWSL_2025_26_ALL_PLAYER_STATS.csv
+# python manage.py import_players LigaF_2025_26_ALL_PLAYER_STATS.csv

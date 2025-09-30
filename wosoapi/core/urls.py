@@ -1,5 +1,7 @@
 from django.urls import path, include
 from core.views import *
+import core.views as views
+
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
@@ -18,4 +20,5 @@ urlpatterns = [
         PlayerSeasonDetailView.as_view(),
         name="player_detail",
     ),
+    path('robots.txt', views.robots_txt, name='robots_txt')
 ]

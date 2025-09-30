@@ -548,6 +548,7 @@ class PlayerSeasonDetailView(DetailView):
                 .filter(player=current_player_season.player)
                 .order_by("season__season")
             )
+            player_qs = player_qs.annotate(GA=F("goals") + F("assists"))
         else:
             player_qs = (
                 Goalkeeper.objects.select_related("club", "season", "player")
@@ -569,7 +570,88 @@ class PlayerSeasonDetailView(DetailView):
         context["player_profile"] = cleaned_nationality
         context["players"] = player_qs
         context["is_goalkeeper"] = isinstance(current_player_season, Goalkeeper)
-        context["ga"] = getattr(current_player_season, "goals", 0) + getattr(
-            current_player_season, "assists", 0
-        )
+        # context["ga"] = getattr(current_player_season, "goals", 0) + getattr(
+        #     current_player_season, "assists", 0
+        # )
+
         return context
+    
+from django.http import HttpResponse
+
+def robots_txt(request):
+    content = """# Allow important search engine bots for SEO
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# Block AI training bots
+User-agent: GPTBot
+Disallow: /
+
+User-agent: OpenAI-ChatGPT
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: ImagesiftBot
+Disallow: /
+
+User-agent: Omgilibot
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+# Default rule for any other bot
+User-agent: *
+Disallow: /admin/
+Disallow: /api/auth/
+Disallow: /private/
+"""
+    return HttpResponse(content, content_type="text/plain")
+

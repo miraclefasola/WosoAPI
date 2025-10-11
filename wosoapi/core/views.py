@@ -649,6 +649,10 @@ Disallow: /
 User-agent: ChatGPT-User
 Disallow: /
 
+User-agent: AhrefsBot
+Disallow: /
+
+
 # Default rule for any other bot
 User-agent: *
 Disallow: /admin/

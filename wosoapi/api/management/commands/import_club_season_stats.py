@@ -119,3 +119,4 @@ class Command(BaseCommand):
 # python manage.py import_club_season_stats Arkema_2025_26_TEAM_STATS.csv --season_id=6 --league_id=5
 # python manage.py import_club_season_stats NWSL_2025_26_TEAM_STATS.csv --season_id=4 --league_id=3
 # python manage.py import_club_season_stats LigaF_2025_26_TEAM_STATS.csv --season_id=5 --league_id=4
+# python manage.py import_club_season_stats SerieA_2025_26_TEAM_STATS.csv --season_id=8 --league_id=7

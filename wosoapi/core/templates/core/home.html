@@ -202,6 +202,7 @@
         .search-input { width: 100%; max-width: 340px; }
         .filter-select { background: white; }
 
+
         footer { text-align: center; margin-top: 1.6rem; padding: 1rem 0; opacity: 0.85; font-size: 0.92rem; }
     </style>
 </head>
@@ -210,7 +211,7 @@
         <header>
             <h1>Football Leagues</h1>
             <p class="subtitle">Explore the most exciting women's football leagues from around the world</p>
-        </header>
+        </header>    
 
         <div class="search-bar">
             <input type="text" class="search-input" placeholder="Search leagues..." id="searchInput">
@@ -221,88 +222,100 @@
             </select>
         </div>
 
-        <div class="leagues-container" id="leaguesContainer">
-            {% for league in leagues %}
-                {% if league.code == "WSL" %}
-                    <div class="league-card">
-                        <div class="league-content">
-                            <a href="{% url 'club_stats_by_league' league_code=league.code %}" class="league-link">
-                                <div class="logo-box">
-                                    <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/WSL.png" alt="WSL">
-                                </div>
-                            </a>
-                            <h2>Women's Super League</h2>
+       <div class="leagues-container" id="leaguesContainer">
+    {% for league in leagues %}
+        {% if league.code == "WSL" %}
+            <a href="{% url 'club_stats_by_league' league_code=league.code %}" class="league-link">
+                <div class="league-card">
+                    <div class="league-content">
+                        <div class="logo-box">
+                            <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/WSL.png" alt="WSL">
                         </div>
+                        <h2>Women's Super League</h2>
                     </div>
-                {% elif league.code == "UWCL" %}
-                    <div class="league-card coming-soon">
-                        <div class="league-content">
-                            <a href="#" class="league-link">
-                                <div class="logo-box">
-                                    <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/UWCL.png" alt="UWCL">
-                                </div>
-                            </a>
-                            <h2>UEFA Women's Champions League</h2>
-                        </div>
-                    </div>
-                {% elif league.code == "LigaF" %}
-                    <div class="league-card">
-                        <div class="league-content">
-                            <a href="{% url 'club_stats_by_league' league_code=league.code %}" class="league-link">
-                                <div class="logo-box">
-                                    <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/LigaF.png" alt="LigaF">
-                                </div>
-                            </a>
-                            <h2>Liga F Moeve</h2>
-                        </div>
-                    </div>
-                {% elif league.code == "Arkema" %}
-                    <div class="league-card">
-                        <div class="league-content">
-                            <a href="{% url 'club_stats_by_league' league_code=league.code %}" class="league-link">
-                                <div class="logo-box">
-                                    <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/Arkema.png" alt="D1 Arkema">
-                                </div>
-                            </a>
-                            <h2>Arkema Première Ligue</h2>
-                        </div>
-                    </div>
-                {% elif league.code == "NWSL" %}
-                    <div class="league-card">
-                        <div class="league-content">
-                            <a href="{% url 'club_stats_by_league' league_code=league.code %}" class="league-link">
-                                <div class="logo-box">
-                                    <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/NWSL.png" alt="NWSL">
-                                </div>
-                            </a>
-                            <h2>National Women's Soccer League</h2>
-                        </div>
-                    </div>
-                {% elif league.code == "Frauen" %}
-                    <div class="league-card">
-                        <div class="league-content">
-                            <a href="{% url 'club_stats_by_league' league_code=league.code %}" class="league-link">
-                                <div class="logo-box">
-                                    <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/Frauen.png" alt="Frauen-Bundesliga">
-                                </div>
-                            </a>
-                            <h2>Frauen-Bundesliga</h2>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
+                </div>
+            </a>
 
-    <footer style="background-color: #141212; color: white; padding: 2rem 0; text-align: center;">
-        <div class="container">
-            <p style="margin-bottom: 1rem;">
-                <strong>Data powered by <a href="https://fbref.com" target="_blank" style="color: var(--secondary);">FBref.com</a></strong>
-            </p>
-            <p style="color: var(--text-light); font-size: 0.875rem;">
-                © 2025 Wosostat. All rights reserved. Original data belongs to FBref.com and their data providers.
-            </p>
-        </div>
-    </footer>
+        {% elif league.code == "SerieA" %}
+            <a href="{% url 'club_stats_by_league' league_code=league.code %}" class="league-link">
+                <div class="league-card">
+                    <div class="league-content">
+                        <div class="logo-box">
+                            <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/SerieA.png" alt="UWCL">
+                        </div>
+                        <h2>Serie A Women</h2>
+                    </div>
+                </div>
+            </a>
+
+        {% elif league.code == "LigaF" %}
+            <a href="{% url 'club_stats_by_league' league_code=league.code %}" class="league-link">
+                <div class="league-card">
+                    <div class="league-content">
+                        <div class="logo-box">
+                            <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/LigaF.png" alt="LigaF">
+                        </div>
+                        <h2>Liga F Moeve</h2>
+                    </div>
+                </div>
+            </a>
+
+        {% elif league.code == "Arkema" %}
+            <a href="{% url 'club_stats_by_league' league_code=league.code %}" class="league-link">
+                <div class="league-card">
+                    <div class="league-content">
+                        <div class="logo-box">
+                            <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/Arkema.png" alt="D1 Arkema">
+                        </div>
+                        <h2>Arkema Première Ligue</h2>
+                    </div>
+                </div>
+            </a>
+
+        {% elif league.code == "NWSL" %}
+            <a href="{% url 'club_stats_by_league' league_code=league.code %}" class="league-link">
+                <div class="league-card">
+                    <div class="league-content">
+                        <div class="logo-box">
+                            <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/NWSL.png" alt="NWSL">
+                        </div>
+                        <h2>National Women's Soccer League</h2>
+                    </div>
+                </div>
+            </a>
+
+        {% elif league.code == "Frauen" %}
+            <a href="{% url 'club_stats_by_league' league_code=league.code %}" class="league-link">
+                <div class="league-card">
+                    <div class="league-content">
+                        <div class="logo-box">
+                            <img src="https://wosostat.s3.eu-central-1.amazonaws.com/wosostat_static_logo/Frauen.png" alt="Frauen-Bundesliga">
+                        </div>
+                        <h2>Frauen-Bundesliga</h2>
+                    </div>
+                </div>
+            </a>
+        {% endif %}
+    {% endfor %}
+</div>
+
+
+   <footer style="background-color: #141212; color: white; padding: 2rem 0; text-align: center;">
+  <div class="container">
+      <p style="margin-bottom: 1rem;">
+          <strong>Data powered by 
+              <a href="https://fbref.com" target="_blank" style="color: var(--secondary);">
+                  FBref.com
+              </a>
+          </strong>
+      </p>
+      <p style="color: var(--text-light); font-size: 0.875rem;">
+          © 2025 Wosostat. All rights reserved. Original data belongs to FBref.com and their data providers.
+      </p>
+  </div>
+</footer>
+
+
     </div>
 
     <script>
@@ -340,5 +353,74 @@
             });
         });
     </script>
+    
+<!-- SUPPORT BAR (keep this markup) -->
+<div id="support-bar"
+     style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #1b1b1b;
+            color: #fff; text-align: center; padding: 0.75rem; font-size: 0.95rem;
+            z-index: 999; border-top: 1px solid #333;">
+  Wosostat runs on passion (and servers). Support cloud costs or
+  <a href="https://flutterwave.com/pay/wosostat" target="_blank" rel="noopener noreferrer"
+     style="color: #e94560; text-decoration: none; font-weight: 600;">Buy me a coffee ☕</a>
+</div>
+
+<!-- SCRIPT: creates/updates a spacer so page can scroll to footer without being hidden -->
+<script>
+(function(){
+  const bar = document.getElementById('support-bar');
+  if (!bar) return;
+
+  // Remove any accidental padding-bottom on the bar itself
+  bar.style.paddingBottom = bar.style.paddingBottom || '';
+
+  // Create spacer if not present
+  function ensureSpacer() {
+    let spacer = document.getElementById('support-spacer');
+    if (!spacer) {
+      spacer = document.createElement('div');
+      spacer.id = 'support-spacer';
+      // ensure spacer doesn't visible beyond taking space
+      spacer.style.width = '100%';
+      spacer.style.pointerEvents = 'none';
+      spacer.style.background = 'transparent';
+      // insert spacer right before the support bar in the DOM
+      bar.parentNode.insertBefore(spacer, bar);
+    }
+    return spacer;
+  }
+
+  function adjustSpacer() {
+    const spacer = ensureSpacer();
+    // get bar height (includes padding)
+    const rect = bar.getBoundingClientRect();
+    const h = Math.ceil(rect.height);
+    spacer.style.height = h + 'px';
+  }
+
+  // run initially after a tiny delay to let fonts/layout settle
+  setTimeout(adjustSpacer, 30);
+
+  // update on window resize and load
+  window.addEventListener('resize', adjustSpacer);
+  window.addEventListener('load', function(){ setTimeout(adjustSpacer, 50); });
+
+  // observe DOM changes inside the bar (if text or size changes)
+  const observer = new MutationObserver(adjustSpacer);
+  observer.observe(bar, { childList: true, subtree: true, characterData: true });
+
+  // safety: recalc every 2s for the first 10s in case of late layout changes (fonts, images)
+  let ticks = 0, interval = setInterval(function(){
+    adjustSpacer();
+    ticks++;
+    if (ticks > 5) clearInterval(interval);
+  }, 2000);
+
+})();
+</script>
+
 </body>
 </html>
+
+
+
+

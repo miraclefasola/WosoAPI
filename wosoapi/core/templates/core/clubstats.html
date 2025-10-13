@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Overview of Club, Player, Goalkeepers, and best U23 players">
     <link rel="apple-touch-icon" sizes="180x180" href="https://wosostat.s3.eu-central-1.amazonaws.com/favicon_io+(1)/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="https://wosostat.s3.eu-central-1.amazonaws.com/favicon_io+(1)/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="https://wosostat.s3.eu-central-1.amazonaws.com/favicon_io+(1)/favicon-16x16.png">
@@ -2216,5 +2217,67 @@
             
         });
     </script>
+    <div id="support-bar"
+     style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #1b1b1b;
+            color: #fff; text-align: center; padding: 0.75rem; font-size: 0.95rem;
+            z-index: 999; border-top: 1px solid #333;">
+  Wosostat runs on passion (and servers). Support cloud costs or
+  <a href="https://flutterwave.com/pay/wosostat" target="_blank" rel="noopener noreferrer"
+     style="color: #e94560; text-decoration: none; font-weight: 600;">Buy me a coffee ☕</a>
+</div>
+
+<!-- SCRIPT: creates/updates a spacer so page can scroll to footer without being hidden -->
+<script>
+(function(){
+  const bar = document.getElementById('support-bar');
+  if (!bar) return;
+
+  // Remove any accidental padding-bottom on the bar itself
+  bar.style.paddingBottom = bar.style.paddingBottom || '';
+
+  // Create spacer if not present
+  function ensureSpacer() {
+    let spacer = document.getElementById('support-spacer');
+    if (!spacer) {
+      spacer = document.createElement('div');
+      spacer.id = 'support-spacer';
+      // ensure spacer doesn't visible beyond taking space
+      spacer.style.width = '100%';
+      spacer.style.pointerEvents = 'none';
+      spacer.style.background = 'transparent';
+      // insert spacer right before the support bar in the DOM
+      bar.parentNode.insertBefore(spacer, bar);
+    }
+    return spacer;
+  }
+
+  function adjustSpacer() {
+    const spacer = ensureSpacer();
+    // get bar height (includes padding)
+    const rect = bar.getBoundingClientRect();
+    const h = Math.ceil(rect.height);
+    spacer.style.height = h + 'px';
+  }
+
+  // run initially after a tiny delay to let fonts/layout settle
+  setTimeout(adjustSpacer, 30);
+
+  // update on window resize and load
+  window.addEventListener('resize', adjustSpacer);
+  window.addEventListener('load', function(){ setTimeout(adjustSpacer, 50); });
+
+  // observe DOM changes inside the bar (if text or size changes)
+  const observer = new MutationObserver(adjustSpacer);
+  observer.observe(bar, { childList: true, subtree: true, characterData: true });
+
+  // safety: recalc every 2s for the first 10s in case of late layout changes (fonts, images)
+  let ticks = 0, interval = setInterval(function(){
+    adjustSpacer();
+    ticks++;
+    if (ticks > 5) clearInterval(interval);
+  }, 2000);
+
+})();
+</script>
 </body>
 </html>

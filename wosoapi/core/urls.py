@@ -21,4 +21,12 @@ urlpatterns = [
         name="player_detail",
     ),
     path("robots.txt", views.robots_txt, name="robots_txt"),
+    path(
+        "europe/stats/<str:season_season>",
+        EuropeTop5Leagues.as_view(),
+        name="europe_top5_leagues",
+    ),
+    path(
+        "europe/leagues/seasons", EuropeSeasonList.as_view(), name="europe_season_lists"
+    ),
 ]

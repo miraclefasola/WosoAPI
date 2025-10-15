@@ -60,7 +60,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "core.middleware.url_converter.UrlMiddleware"
+    "core.middleware.url_converter.UrlMiddleware",
 ]
 
 ROOT_URLCONF = "wosoapi.urls"

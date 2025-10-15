@@ -1,0 +1,4 @@
+<H2>Goals</H2>
+{% for player in player_goals %}
+  {{ player.player.full_name }}({{player.player.age}}) {{player.club.name}} - {{ player.goals }}<br>
+{% endfor %}

@@ -577,6 +577,157 @@ class PlayerSeasonDetailView(DetailView):
         return context
 
 
+class EuropeTop5Leagues(ListView):
+
+    template_name = "core/top5leagueplayers.html"
+    context_object_name = "players"
+    model = PlayerSeasonStats
+
+    def get_queryset(self):
+        self.europe_leagues = ["Arkema", "WSL", "LigaF", "SerieA", "Frauen"]
+        season = self.kwargs.get("season_season")
+        self.season_cleaned = season.replace("-", "/")
+        return PlayerSeasonStats.objects.select_related(
+            "club", "season", "player"
+        ).filter(
+            season__season=self.season_cleaned, league__code__in=self.europe_leagues
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        qs = self.get_queryset()
+
+        def Top_players(orderby):
+            field_name = orderby.lstrip("-")
+            zero_filter = {f"{field_name}__gt": 0}
+            top10 = qs.filter(**zero_filter).order_by(orderby)[:10]
+            return top10
+
+        def U23_top_players(orderby):
+            field_name = orderby.lstrip("-")
+            zero_filter = {f"{field_name}__gt": 0}
+            qs = qs.filter(player__player_age__lt=23)
+            top10 = qs.filter(**zero_filter).order_by(orderby)[:10]
+            return top10
+
+        def top_goalkeepers(orderby):
+            field_name = orderby.lstrip("-")
+            zero_filter = {f"{field_name}__gt": 0}
+            qs = Goalkeeper.objects.select_related("player", "club", "season").filter(
+                season__season=self.season_cleaned, league__code__in=self.europe_leagues
+            )
+            top10 = qs.filter(**zero_filter).order_by(orderby)[:10]
+            return top10
+
+        def top_clubs(orderby):
+            field_name = orderby.lstrip("-")
+            zero_filter = {f"{field_name}__gt": 0}
+            qs = ClubSeasonStat.objects.select_related(
+                "club", "season", "league"
+            ).filter(
+                season__season=self.season_cleaned, league__code__in=self.europe_leagues
+            )
+            top10 = qs.filter(**zero_filter).order_by(orderby)[:10]
+            return top10
+
+        metrics = [
+            "matches_played",
+            "minutes_played",
+            "matches_completed",
+            "matches_substituted",
+            "unused_sub",
+            "goals",
+            "assists",
+            "xg",
+            "npxg",
+            "xg_performance",
+            "npxg_performance",
+            "prog_carries",
+            "prog_carries_final_3rd",
+            "prog_passes",
+            "shots_target",
+            "passes_to_final_3rd",
+            "passes_to_pen_area",
+            "pass_switches",
+            "through_ball",
+            "shots_creation_action",
+            "offsides",
+            "pen_won",
+            "pen_conceded",
+            "tackles",
+            "ball_recoveries",
+            "aerial_duels_won",
+            "aerial_duels_lost",
+            "blocks",
+            "tackles_won",
+            "interceptions",
+            "touches",
+            "dispossessed",
+            "miscontrols",
+            "take_ons",
+            "take_ons_won",
+            "fouls_won",
+            "fouls_committed",
+            "carries_to_final_3rd",
+            "carries_to_pen_area",
+            "yellow_card",
+            "red_card",
+        ]
+
+        for metric in metrics:
+            context[f"player_{metric}"] = Top_players(f"-{metric}")
+            context[f"U23_player_{metric}"] = U23_top_players(f"-{metric}")
+
+        gk_metrics = [
+            "matches_played",
+            "minutes_played",
+            "goals_conceded",
+            "shots_faced",
+            "saves",
+            "save_percentage",
+            "clean_sheets",
+            "psxg",
+            "psxg_performance",
+            "pen_saved",
+            "passes",
+            "crosses_stopped",
+            "sweeper_action",
+            "sweeper_action_per90",
+        ]
+
+        for metric in gk_metrics:
+            context[f"gk_{metric}"] = top_goalkeepers(f"-{metric}")
+
+        club_metrics = [
+            "points_won",
+            "league_position",
+            "matches_played",
+            "win",
+            "draw",
+            "lost",
+            "goals_scored",
+            "goals_conceded",
+            "xg_created",
+            "xg_conceded",
+            "shots_allowed",
+            "shots_target_allowed",
+            "attempted_passes_against",
+            "comp_passes_allowed",
+            "passes_to_final_third_allowed",
+            "passes_to_pen_area_allowed",
+        ]
+
+        for metric in club_metrics:
+            context[f"club_{metric}"] = top_clubs(f"-{metric}")
+        return context
+
+
+class EuropeSeasonList(ListView):
+    queryset = Season.objects.all()
+    template_name = "core/seasonlist.html"
+    context_object_name = "seasons"
+
+
 from django.http import HttpResponse
 
 

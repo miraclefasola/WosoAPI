@@ -282,10 +282,11 @@ class Command(BaseCommand):
         except Exception as e:
             self.stdout.write(self.style.ERROR(f"An unexpected error occurred: {e}"))
 
-
-# python manage.py import_goalkeeper_stats WSL_2025_26_ALL_PLAYER_STATS.csv --season-id=2 --league-id=1
-# python manage.py import_goalkeeper_stats Frauen_2025_26_ALL_PLAYER_STATS.csv --season-id=3 --league-id=2
-# python manage.py import_goalkeeper_stats Arkema_2025_26_ALL_PLAYER_STATS.csv --season-id=6 --league-id=5
-# python manage.py import_goalkeeper_stats NWSL_2025_26_ALL_PLAYER_STATS.csv --season-id=4 --league-id=3
-# python manage.py import_goalkeeper_stats LigaF_2025_26_ALL_PLAYER_STATS.csv --season-id=5 --league-id=4
-# python manage.py import_goalkeeper_stats SerieA_2025_26_ALL_PLAYER_STATS.csv --season-id=8 --league-id=7
+"""
+ python manage.py import_goalkeeper_stats WSL_2025_26_ALL_PLAYER_STATS.csv --season-id=2 --league-id=1
+ python manage.py import_goalkeeper_stats Frauen_2025_26_ALL_PLAYER_STATS.csv --season-id=3 --league-id=2
+ python manage.py import_goalkeeper_stats Arkema_2025_26_ALL_PLAYER_STATS.csv --season-id=6 --league-id=5
+ python manage.py import_goalkeeper_stats NWSL_2025_26_ALL_PLAYER_STATS.csv --season-id=4 --league-id=3
+ python manage.py import_goalkeeper_stats LigaF_2025_26_ALL_PLAYER_STATS.csv --season-id=5 --league-id=4
+ python manage.py import_goalkeeper_stats SerieA_2025_26_ALL_PLAYER_STATS.csv --season-id=8 --league-id=7
+"""

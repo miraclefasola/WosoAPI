@@ -114,9 +114,11 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(f"An error occurred: {e}"))
 
 
-# python manage.py import_club_season_stats WSL_2025_26_TEAM_STATS.csv --season_id=2 --league_id=1
-# python manage.py import_club_season_stats Frauen_2025_26_TEAM_STATS.csv --season_id=3 --league_id=2
-# python manage.py import_club_season_stats Arkema_2025_26_TEAM_STATS.csv --season_id=6 --league_id=5
-# python manage.py import_club_season_stats NWSL_2025_26_TEAM_STATS.csv --season_id=4 --league_id=3
-# python manage.py import_club_season_stats LigaF_2025_26_TEAM_STATS.csv --season_id=5 --league_id=4
-# python manage.py import_club_season_stats SerieA_2025_26_TEAM_STATS.csv --season_id=8 --league_id=7
+"""
+ python manage.py import_club_season_stats WSL_2025_26_TEAM_STATS.csv --season_id=2 --league_id=1
+ python manage.py import_club_season_stats Frauen_2025_26_TEAM_STATS.csv --season_id=3 --league_id=2
+ python manage.py import_club_season_stats Arkema_2025_26_TEAM_STATS.csv --season_id=6 --league_id=5
+ python manage.py import_club_season_stats NWSL_2025_26_TEAM_STATS.csv --season_id=4 --league_id=3
+ python manage.py import_club_season_stats LigaF_2025_26_TEAM_STATS.csv --season_id=5 --league_id=4
+ python manage.py import_club_season_stats SerieA_2025_26_TEAM_STATS.csv --season_id=8 --league_id=7
+"""

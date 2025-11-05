@@ -2,10 +2,12 @@ from rest_framework import serializers
 from api.models import *
 
 
+
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
         fields = ["id", "name", "code"]
+
 
 
 class LeagueSerializer(serializers.ModelSerializer):
@@ -14,9 +16,11 @@ class LeagueSerializer(serializers.ModelSerializer):
     )
     country = serializers.ReadOnlyField(source="country.name")
 
+
     class Meta:
         model = League
         fields = ["id", "name", "country", "country_id", "code", "total_clubs"]
+
 
 
 class SeasonSerializer(serializers.ModelSerializer):
@@ -25,15 +29,18 @@ class SeasonSerializer(serializers.ModelSerializer):
     )
     league = serializers.ReadOnlyField(source="league.name")
 
+
     class Meta:
         model = Season
         fields = ["id", "season", "league", "league_id"]
+
 
 
 class ClubSerializer(serializers.ModelSerializer):
     class Meta:
         model = Club
         fields = ["id", "name", "fbref_id", "stadium"]
+
 
 
 class ClubSeasonStatSerializer(serializers.ModelSerializer):
@@ -49,6 +56,7 @@ class ClubSeasonStatSerializer(serializers.ModelSerializer):
     league = serializers.ReadOnlyField(source="league.code")
     club = serializers.ReadOnlyField(source="club.name")
     season = serializers.ReadOnlyField(source="season.season")
+
 
     class Meta:
         model = ClubSeasonStat
@@ -74,20 +82,22 @@ class ClubSeasonStatSerializer(serializers.ModelSerializer):
             "xg_created",
             "xg_conceded",
             # Shooting
-            "shots",
-            "shots_target",
+            "shots_allowed",
+            "shots_target_allowed",
             # Passing
-            "passes",
-            "passes_comp",
-            "passes_to_final_third",
-            "passes_to_pen_area",
+            "attempted_passes_against",
+            "comp_passes_allowed",
+            "passes_to_final_third_allowed",
+            "passes_to_pen_area_allowed",
         ]
+
 
 
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
         fields = ["id", "full_name", "fbref_id", "nationality", "age"]
+
 
 
 class PlayerSeasonStatsSerializer(serializers.ModelSerializer):
@@ -107,6 +117,7 @@ class PlayerSeasonStatsSerializer(serializers.ModelSerializer):
     player_name = serializers.ReadOnlyField(source="player.full_name")
     club_name = serializers.ReadOnlyField(source="club.name")
     season = serializers.ReadOnlyField(source="season.season")
+
 
     class Meta:
         model = PlayerSeasonStats
@@ -165,12 +176,14 @@ class PlayerSeasonStatsSerializer(serializers.ModelSerializer):
             "dispossessed",
             "miscontrols",
             "take_ons",
+            "take_ons_won",
             # Discipline
             "fouls_won",
             "fouls_committed",
             "yellow_card",
             "red_card",
         ]
+
 
 
 class GoalkeeperSerializer(serializers.ModelSerializer):
@@ -190,6 +203,7 @@ class GoalkeeperSerializer(serializers.ModelSerializer):
     player_name = serializers.ReadOnlyField(source="player.full_name")
     club_name = serializers.ReadOnlyField(source="club.name")
     season = serializers.ReadOnlyField(source="season.season")
+
 
     class Meta:
         model = Goalkeeper

@@ -14,7 +14,7 @@ def send_verification_email(user):
     from_email = "shetalksfooty@gmail.com"
     to = user.email
 
-    verify_url = f"https://wosostat.duckdns.org/verify/{uid}/{token}/"
+    verify_url = f"https://wosostat.duckdns.org/api/verify/{uid}/{token}/"
 
     # Render HTML template
     html_content = render_to_string(

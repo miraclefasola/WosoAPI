@@ -263,7 +263,7 @@ class PlayerSeasonStatsView(ModelViewSet):
         "dispossessed",
         "miscontrols",
         "take_ons",
-        "take_ons_won" "carries_to_final_3rd",
+        "take_ons_won", "carries_to_final_3rd",
         "carries_to_pen_area",
         "yellow_card",
         "red_card",
@@ -275,7 +275,7 @@ class PlayerSeasonStatsView(ModelViewSet):
         "player__full_name",
         "club__name",
         "league__code",
-        "league__name" "season__season",
+        "league__name" ,"season__season",
         "position",
         "age",
         "matches_played",
@@ -494,13 +494,13 @@ class LeagueClubView(ListAPIView):
         DjangoFilterBackend,
     ]
 
-    ordering_fields = ["id", "name", "fbref_id", "league__name"]
-    search_fields = ["id", "name", "fbref_id", "league__name"]
-    ordering = ["name", "fbref_id"]
+    ordering_fields = ["id", "club__name", "club__fbref_id", "league__name"]
+    search_fields = ["id", "club__name", "club__fbref_id", "league__name"]
+    ordering = ["club__name", "club__fbref_id"]
     filterset_fields = {
         "id": ["exact"],
-        "name": ["exact", "icontains"],
-        "fbref_id": ["exact"],
+        "club__name": ["exact", "icontains"],
+        "club__fbref_id": ["exact"],  # Access fbref_id through the club relationship
         "league__name": ["exact", "icontains"],
     }
 
@@ -646,7 +646,7 @@ class LeaguePlayerView(ListAPIView):
         "npxg": ["exact", "gte", "lte", "range"],
         "xg_performance": ["exact", "gte", "lte", "range"],
         "npxg_performance": ["exact", "gte", "lte", "range"],
-        "prog_carrides": ["exact", "gte", "lte", "range"],
+        "prog_carries": ["exact", "gte", "lte", "range"],
         "prog_carries_final_3rd": ["exact", "gte", "lte", "range"],
         "prog_passes": ["exact", "gte", "lte", "range"],
         "shots_target": ["exact", "gte", "lte", "range"],

@@ -32,7 +32,7 @@ class APIRegisterView(CreateAPIView):
         user = serializer.save()
         send_verification_email(user)
         data = serializer.data
-        data["SUCCESS"] = "Now proceed to verify your email"
+        data["SUCCESS"] = "Now proceed to verify your email....Remember to check your spam."
         return Response(data, status=status.HTTP_201_CREATED)
 
 

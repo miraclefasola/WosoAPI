@@ -107,9 +107,11 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(f"An unexpected error occurred: {e}"))
 
 
-# python manage.py import_players WSL_2025_26_ALL_PLAYER_STATS.csv
-# python manage.py import_players Frauen_2025_26_ALL_PLAYER_STATS.csv
-# python manage.py import_players Arkema_2025_26_ALL_PLAYER_STATS.csv
-# python manage.py import_players NWSL_2025_26_ALL_PLAYER_STATS.csv
-# python manage.py import_players LigaF_2025_26_ALL_PLAYER_STATS.csv
-# python manage.py import_players SerieA_2025_26_ALL_PLAYER_STATS.csv
+"""
+python manage.py import_players WSL_2025_26_ALL_PLAYER_STATS.csv
+python manage.py import_players Frauen_2025_26_ALL_PLAYER_STATS.csv
+python manage.py import_players Arkema_2025_26_ALL_PLAYER_STATS.csv
+python manage.py import_players NWSL_2025_26_ALL_PLAYER_STATS.csv
+python manage.py import_players LigaF_2025_26_ALL_PLAYER_STATS.csv
+python manage.py import_players SerieA_2025_26_ALL_PLAYER_STATS.csv
+"""

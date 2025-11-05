@@ -606,28 +606,28 @@ class EuropeTop5Leagues(ListView):
         def U23_top_players(orderby):
             field_name = orderby.lstrip("-")
             zero_filter = {f"{field_name}__gt": 0}
-            qs = qs.filter(player__player_age__lt=23)
-            top10 = qs.filter(**zero_filter).order_by(orderby)[:10]
+            U23_qs = qs.filter(player__player_age__lt=23)
+            top10 = U23_qs.filter(**zero_filter).order_by(orderby)[:10]
             return top10
 
         def top_goalkeepers(orderby):
             field_name = orderby.lstrip("-")
             zero_filter = {f"{field_name}__gt": 0}
-            qs = Goalkeeper.objects.select_related("player", "club", "season").filter(
+            gk_qs = Goalkeeper.objects.select_related("player", "club", "season", "league").filter(
                 season__season=self.season_cleaned, league__code__in=self.europe_leagues
             )
-            top10 = qs.filter(**zero_filter).order_by(orderby)[:10]
+            top10 = gk_qs.filter(**zero_filter).order_by(orderby)[:10]
             return top10
 
         def top_clubs(orderby):
             field_name = orderby.lstrip("-")
             zero_filter = {f"{field_name}__gt": 0}
-            qs = ClubSeasonStat.objects.select_related(
+            club_qs = ClubSeasonStat.objects.select_related(
                 "club", "season", "league"
             ).filter(
                 season__season=self.season_cleaned, league__code__in=self.europe_leagues
             )
-            top10 = qs.filter(**zero_filter).order_by(orderby)[:10]
+            top10 = club_qs.filter(**zero_filter).order_by(orderby)[:10]
             return top10
 
         metrics = [
